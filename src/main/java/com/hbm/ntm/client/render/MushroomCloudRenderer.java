@@ -2,6 +2,7 @@ package com.hbm.ntm.client.render;
 
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.client.ClientNuclearFlash;
+import com.hbm.ntm.client.ShaderPackCompat;
 import com.hbm.ntm.nuclear.MushroomCloudEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -25,12 +26,15 @@ import java.util.Random;
 
 /** Batches the Torex cloudlets and the eye-searing flare behind them. */
 public final class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEntity> {
-    private static final ResourceLocation CLOUD_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation SHADER_CLOUD_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             HbmNtm.MOD_ID, "textures/particle/torex_cloud.png");
+    private static final ResourceLocation CLASSIC_CLOUD_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            HbmNtm.MOD_ID, "textures/particle/particle_base.png");
     // The flare texture has black baked in. True alpha keeps Iris from displaying the evidence.
     private static final ResourceLocation FLARE_TEXTURE = ResourceLocation.withDefaultNamespace(
             "textures/particle/flash.png");
-    private static final RenderType CLOUD_TYPE = RenderType.entityTranslucent(CLOUD_TEXTURE, false);
+    private static final RenderType SHADER_CLOUD_TYPE = RenderType.entityTranslucent(SHADER_CLOUD_TEXTURE, false);
+    private static final RenderType CLASSIC_CLOUD_TYPE = RenderType.entityTranslucent(CLASSIC_CLOUD_TEXTURE, false);
     private static final RenderType FLARE_TYPE = RenderType.entityTranslucentEmissive(FLARE_TEXTURE, false);
 
     private final List<MushroomCloudEntity.Cloudlet> sortedCloudlets = new ArrayList<>();
@@ -48,7 +52,8 @@ public final class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEnt
         Vector3f up = new Vector3f(0.0F, 1.0F, 0.0F).rotate(camera);
         Vector3f normal = new Vector3f(0.0F, 0.0F, 1.0F).rotate(camera);
 
-        renderCloudlets(cloud, partialTick, poses, buffers.getBuffer(CLOUD_TYPE), right, up, normal,
+        RenderType cloudType = ShaderPackCompat.shadersEnabled() ? SHADER_CLOUD_TYPE : CLASSIC_CLOUD_TYPE;
+        renderCloudlets(cloud, partialTick, poses, buffers.getBuffer(cloudType), right, up, normal,
                 packedLight);
         renderShockwave(cloud, partialTick, poses.last(), buffers.getBuffer(RenderType.lightning()));
         if (cloud.age() < 101) {
@@ -195,6 +200,6 @@ public final class MushroomCloudRenderer extends EntityRenderer<MushroomCloudEnt
 
     @Override
     public ResourceLocation getTextureLocation(MushroomCloudEntity entity) {
-        return CLOUD_TEXTURE;
+        return ShaderPackCompat.shadersEnabled() ? SHADER_CLOUD_TEXTURE : CLASSIC_CLOUD_TEXTURE;
     }
 }
