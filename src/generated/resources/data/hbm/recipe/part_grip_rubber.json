@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:ingots/rubber"
+    }
+  },
+  "pattern": [
+    "W ",
+    " W",
+    " W"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "material": "rubber"
+      },
+      "minecraft:custom_model_data": 20003
+    },
+    "count": 1,
+    "id": "hbm:part_grip"
+  }
+}

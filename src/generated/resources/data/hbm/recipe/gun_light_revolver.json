@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:part_barrel_light",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "wood"
+        },
+        "minecraft:custom_model_data": 3
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "gunmetal"
+        },
+        "minecraft:custom_model_data": 49
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "R": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:part_receiver_light",
+      "strict": false
+    }
+  },
+  "pattern": [
+    "BRM",
+    "  G"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_light_revolver"
+  }
+}

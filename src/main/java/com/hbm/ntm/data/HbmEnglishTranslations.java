@@ -442,6 +442,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.casing.small_steel", "Small Weapon Steel Casing");
         language.addProperty("item.hbm.casing.large_steel", "Large Weapon Steel Casing");
         Map<String, String> foundryMaterialNames = Map.ofEntries(
+                Map.entry("wood", "Wood"), Map.entry("ivory", "Ivory"),
                 Map.entry("gold", "Gold"), Map.entry("titanium", "Titanium"),
                 Map.entry("copper", "Copper"), Map.entry("tungsten", "Tungsten"),
                 Map.entry("schrabidium", "Schrabidium"), Map.entry("red_copper", "Red Copper"),
@@ -454,7 +455,7 @@ final class HbmEnglishTranslations {
                 Map.entry("arsenic_bronze", "Arsenic Bronze"), Map.entry("bscco", "BSCCO"),
                 Map.entry("magnetized_tungsten", "Magnetized Tungsten"),
                 Map.entry("gunmetal", "Gunmetal"), Map.entry("weapon_steel", "Weapon Steel"),
-                Map.entry("polymer", "Polymer"));
+                Map.entry("polymer", "Polymer"), Map.entry("rubber", "Rubber"));
         foundryMaterialNames.forEach((id, name) -> language.addProperty("item.hbm.wire_dense." + id,
                 "Dense " + name + " Wire"));
         Map<String, String> foundryPartNames = Map.of(

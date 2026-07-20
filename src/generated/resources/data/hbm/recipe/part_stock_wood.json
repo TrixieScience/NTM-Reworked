@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "  W"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "material": "wood"
+      },
+      "minecraft:custom_model_data": 3
+    },
+    "count": 1,
+    "id": "hbm:part_stock"
+  }
+}

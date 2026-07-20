@@ -22,6 +22,8 @@ import java.util.List;
 
 /** Materials accepted by the Crucible and Foundry. */
 public enum FoundryMaterial {
+    WOOD("wood", 3, 0x896727, false, false),
+    IVORY("ivory", 4, 0xEDEBCA, false, false),
     STONE("stone", 0, 0x4D2F23, false),
     IRON("iron", 2600, 0xFFA259, false),
     GOLD("gold", 7900, 0xE8D754, false),
@@ -61,7 +63,8 @@ public enum FoundryMaterial {
     COMBINE_STEEL("combine_steel", 39, 0x6F6FB4, false),
     GUNMETAL("gunmetal", 49, 0xF9C62C, false),
     WEAPON_STEEL("weapon_steel", 50, 0x808080, false),
-    POLYMER("polymer", 20_001, 0x272727, false),
+    POLYMER("polymer", 20_001, 0x272727, false, false),
+    RUBBER("rubber", 20_003, 0x4B4A3F, false, false),
     SLAG("slag", 41, 0x6C6562, false);
 
     public static final int NUGGET = 8;
@@ -77,18 +80,25 @@ public enum FoundryMaterial {
     private final int legacyId;
     private final int moltenColor;
     private final boolean additive;
+    private final boolean smeltable;
 
     FoundryMaterial(String id, int legacyId, int moltenColor, boolean additive) {
+        this(id, legacyId, moltenColor, additive, true);
+    }
+
+    FoundryMaterial(String id, int legacyId, int moltenColor, boolean additive, boolean smeltable) {
         this.id = id;
         this.legacyId = legacyId;
         this.moltenColor = moltenColor;
         this.additive = additive;
+        this.smeltable = smeltable;
     }
 
     public String id() { return id; }
     public int legacyId() { return legacyId; }
     public int moltenColor() { return moltenColor; }
     public boolean additive() { return additive; }
+    public boolean smeltable() { return smeltable; }
 
     public static FoundryMaterial byId(String id) {
         for (FoundryMaterial material : values()) if (material.id.equals(id)) return material;
@@ -346,7 +356,7 @@ public enum FoundryMaterial {
         CasingItem.CasingType casing = CasingItem.type(stack);
         if (casing != null) return new MaterialAmount(casing.material(), casing.cost());
         FoundryMaterial partMaterial = FoundryPartItem.material(stack);
-        if (partMaterial != null && partMaterial != POLYMER && stack.getItem() instanceof FoundryPartItem part) {
+        if (partMaterial != null && partMaterial.smeltable() && stack.getItem() instanceof FoundryPartItem part) {
             return new MaterialAmount(partMaterial, part.type().cost());
         }
 
@@ -566,9 +576,11 @@ public enum FoundryMaterial {
                 default -> false;
             };
             case MECHANISM -> this == GUNMETAL || this == WEAPON_STEEL;
-            case STOCK -> this == DESH || this == GUNMETAL || this == WEAPON_STEEL;
+            case STOCK -> this == WOOD || this == DESH || this == GUNMETAL
+                    || this == WEAPON_STEEL || this == POLYMER;
             case GRIP -> this == STEEL || this == DURA_STEEL || this == DESH
-                    || this == GUNMETAL || this == WEAPON_STEEL;
+                    || this == GUNMETAL || this == WEAPON_STEEL || this == WOOD
+                    || this == IVORY || this == POLYMER || this == RUBBER;
         };
     }
 

@@ -1,0 +1,69 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "dura_steel"
+        },
+        "minecraft:custom_model_data": 33
+      },
+      "items": "hbm:part_barrel_light",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "wood"
+        },
+        "minecraft:custom_model_data": 3
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "gunmetal"
+        },
+        "minecraft:custom_model_data": 49
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "R": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "dura_steel"
+        },
+        "minecraft:custom_model_data": 33
+      },
+      "items": "hbm:part_receiver_light",
+      "strict": false
+    },
+    "S": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "wood"
+        },
+        "minecraft:custom_model_data": 3
+      },
+      "items": "hbm:part_stock",
+      "strict": false
+    }
+  },
+  "pattern": [
+    "BRS",
+    "GMG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_am180"
+  }
+}

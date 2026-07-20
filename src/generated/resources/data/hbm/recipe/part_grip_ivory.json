@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:bone"
+    }
+  },
+  "pattern": [
+    "W ",
+    " W",
+    " W"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "material": "ivory"
+      },
+      "minecraft:custom_model_data": 4
+    },
+    "count": 1,
+    "id": "hbm:part_grip"
+  }
+}

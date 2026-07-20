@@ -4328,21 +4328,31 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, steelTankRecipe(), recipes, hbm("tank_steel")));
         writes.add(save(output, motorRecipe(false), recipes, hbm("motor_from_iron")));
         writes.add(save(output, motorRecipe(true), recipes, hbm("motor_from_steel")));
-        writes.add(save(output, polymerPartRecipe(true), recipes, hbm("part_stock_polymer")));
-        writes.add(save(output, polymerPartRecipe(false), recipes, hbm("part_grip_polymer")));
+        writes.add(save(output, craftedPartRecipe(true, tagIngredient("c:ingots/polymer"),
+                "polymer", 20_001), recipes, hbm("part_stock_polymer")));
+        writes.add(save(output, craftedPartRecipe(false, tagIngredient("c:ingots/polymer"),
+                "polymer", 20_001), recipes, hbm("part_grip_polymer")));
+        writes.add(save(output, craftedPartRecipe(true, tagIngredient("minecraft:planks"),
+                "wood", 3), recipes, hbm("part_stock_wood")));
+        writes.add(save(output, craftedPartRecipe(false, tagIngredient("minecraft:planks"),
+                "wood", 3), recipes, hbm("part_grip_wood")));
+        writes.add(save(output, craftedPartRecipe(false, tagIngredient("c:ingots/rubber"),
+                "rubber", 20_003), recipes, hbm("part_grip_rubber")));
+        writes.add(save(output, craftedPartRecipe(false, itemIngredient("minecraft:bone"),
+                "ivory", 4), recipes, hbm("part_grip_ivory")));
         writes.add(save(output, deshMotorRecipe(), recipes, hbm("motor_desh")));
         writes.add(save(output, deshBladesRecipe(), recipes, hbm("blades_desh")));
         addUnlockedWeaponRecipes(writes, output);
         writes.add(save(output, coilBatterySocketRecipe(), recipes, hbm("machine_battery_socket_from_coil")));
     }
 
-    private JsonObject polymerPartRecipe(boolean stock) {
+    private JsonObject craftedPartRecipe(boolean stock, JsonObject ingredient, String material, int metadata) {
         JsonObject recipe = shapedBase(stock ? List.of("WWW", "  W") : List.of("W ", " W", " W"));
         JsonObject key = new JsonObject();
-        key.add("W", tagIngredient("c:ingots/polymer"));
+        key.add("W", ingredient);
         recipe.add("key", key);
         String part = stock ? "part_stock" : "part_grip";
-        recipe.add("result", materialComponentResult("hbm:" + part, "polymer", 20_001, 1));
+        recipe.add("result", materialComponentResult("hbm:" + part, material, metadata, 1));
         return recipe;
     }
 
@@ -4363,6 +4373,70 @@ public final class MaterialResourcesProvider implements DataProvider {
     }
 
     private void addUnlockedWeaponRecipes(List<CompletableFuture<?>> writes, CachedOutput output) {
+        writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
+                "B", foundryPart("part_barrel_light", "steel", 30),
+                "R", foundryPart("part_receiver_light", "steel", 30),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", foundryPart("part_grip", "wood", 3)), "gun_light_revolver"),
+                recipes, hbm("gun_light_revolver")));
+        writes.add(save(output, weaponRecipe(List.of("BRP", "BMS"), Map.of(
+                "B", foundryPart("part_barrel_light", "steel", 30),
+                "R", foundryPart("part_receiver_light", "gunmetal", 49),
+                "P", tagIngredient("c:plates/gunmetal"),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "S", foundryPart("part_stock", "wood", 3)), "gun_henry"),
+                recipes, hbm("gun_henry")));
+        writes.add(save(output, weaponRecipe(List.of("BRM", "BGS"), Map.of(
+                "B", foundryPart("part_barrel_light", "steel", 30),
+                "R", foundryPart("part_receiver_light", "steel", 30),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", materialComponentIngredient("hbm:bolt", "steel", 30),
+                "S", foundryPart("part_stock", "wood", 3)), "gun_maresleg"),
+                recipes, hbm("gun_maresleg")));
+        writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
+                "B", foundryPart("part_barrel_heavy", "steel", 30),
+                "R", foundryPart("part_receiver_light", "steel", 30),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", foundryPart("part_grip", "steel", 30)), "gun_flaregun"),
+                recipes, hbm("gun_flaregun")));
+        writes.add(save(output, weaponRecipe(List.of("BRS", "GMG"), Map.of(
+                "B", foundryPart("part_barrel_light", "dura_steel", 33),
+                "R", foundryPart("part_receiver_light", "dura_steel", 33),
+                "S", foundryPart("part_stock", "wood", 3),
+                "G", foundryPart("part_grip", "wood", 3),
+                "M", foundryPart("part_mechanism", "gunmetal", 49)), "gun_am180"),
+                recipes, hbm("gun_am180")));
+        writes.add(save(output, weaponRecipe(List.of("BB ", "BBM", "G G"), Map.of(
+                "B", foundryPart("part_barrel_light", "dura_steel", 33),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", foundryPart("part_grip", "wood", 3)), "gun_liberator"),
+                recipes, hbm("gun_liberator")));
+        writes.add(save(output, weaponRecipe(List.of("BM ", "BRS", "G  "), Map.of(
+                "B", foundryPart("part_barrel_heavy", "dura_steel", 33),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "R", foundryPart("part_receiver_light", "dura_steel", 33),
+                "S", foundryPart("part_stock", "wood", 3),
+                "G", foundryPart("part_grip", "wood", 3)), "gun_congolake"),
+                recipes, hbm("gun_congolake")));
+        writes.add(save(output, weaponRecipe(List.of(" MG", "BBR", " GM"), Map.of(
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", foundryPart("part_grip", "dura_steel", 33),
+                "B", foundryPart("part_barrel_heavy", "dura_steel", 33),
+                "R", foundryPart("part_receiver_heavy", "dura_steel", 33)), "gun_flamer"),
+                recipes, hbm("gun_flamer")));
+        writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
+                "B", foundryPart("part_barrel_light", "desh", 42),
+                "R", foundryPart("part_receiver_light", "desh", 42),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", foundryPart("part_grip", "wood", 3)), "gun_heavy_revolver"),
+                recipes, hbm("gun_heavy_revolver")));
+        writes.add(save(output, weaponRecipe(List.of("BRM", "G S"), Map.of(
+                "B", foundryPart("part_barrel_light", "desh", 42),
+                "R", foundryPart("part_receiver_light", "desh", 42),
+                "M", foundryPart("part_mechanism", "gunmetal", 49),
+                "G", foundryPart("part_grip", "wood", 3),
+                "S", foundryPart("part_stock", "wood", 3)), "gun_carbine"),
+                recipes, hbm("gun_carbine")));
         writes.add(save(output, weaponRecipe(List.of("BRS", " GM"), Map.of(
                 "B", foundryPart("part_barrel_light", "desh", 42),
                 "R", foundryPart("part_receiver_light", "desh", 42),

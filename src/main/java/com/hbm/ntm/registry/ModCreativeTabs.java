@@ -116,12 +116,6 @@ public final class ModCreativeTabs {
                                 if (!part.isEmpty()) output.accept(part);
                             }
                         }
-                        output.accept(com.hbm.ntm.item.FoundryPartItem.create(
-                                ModItems.FOUNDRY_PARTS.get(com.hbm.ntm.item.FoundryPartItem.PartType.STOCK).get(),
-                                FoundryMaterial.POLYMER, 1));
-                        output.accept(com.hbm.ntm.item.FoundryPartItem.create(
-                                ModItems.FOUNDRY_PARTS.get(com.hbm.ntm.item.FoundryPartItem.PartType.GRIP).get(),
-                                FoundryMaterial.POLYMER, 1));
                         output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
                                 CastPlateItem.CastPlateMaterial.IRON, 1));
                         output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
