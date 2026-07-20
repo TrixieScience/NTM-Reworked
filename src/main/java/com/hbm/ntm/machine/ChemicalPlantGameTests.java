@@ -153,8 +153,8 @@ public final class ChemicalPlantGameTests {
         var lubeElectrodes = ChemicalPlantRecipes.get(ChemicalPlantRecipes.LUBE_ELECTRODES);
         var cordite = ChemicalPlantRecipes.get(ChemicalPlantRecipes.CORDITE);
         var dynamite = ChemicalPlantRecipes.get(ChemicalPlantRecipes.DYNAMITE);
-        check(helper, ChemicalPlantRecipes.all().size() == 19,
-                "The Chemical Plant table must contain exactly nineteen registered source recipes");
+        check(helper, ChemicalPlantRecipes.all().size() == 20,
+                "The Chemical Plant table must contain exactly twenty registered source recipes");
         check(helper, coalLube != null && coalLube.duration() == 40 && coalLube.power() == 100
                         && coalLube.pools().equals(java.util.List.of("alt..lube"))
                         && coalLube.fluidInputs().getFirst().amount() == 1_000

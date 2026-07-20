@@ -66,6 +66,8 @@ import com.hbm.ntm.blockentity.HeatBoilerBlockEntity;
 import com.hbm.ntm.blockentity.HeatBoilerProxyBlockEntity;
 import com.hbm.ntm.blockentity.HeatExchangerBlockEntity;
 import com.hbm.ntm.blockentity.HeatExchangerProxyBlockEntity;
+import com.hbm.ntm.blockentity.HighPowerCondenserBlockEntity;
+import com.hbm.ntm.blockentity.HighPowerCondenserProxyBlockEntity;
 import com.hbm.ntm.blockentity.IndustrialTurbineBlockEntity;
 import com.hbm.ntm.blockentity.GasTurbineBlockEntity;
 import com.hbm.ntm.blockentity.GasTurbineProxyBlockEntity;
@@ -386,6 +388,16 @@ public final class ModBlockEntities {
             BLOCK_ENTITY_TYPES.register("machine_condenser",
                     () -> BlockEntityType.Builder.of(SteamCondenserBlockEntity::new,
                             ModBlocks.MACHINE_CONDENSER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HighPowerCondenserBlockEntity>> MACHINE_CONDENSER_POWERED =
+            BLOCK_ENTITY_TYPES.register("machine_condenser_powered",
+                    () -> BlockEntityType.Builder.of(HighPowerCondenserBlockEntity::new,
+                            ModBlocks.MACHINE_CONDENSER_POWERED.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<HighPowerCondenserProxyBlockEntity>> MACHINE_CONDENSER_POWERED_PROXY =
+            BLOCK_ENTITY_TYPES.register("machine_condenser_powered_proxy",
+                    () -> BlockEntityType.Builder.of(HighPowerCondenserProxyBlockEntity::new,
+                            ModBlocks.MACHINE_CONDENSER_POWERED.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ThermalProxyBlockEntity>> THERMAL_PROXY =
             BLOCK_ENTITY_TYPES.register("thermal_proxy",

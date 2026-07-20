@@ -14,6 +14,18 @@
       }
     },
     {
+      "model": "hbm:item/plate_cast_technetium_steel",
+      "predicate": {
+        "custom_model_data": 36
+      }
+    },
+    {
+      "model": "hbm:item/plate_cast_cadmium_steel",
+      "predicate": {
+        "custom_model_data": 43
+      }
+    },
+    {
       "model": "hbm:item/plate_cast_titanium",
       "predicate": {
         "custom_model_data": 2200

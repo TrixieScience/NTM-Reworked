@@ -102,6 +102,7 @@ public final class ShredderRecipes {
         generatedHbm(recipes, "ingot_aluminium", "powder_aluminium", 1);
         generatedHbm(recipes, "ingot_steel", "powder_steel", 1);
         generatedHbm(recipes, "ingot_tcalloy", "powder_tcalloy", 1);
+        generatedHbm(recipes, "ingot_polymer", "powder_polymer", 1);
         generatedHbm(recipes, "ingot_calcium", "powder_calcium", 1);
         generatedHbm(recipes, "ingot_cadmium", "powder_cadmium", 1);
         generatedHbm(recipes, "ingot_beryllium", "powder_beryllium", 1);

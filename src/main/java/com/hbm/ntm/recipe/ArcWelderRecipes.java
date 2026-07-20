@@ -3,6 +3,7 @@ package com.hbm.ntm.recipe;
 import com.hbm.ntm.item.CastPlateItem;
 import com.hbm.ntm.item.WeldedPlateItem;
 import com.hbm.ntm.registry.ModItems;
+import com.hbm.ntm.registry.ModFluids;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -22,7 +23,18 @@ import java.util.List;
 public final class ArcWelderRecipes {
     private static final List<ArcWelderRecipe> RECIPES = List.of(
             new ArcWelderRecipe(WeldedPlateItem.steel(ModItems.PLATE_WELDED.get(), 1), 100, 500L, null,
-                    List.of(new Input(castSteelPlate(), 2)))
+                    List.of(new Input(castPlate(CastPlateItem.CastPlateMaterial.STEEL,
+                            "steel"), 2))),
+            new ArcWelderRecipe(WeldedPlateItem.create(ModItems.PLATE_WELDED.get(),
+                    WeldedPlateItem.WeldedPlateMaterial.TECHNETIUM_STEEL, 1), 1_200, 1_000_000L,
+                    new FluidStack(ModFluids.OXYGEN.get(), 1_000),
+                    List.of(new Input(castPlate(CastPlateItem.CastPlateMaterial.TECHNETIUM_STEEL,
+                            "technetium_steel"), 2))),
+            new ArcWelderRecipe(WeldedPlateItem.create(ModItems.PLATE_WELDED.get(),
+                    WeldedPlateItem.WeldedPlateMaterial.CADMIUM_STEEL, 1), 1_200, 1_000_000L,
+                    new FluidStack(ModFluids.OXYGEN.get(), 1_000),
+                    List.of(new Input(castPlate(CastPlateItem.CastPlateMaterial.CADMIUM_STEEL,
+                            "cadmium_steel"), 2)))
     );
 
     private ArcWelderRecipes() { }
@@ -54,11 +66,11 @@ public final class ArcWelderRecipes {
         return false;
     }
 
-    private static Ingredient castSteelPlate() {
-        ItemStack steel = CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.STEEL, 1);
-        Ingredient hbmSubtype = DataComponentIngredient.of(false, steel);
+    private static Ingredient castPlate(CastPlateItem.CastPlateMaterial material, String tagName) {
+        ItemStack plate = CastPlateItem.create(ModItems.PLATE_CAST.get(), material, 1);
+        Ingredient hbmSubtype = DataComponentIngredient.of(false, plate);
         TagKey<Item> compatibilityTag = TagKey.create(Registries.ITEM,
-                ResourceLocation.fromNamespaceAndPath("c", "plates/cast/steel"));
+                ResourceLocation.fromNamespaceAndPath("c", "plates/cast/" + tagName));
         Ingredient externalCompatibility = DifferenceIngredient.of(
                 Ingredient.of(compatibilityTag), Ingredient.of(ModItems.PLATE_CAST.get()));
         return CompoundIngredient.of(hbmSubtype, externalCompatibility);
@@ -74,7 +86,7 @@ public final class ArcWelderRecipes {
         public boolean matchesOutput(ItemStack stack) {
             if (!stack.is(output.getItem())) return false;
             if (output.is(ModItems.PLATE_WELDED.get())) {
-                return WeldedPlateItem.isSteel(stack) == WeldedPlateItem.isSteel(output);
+                return WeldedPlateItem.material(stack) == WeldedPlateItem.material(output);
             }
             return ItemStack.isSameItemSameComponents(stack, output);
         }

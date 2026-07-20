@@ -4,6 +4,7 @@ import com.hbm.ntm.block.ElectricHeaterBlock;
 import com.hbm.ntm.block.AirIntakeBlock;
 import com.hbm.ntm.block.HeatBoilerBlock;
 import com.hbm.ntm.block.HeatExchangerBlock;
+import com.hbm.ntm.block.HighPowerCondenserBlock;
 import com.hbm.ntm.block.FluidBurnerBlock;
 import com.hbm.ntm.block.FluidStorageTankBlock;
 import com.hbm.ntm.block.GasTurbineBlock;
@@ -15,6 +16,7 @@ import com.hbm.ntm.blockentity.ElectricHeaterBlockEntity;
 import com.hbm.ntm.blockentity.AirIntakeBlockEntity;
 import com.hbm.ntm.blockentity.HeatBoilerBlockEntity;
 import com.hbm.ntm.blockentity.HeatExchangerBlockEntity;
+import com.hbm.ntm.blockentity.HighPowerCondenserBlockEntity;
 import com.hbm.ntm.blockentity.FluidBurnerBlockEntity;
 import com.hbm.ntm.blockentity.FluidDuctBlockEntity;
 import com.hbm.ntm.blockentity.FoundryOutletBlockEntity;
@@ -139,6 +141,13 @@ public final class ClientLookOverlay {
         if (state.is(ModBlocks.MACHINE_CONDENSER.get())) {
             if (minecraft.level.getBlockEntity(hit.getBlockPos()) instanceof SteamCondenserBlockEntity condenser) {
                 renderSteamCondenser(event.getGuiGraphics(), minecraft, condenser);
+            }
+            return;
+        }
+        if (state.is(ModBlocks.MACHINE_CONDENSER_POWERED.get())) {
+            var core = HighPowerCondenserBlock.corePosition(hit.getBlockPos(), state);
+            if (minecraft.level.getBlockEntity(core) instanceof HighPowerCondenserBlockEntity condenser) {
+                renderHighPowerCondenser(event.getGuiGraphics(), minecraft, condenser);
             }
             return;
         }
@@ -453,6 +462,26 @@ public final class ClientLookOverlay {
         y += 10;
         graphics.drawString(minecraft.font, "<- Water: " + condenser.waterTank().getFluidAmount() + "/"
                 + condenser.waterTank().getCapacity() + "mB", x, y, 0xFF5555, true);
+    }
+
+    private static void renderHighPowerCondenser(GuiGraphics graphics, Minecraft minecraft,
+                                                  HighPowerCondenserBlockEntity condenser) {
+        int x = graphics.guiWidth() / 2 + 8;
+        int y = graphics.guiHeight() / 2;
+        String title = Component.translatable("block.hbm.machine_condenser_powered").getString();
+        graphics.drawString(minecraft.font, title, x + 1, y - 9, 0x404000, false);
+        graphics.drawString(minecraft.font, title, x, y - 10, 0xFFFF00, false);
+        graphics.drawString(minecraft.font, String.format(java.util.Locale.US, "%,dHE / %,dHE",
+                condenser.getPower(), condenser.getMaxPower()), x, y, 0xFFFFFF, true);
+        y += 10;
+        String spent = Component.translatable("hbmfluid.spentsteam").getString();
+        graphics.drawString(minecraft.font, String.format(java.util.Locale.US,
+                "-> %s: %,d/%,dmB", spent, condenser.spentSteamTank().getFluidAmount(),
+                condenser.spentSteamTank().getCapacity()), x, y, 0x55FF55, true);
+        y += 10;
+        graphics.drawString(minecraft.font, String.format(java.util.Locale.US,
+                "<- Water: %,d/%,dmB", condenser.waterTank().getFluidAmount(),
+                condenser.waterTank().getCapacity()), x, y, 0xFF5555, true);
     }
 
     private static void renderAirIntake(GuiGraphics graphics, Minecraft minecraft,

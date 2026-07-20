@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "gold"
+        },
+        "minecraft:custom_model_data": 7900
+      },
+      "items": "hbm:wire_dense",
+      "strict": false
+    },
+    "D": {
+      "tag": "c:ingots/desh"
+    },
+    "M": {
+      "item": "hbm:motor"
+    },
+    "P": {
+      "tag": "c:ingots/polymer"
+    }
+  },
+  "pattern": [
+    "PCP",
+    "DMD",
+    "PCP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:motor_desh"
+  }
+}

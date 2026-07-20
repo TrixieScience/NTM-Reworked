@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:dusts/coal"
+    },
+    "D": {
+      "item": "hbm:ducttape"
+    },
+    "R": {
+      "tag": "hbm:ingots/any_rubber"
+    }
+  },
+  "pattern": [
+    "RCR",
+    "CDC",
+    "RCR"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:cladding_rubber"
+  }
+}

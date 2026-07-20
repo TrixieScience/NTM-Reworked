@@ -1,0 +1,63 @@
+{
+  "id": "hbm:ass.hpcondenser",
+  "name": "ass.hpcondenser",
+  "inputs": [
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:plate_welded",
+        "components": {
+          "minecraft:custom_data": {"material": "steel"},
+          "minecraft:custom_model_data": 30
+        },
+        "strict": false
+      },
+      "count": 8
+    },
+    {
+      "ingredient": {
+        "type": "neoforge:compound",
+        "children": [
+          {
+            "type": "neoforge:components",
+            "items": "hbm:plate_welded",
+            "components": {
+              "minecraft:custom_data": {"material": "technetium_steel"},
+              "minecraft:custom_model_data": 36
+            },
+            "strict": false
+          },
+          {
+            "type": "neoforge:components",
+            "items": "hbm:plate_welded",
+            "components": {
+              "minecraft:custom_data": {"material": "cadmium_steel"},
+              "minecraft:custom_model_data": 43
+            },
+            "strict": false
+          }
+        ]
+      },
+      "count": 4
+    },
+    {"ingredient": {"tag": "c:plates/copper"}, "count": 16},
+    {"ingredient": {"item": "hbm:motor_desh"}, "count": 3},
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:pipe",
+        "components": {
+          "minecraft:custom_data": {"material": "steel"},
+          "minecraft:custom_model_data": 30
+        },
+        "strict": false
+      },
+      "count": 24
+    }
+  ],
+  "fluid_input": {"fluid": "hbm:lubricant", "amount": 4000},
+  "output": {"id": "hbm:machine_condenser_powered", "count": 1},
+  "duration": 600,
+  "power": 100,
+  "pools": []
+}

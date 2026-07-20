@@ -93,6 +93,7 @@ public final class MaterialDefinitions {
             new ItemDefinition("ingot_zirconium", "Zirconium Cube", ItemForm.INGOT, "zirconium"),
             new ItemDefinition("ingot_dura_steel", "High-Speed Steel Ingot", ItemForm.INGOT, "dura_steel"),
             new ItemDefinition("ingot_desh", "Desh Ingot", ItemForm.INGOT, "desh"),
+            new ItemDefinition("ingot_polymer", "Polymer Bar", ItemForm.INGOT, "polymer"),
 
             // Loose machine snacks.
             new ItemDefinition("sulfur", "Sulfur", ItemForm.MISC, null),
@@ -135,6 +136,7 @@ public final class MaterialDefinitions {
             new ItemDefinition("powder_cobalt_tiny", "Tiny Pile of Cobalt Powder", ItemForm.MISC, null),
             new ItemDefinition("powder_niobium", "Niobium Powder", ItemForm.DUST, "niobium"),
             new ItemDefinition("powder_desh_mix", "Desh Blend", ItemForm.MISC, null),
+            new ItemDefinition("powder_polymer", "Polymer Powder", ItemForm.DUST, "polymer"),
             new ItemDefinition("powder_magnetized_tungsten", "Magnetized Tungsten Powder", ItemForm.DUST, "magnetized_tungsten"),
             new ItemDefinition("powder_combine_steel", "CMB Steel Powder", ItemForm.DUST, "combine_steel"),
 
@@ -148,7 +150,8 @@ public final class MaterialDefinitions {
             new ItemDefinition("plate_copper", "Copper Plate", ItemForm.PLATE, "copper"),
             new ItemDefinition("plate_gunmetal", "Gunmetal Plate", ItemForm.PLATE, "gunmetal"),
             new ItemDefinition("plate_weaponsteel", "Weapon Steel Plate", "plate_gunsteel", ItemForm.PLATE, "weapon_steel"),
-            new ItemDefinition("plate_dura_steel", "High-Speed Steel Plate", ItemForm.PLATE, "dura_steel")
+            new ItemDefinition("plate_dura_steel", "High-Speed Steel Plate", ItemForm.PLATE, "dura_steel"),
+            new ItemDefinition("plate_desh", "Desh Compound Plate", ItemForm.MISC, null)
     );
 
     public static final List<BlockDefinition> BLOCKS = List.of(
@@ -179,7 +182,7 @@ public final class MaterialDefinitions {
             block("block_niobium", "Block of Niobium", SoundType.METAL, 5.0F, 50.0F, "ingot_niobium", "niobium"),
             block("block_zirconium", "Block of Zirconium", SoundType.METAL, 5.0F, 30.0F, "ingot_zirconium", "zirconium"),
             block("block_boron", "Block of Boron", SoundType.METAL, 5.0F, 10.0F, "ingot_boron", "boron"),
-            rockBlock("block_polymer", "Block of Polymer", 3.0F, 10.0F, null, "polymer"),
+            rockBlock("block_polymer", "Block of Polymer", 3.0F, 10.0F, "ingot_polymer", "polymer"),
             rockBlock("block_bakelite", "Block of Bakelite", 3.0F, 5.0F, null, "bakelite"),
             rockBlock("block_rubber", "Block of Rubber", 3.0F, 15.0F, "ingot_rubber", "rubber"),
             block("block_lanthanium", "Block of Lanthanium", SoundType.METAL, 5.0F, 10.0F, null, "lanthanium")

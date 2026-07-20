@@ -97,6 +97,7 @@
     "hbm:pump_electric",
     "hbm:machine_intake",
     "hbm:machine_condenser",
+    "hbm:machine_condenser_powered",
     "hbm:machine_boiler",
     "hbm:heater_electric",
     "hbm:heater_oilburner",

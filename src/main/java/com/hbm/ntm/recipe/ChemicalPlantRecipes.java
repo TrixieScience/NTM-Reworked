@@ -29,6 +29,7 @@ public final class ChemicalPlantRecipes {
     public static final ResourceLocation COLTAN_PAIN = id("chem.coltanpain");
     public static final ResourceLocation COLTAN_CRYSTAL = id("chem.coltancrystal");
     public static final ResourceLocation DESH = id("chem.desh");
+    public static final ResourceLocation POLYMER = id("chem.polymer");
     public static final ResourceLocation RUBBER = id("chem.rubber");
     public static final ResourceLocation COAL_LUBE = id("chem.coallube");
     public static final ResourceLocation HEAVY_LUBE = id("chem.heavylube");
@@ -85,6 +86,14 @@ public final class ChemicalPlantRecipes {
                     List.of(new FluidInput(ModFluids.LIGHTOIL, 200),
                             new FluidInput(ModFluids.MERCURY, 200)),
                     List.of(new ItemStack(ModItems.get("ingot_desh").get())), List.of(), List.of()),
+            new ChemicalRecipe(POLYMER, "chem.polymer", 100, 100,
+                    List.of(
+                            new ItemInput(Ingredient.of(TagKey.create(Registries.ITEM,
+                                    ResourceLocation.fromNamespaceAndPath("c", "dusts/coal"))), 2),
+                            new ItemInput(Ingredient.of(TagKey.create(Registries.ITEM,
+                                    ResourceLocation.fromNamespaceAndPath("c", "dusts/fluorite"))), 1)),
+                    List.of(new FluidInput(ModFluids.PETROLEUM, 1_000)),
+                    List.of(new ItemStack(ModItems.get("ingot_polymer").get(), 4)), List.of(), List.of()),
             new ChemicalRecipe(RUBBER, "chem.rubber", 100, 200,
                     List.of(new ItemInput(Ingredient.of(TagKey.create(Registries.ITEM,
                             ResourceLocation.fromNamespaceAndPath("c", "dusts/sulfur"))), 1)),

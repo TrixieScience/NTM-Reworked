@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:ingots/polymer"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "  W"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "material": "polymer"
+      },
+      "minecraft:custom_model_data": 20001
+    },
+    "count": 1,
+    "id": "hbm:part_stock"
+  }
+}

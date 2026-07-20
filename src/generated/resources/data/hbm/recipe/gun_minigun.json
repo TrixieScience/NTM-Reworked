@@ -1,0 +1,94 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "type": "neoforge:components",
+          "components": {
+            "minecraft:custom_data": {
+              "material": "technetium_steel"
+            },
+            "minecraft:custom_model_data": 36
+          },
+          "items": "hbm:part_barrel_light",
+          "strict": false
+        },
+        {
+          "type": "neoforge:components",
+          "components": {
+            "minecraft:custom_data": {
+              "material": "cadmium_steel"
+            },
+            "minecraft:custom_model_data": 43
+          },
+          "items": "hbm:part_barrel_light",
+          "strict": false
+        }
+      ]
+    },
+    "E": {
+      "item": "hbm:motor_desh"
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "polymer"
+        },
+        "minecraft:custom_model_data": 20001
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "R": {
+      "type": "neoforge:compound",
+      "children": [
+        {
+          "type": "neoforge:components",
+          "components": {
+            "minecraft:custom_data": {
+              "material": "technetium_steel"
+            },
+            "minecraft:custom_model_data": 36
+          },
+          "items": "hbm:part_receiver_heavy",
+          "strict": false
+        },
+        {
+          "type": "neoforge:components",
+          "components": {
+            "minecraft:custom_data": {
+              "material": "cadmium_steel"
+            },
+            "minecraft:custom_model_data": 43
+          },
+          "items": "hbm:part_receiver_heavy",
+          "strict": false
+        }
+      ]
+    }
+  },
+  "pattern": [
+    "BMG",
+    "BRE",
+    "BGM"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_minigun"
+  }
+}

@@ -93,6 +93,9 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.FILTER_COAL.get());
                         output.accept(ModItems.CATALYST_CLAY.get());
                         output.accept(ModItems.PLATE_POLYMER.get());
+                        output.accept(ModItems.get("ingot_polymer").get());
+                        output.accept(ModItems.get("powder_polymer").get());
+                        output.accept(ModItems.get("plate_desh").get());
                         for (WireFineItem.WireMaterial material : WireFineItem.WireMaterial.values()) {
                             output.accept(WireFineItem.create(ModItems.WIRE_FINE.get(), material, 1));
                         }
@@ -113,6 +116,12 @@ public final class ModCreativeTabs {
                                 if (!part.isEmpty()) output.accept(part);
                             }
                         }
+                        output.accept(com.hbm.ntm.item.FoundryPartItem.create(
+                                ModItems.FOUNDRY_PARTS.get(com.hbm.ntm.item.FoundryPartItem.PartType.STOCK).get(),
+                                FoundryMaterial.POLYMER, 1));
+                        output.accept(com.hbm.ntm.item.FoundryPartItem.create(
+                                ModItems.FOUNDRY_PARTS.get(com.hbm.ntm.item.FoundryPartItem.PartType.GRIP).get(),
+                                FoundryMaterial.POLYMER, 1));
                         output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
                                 CastPlateItem.CastPlateMaterial.IRON, 1));
                         output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
@@ -123,7 +132,15 @@ public final class ModCreativeTabs {
                                 CastPlateItem.CastPlateMaterial.STEEL, 1));
                         output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
                                 CastPlateItem.CastPlateMaterial.DURA_STEEL, 1));
+                        output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
+                                CastPlateItem.CastPlateMaterial.TECHNETIUM_STEEL, 1));
+                        output.accept(CastPlateItem.create(ModItems.PLATE_CAST.get(),
+                                CastPlateItem.CastPlateMaterial.CADMIUM_STEEL, 1));
                         output.accept(WeldedPlateItem.steel(ModItems.PLATE_WELDED.get(), 1));
+                        output.accept(WeldedPlateItem.create(ModItems.PLATE_WELDED.get(),
+                                WeldedPlateItem.WeldedPlateMaterial.TECHNETIUM_STEEL, 1));
+                        output.accept(WeldedPlateItem.create(ModItems.PLATE_WELDED.get(),
+                                WeldedPlateItem.WeldedPlateMaterial.CADMIUM_STEEL, 1));
                         output.accept(FoundryIngotItem.create(ModItems.INGOT_RAW.get(),
                                 com.hbm.ntm.foundry.FoundryMaterial.SLAG, 1));
                         output.accept(ModItems.POWDER_FLUX.get());
@@ -151,6 +168,7 @@ public final class ModCreativeTabs {
                                         ModItems.FLUID_TANK_FULL.get(), fluid, 1));
                         }
                         output.accept(ModItems.MOTOR.get());
+                        output.accept(ModItems.MOTOR_DESH.get());
                         output.accept(ModItems.MAGNETRON.get());
                         output.accept(ModItems.DRILL_TITANIUM.get());
                         output.accept(ModItems.CENTRIFUGE_ELEMENT.get());
@@ -415,6 +433,7 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.PUMP_ELECTRIC_ITEM.get());
                         output.accept(ModItems.MACHINE_INTAKE_ITEM.get());
                         output.accept(ModItems.MACHINE_CONDENSER_ITEM.get());
+                        output.accept(ModItems.MACHINE_CONDENSER_POWERED_ITEM.get());
                         output.accept(ModItems.MACHINE_BOILER_ITEM.get());
                         output.accept(ModItems.HEATER_ELECTRIC_ITEM.get());
                         output.accept(ModItems.HEATER_OILBURNER_ITEM.get());

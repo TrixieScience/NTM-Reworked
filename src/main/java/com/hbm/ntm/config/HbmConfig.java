@@ -93,6 +93,10 @@ public final class HbmConfig {
     public static final ModConfigSpec.IntValue WATER_PUMP_ELECTRIC_SPEED;
     public static final ModConfigSpec.IntValue CONDENSER_INPUT_CAPACITY;
     public static final ModConfigSpec.IntValue CONDENSER_OUTPUT_CAPACITY;
+    public static final ModConfigSpec.LongValue POWERED_CONDENSER_MAX_POWER;
+    public static final ModConfigSpec.IntValue POWERED_CONDENSER_INPUT_CAPACITY;
+    public static final ModConfigSpec.IntValue POWERED_CONDENSER_OUTPUT_CAPACITY;
+    public static final ModConfigSpec.IntValue POWERED_CONDENSER_POWER_CONSUMPTION;
     public static final ModConfigSpec.DoubleValue MINE_AP_DAMAGE;
     public static final ModConfigSpec.DoubleValue MINE_HE_DAMAGE;
     public static final ModConfigSpec.DoubleValue MINE_SHRAP_DAMAGE;
@@ -214,6 +218,15 @@ public final class HbmConfig {
         builder.push("condenser");
         CONDENSER_INPUT_CAPACITY = builder.defineInRange("inputTankSize", 100, 1, Integer.MAX_VALUE);
         CONDENSER_OUTPUT_CAPACITY = builder.defineInRange("outputTankSize", 100, 1, Integer.MAX_VALUE);
+        builder.pop();
+        builder.push("condenserPowered");
+        POWERED_CONDENSER_MAX_POWER = builder.defineInRange("maxPower", 10_000_000L, 1L, Long.MAX_VALUE);
+        POWERED_CONDENSER_INPUT_CAPACITY = builder.defineInRange(
+                "inputTankSize", 1_000_000, 1, Integer.MAX_VALUE);
+        POWERED_CONDENSER_OUTPUT_CAPACITY = builder.defineInRange(
+                "outputTankSize", 1_000_000, 1, Integer.MAX_VALUE);
+        POWERED_CONDENSER_POWER_CONSUMPTION = builder.defineInRange(
+                "powerConsumption", 10, 0, Integer.MAX_VALUE);
         builder.pop();
         builder.pop();
 

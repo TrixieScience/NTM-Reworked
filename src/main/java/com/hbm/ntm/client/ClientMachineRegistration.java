@@ -39,6 +39,8 @@ import com.hbm.ntm.client.render.FoundryStorageRenderer;
 import com.hbm.ntm.client.render.DynamicSlagRenderer;
 import com.hbm.ntm.client.render.HeatBoilerRenderer;
 import com.hbm.ntm.client.render.HeatExchangerRenderer;
+import com.hbm.ntm.client.render.HighPowerCondenserItemRenderer;
+import com.hbm.ntm.client.render.HighPowerCondenserRenderer;
 import com.hbm.ntm.client.render.HeatingOvenRenderer;
 import com.hbm.ntm.client.render.IndustrialTurbineItemRenderer;
 import com.hbm.ntm.client.render.IndustrialTurbineRenderer;
@@ -275,6 +277,8 @@ public final class ClientMachineRegistration {
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_TURBOFAN.get(), TurbofanRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.PUMP.get(), PumpRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_INTAKE.get(), AirIntakeRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_CONDENSER_POWERED.get(),
+                HighPowerCondenserRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_BOILER.get(), HeatBoilerRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.HEATER_ELECTRIC.get(), ElectricHeaterRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.HEATER_OILBURNER.get(), FluidBurnerRenderer::new);
@@ -383,6 +387,9 @@ public final class ClientMachineRegistration {
         event.register(PumpRenderer.ELECTRIC_PISTON);
         event.register(AirIntakeRenderer.BASE);
         event.register(AirIntakeRenderer.FAN);
+        event.register(HighPowerCondenserRenderer.BODY);
+        event.register(HighPowerCondenserRenderer.FAN_ONE);
+        event.register(HighPowerCondenserRenderer.FAN_TWO);
         event.register(HeatBoilerRenderer.NORMAL);
         event.register(HeatBoilerRenderer.BURST);
         event.register(ElectricHeaterRenderer.MODEL);
@@ -605,6 +612,11 @@ public final class ClientMachineRegistration {
 
             @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
         }, ModItems.MACHINE_INTAKE_ITEM.get());
+        event.registerItem(new IClientItemExtensions() {
+            private final HighPowerCondenserItemRenderer renderer = new HighPowerCondenserItemRenderer();
+
+            @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
+        }, ModItems.MACHINE_CONDENSER_POWERED_ITEM.get());
         event.registerItem(new IClientItemExtensions() {
             private final FluidStorageTankItemRenderer renderer = new FluidStorageTankItemRenderer();
 

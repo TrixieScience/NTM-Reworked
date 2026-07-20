@@ -137,6 +137,9 @@ public final class PressCapabilities {
                 (proxy, side) -> proxy.fluidHandler(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_CONDENSER.get(),
                 (condenser, side) -> condenser.fluidHandler());
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,
+                ModBlockEntities.MACHINE_CONDENSER_POWERED_PROXY.get(),
+                (proxy, side) -> proxy.fluidHandler(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_DUCT.get(),
                 (duct, side) -> duct.fluidHandler(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_FLUIDTANK_PROXY.get(),

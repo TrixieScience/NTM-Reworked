@@ -1,0 +1,58 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "desh"
+        },
+        "minecraft:custom_model_data": 42
+      },
+      "items": "hbm:part_barrel_heavy",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "desh"
+        },
+        "minecraft:custom_model_data": 42
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "gunmetal"
+        },
+        "minecraft:custom_model_data": 49
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "P": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:plate_cast",
+      "strict": false
+    }
+  },
+  "pattern": [
+    "BBB",
+    "PGM"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_panzerschreck"
+  }
+}

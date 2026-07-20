@@ -1,0 +1,9 @@
+{
+  "loader":"neoforge:obj",
+  "model":"hbm:models/block/condenser_powered.obj",
+  "automatic_culling":false,
+  "shade_quads":true,
+  "flip_v":true,
+  "emissive_ambient":false,
+  "visibility":{"Condenser":false,"Fan1":false,"Fan2":false}
+}

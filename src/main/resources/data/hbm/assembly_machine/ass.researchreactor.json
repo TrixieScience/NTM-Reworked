@@ -1,0 +1,37 @@
+{
+  "id": "hbm:ass.researchreactor",
+  "name": "ass.researchreactor",
+  "inputs": [
+    {"ingredient": {"tag": "c:ingots/steel"}, "count": 8},
+    {
+      "ingredient": {
+        "type": "neoforge:compound",
+        "children": [
+          {"tag": "c:ingots/technetium_steel"},
+          {"tag": "c:ingots/cadmium_steel"}
+        ]
+      },
+      "count": 4
+    },
+    {"ingredient": {"item": "hbm:motor_desh"}, "count": 2},
+    {"ingredient": {"tag": "c:ingots/boron"}, "count": 5},
+    {"ingredient": {"tag": "c:plates/lead"}, "count": 8},
+    {"ingredient": {"item": "hbm:crt_display"}, "count": 3},
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:circuit",
+        "components": {
+          "minecraft:custom_data": {"type": "basic"},
+          "minecraft:custom_model_data": 8
+        },
+        "strict": false
+      },
+      "count": 4
+    }
+  ],
+  "output": {"id": "hbm:machine_reactor_small", "count": 1},
+  "duration": 200,
+  "power": 100,
+  "pools": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "hbm:ass.platedesh",
+  "name": "ass.platedesh",
+  "inputs": [
+    {"ingredient": {"tag": "c:ingots/desh"}, "count": 4},
+    {"ingredient": {"tag": "c:dusts/polymer"}, "count": 2},
+    {"ingredient": {"tag": "c:ingots/dura_steel"}, "count": 1}
+  ],
+  "output": {"id": "hbm:plate_desh", "count": 4},
+  "duration": 200,
+  "power": 100,
+  "pools": []
+}

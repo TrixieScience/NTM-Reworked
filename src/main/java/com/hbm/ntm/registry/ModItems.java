@@ -315,6 +315,7 @@ public final class ModItems {
     public static final DeferredItem<DescriptionBlockItem> PUMP_ELECTRIC_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_INTAKE_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_CONDENSER_ITEM;
+    public static final DeferredItem<BlockItem> MACHINE_CONDENSER_POWERED_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_BOILER_ITEM;
     public static final DeferredItem<BlockItem> REINFORCED_STONE_ITEM;
     public static final DeferredItem<BlockItem> GNEISS_TILE_ITEM;
@@ -569,6 +570,7 @@ public final class ModItems {
     public static final DeferredItem<Item> FLUID_TANK_EMPTY;
     public static final DeferredItem<UniversalFluidTankItem> FLUID_TANK_FULL;
     public static final DeferredItem<Item> MOTOR;
+    public static final DeferredItem<Item> MOTOR_DESH;
     public static final DeferredItem<Item> MAGNETRON;
     public static final DeferredItem<Item> DRILL_TITANIUM;
     public static final DeferredItem<BlockItem> BLOCK_INSULATOR_ITEM;
@@ -986,6 +988,8 @@ public final class ModItems {
                         "block.hbm.pump_electric.desc.2"));
         MACHINE_INTAKE_ITEM = ITEMS.registerSimpleBlockItem("machine_intake", ModBlocks.MACHINE_INTAKE);
         MACHINE_CONDENSER_ITEM = ITEMS.registerSimpleBlockItem("machine_condenser", ModBlocks.MACHINE_CONDENSER);
+        MACHINE_CONDENSER_POWERED_ITEM = ITEMS.registerSimpleBlockItem(
+                "machine_condenser_powered", ModBlocks.MACHINE_CONDENSER_POWERED);
         REINFORCED_STONE_ITEM = ITEMS.registerSimpleBlockItem("reinforced_stone", ModBlocks.REINFORCED_STONE);
         GNEISS_TILE_ITEM = ITEMS.registerSimpleBlockItem("gneiss_tile", ModBlocks.GNEISS_TILE);
         GNEISS_BRICK_ITEM = ITEMS.registerSimpleBlockItem("gneiss_brick", ModBlocks.GNEISS_BRICK);
@@ -1399,6 +1403,7 @@ public final class ModItems {
         FLUID_TANK_EMPTY = ITEMS.registerSimpleItem("fluid_tank_empty", new Item.Properties());
         FLUID_TANK_FULL = ITEMS.register("fluid_tank_full", UniversalFluidTankItem::new);
         MOTOR = ITEMS.registerSimpleItem("motor", new Item.Properties());
+        MOTOR_DESH = ITEMS.registerSimpleItem("motor_desh", new Item.Properties());
         MAGNETRON = ITEMS.registerSimpleItem("magnetron", new Item.Properties());
         DRILL_TITANIUM = ITEMS.registerSimpleItem("drill_titanium", new Item.Properties());
         BLOCK_INSULATOR_ITEM = ITEMS.registerSimpleBlockItem("block_insulator", ModBlocks.BLOCK_INSULATOR);

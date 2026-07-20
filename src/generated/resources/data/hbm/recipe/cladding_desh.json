@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "hbm:ducttape"
+    },
+    "P": {
+      "item": "hbm:plate_desh"
+    },
+    "R": {
+      "item": "hbm:cladding_lead"
+    }
+  },
+  "pattern": [
+    "DPD",
+    "PRP",
+    "DPD"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:cladding_desh"
+  }
+}

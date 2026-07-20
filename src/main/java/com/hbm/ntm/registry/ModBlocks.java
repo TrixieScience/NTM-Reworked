@@ -51,6 +51,7 @@ import com.hbm.ntm.block.FalloutBlock;
 import com.hbm.ntm.block.GeigerCounterBlock;
 import com.hbm.ntm.block.HeatBoilerBlock;
 import com.hbm.ntm.block.HeatExchangerBlock;
+import com.hbm.ntm.block.HighPowerCondenserBlock;
 import com.hbm.ntm.block.HeatingOvenBlock;
 import com.hbm.ntm.block.HeCableBlock;
 import com.hbm.ntm.block.HydroactiveBlock;
@@ -215,6 +216,7 @@ public final class ModBlocks {
     public static final DeferredBlock<PumpBlock> PUMP_ELECTRIC;
     public static final DeferredBlock<AirIntakeBlock> MACHINE_INTAKE;
     public static final DeferredBlock<SteamCondenserBlock> MACHINE_CONDENSER;
+    public static final DeferredBlock<HighPowerCondenserBlock> MACHINE_CONDENSER_POWERED;
     public static final DeferredBlock<HeatBoilerBlock> MACHINE_BOILER;
     public static final DeferredBlock<Block> REINFORCED_STONE;
     public static final DeferredBlock<Block> GNEISS_TILE;
@@ -701,6 +703,12 @@ public final class ModBlocks {
                 () -> new SteamCondenserBlock(BlockBehaviour.Properties.of()
                         .mapColor(MapColor.METAL).strength(5.0F, 6.0F)
                         .sound(SoundType.METAL).requiresCorrectToolForDrops())
+        );
+        MACHINE_CONDENSER_POWERED = BLOCKS.register(
+                "machine_condenser_powered",
+                () -> new HighPowerCondenserBlock(BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.METAL).strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion())
         );
         REINFORCED_STONE = BLOCKS.register("reinforced_stone",
                 () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)

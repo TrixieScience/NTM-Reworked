@@ -1,0 +1,59 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "ferrouranium"
+        },
+        "minecraft:custom_model_data": 37
+      },
+      "items": "hbm:part_barrel_heavy",
+      "strict": false
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "type": "advanced"
+        },
+        "minecraft:custom_model_data": 9
+      },
+      "items": "hbm:circuit",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "polymer"
+        },
+        "minecraft:custom_model_data": 20001
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    }
+  },
+  "pattern": [
+    "BCB",
+    "BMB",
+    "GG "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_quadro"
+  }
+}

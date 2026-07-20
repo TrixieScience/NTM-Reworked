@@ -61,8 +61,8 @@ public final class AnvilGameTests {
                     .getResultItem(helper.getLevel().registryAccess());
             check(helper, !result.isEmpty(), "Base recipe hbm:" + id + " must load");
         }
-        check(helper, AnvilRecipes.construction().size() == 85,
-                "All 85 currently satisfiable active Anvil recipes must be registered");
+        check(helper, AnvilRecipes.construction().size() == 87,
+                "All 87 currently satisfiable active Anvil recipes must be registered");
         AnvilRecipes.Construction blastFurnace = AnvilRecipes.byId(
                 ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "anvil/machine_blast_furnace"));
         check(helper, blastFurnace != null && blastFurnace.validForTier(1)

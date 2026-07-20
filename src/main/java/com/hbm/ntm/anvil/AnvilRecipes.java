@@ -207,6 +207,21 @@ public final class AnvilRecipes {
         add("motor", 1, Overlay.CONSTRUCTION,
                 List.of(tag("c:plates/iron", 2, itemStack("plate_iron")), item(ModItems.COIL_COPPER, 1),
                         item(ModItems.COIL_COPPER_TORUS, 1)), outputs(itemOutputStack(ModItems.MOTOR, 2)));
+        add("motor_desh", 3, Overlay.CONSTRUCTION,
+                List.of(item(ModItems.MOTOR, 1),
+                        tag("c:ingots/polymer", 2, itemStack("ingot_polymer")),
+                        tag("c:ingots/desh", 2, itemStack("ingot_desh")),
+                        subtype(ModItems.WIRE_DENSE, 1,
+                                stack -> DenseWireItem.material(stack)
+                                        == com.hbm.ntm.foundry.FoundryMaterial.GOLD,
+                                () -> DenseWireItem.create(ModItems.WIRE_DENSE.get(),
+                                        com.hbm.ntm.foundry.FoundryMaterial.GOLD, 1))),
+                outputs(itemOutputStack(ModItems.MOTOR_DESH, 1)));
+        add("plate_desh", 3, Overlay.CONSTRUCTION,
+                List.of(tag("c:ingots/desh", 4, itemStack("ingot_desh")),
+                        tag("c:dusts/polymer", 2, itemStack("powder_polymer")),
+                        tag("c:ingots/dura_steel", 1, itemStack("ingot_dura_steel"))),
+                outputs(itemOutput("plate_desh", 4)));
         add("machine_blast_furnace", 1, Overlay.CONSTRUCTION,
                 List.of(Input.item(Items.STONE_BRICKS, 4),
                         item(() -> ModItems.get("ingot_firebrick").get(), 32),
@@ -242,9 +257,8 @@ public final class AnvilRecipes {
                 List.of(Input.item(Items.STONE, 8), tag("c:plates/steel", 2, itemStack("plate_steel")),
                         tag("c:ingots/iron", 4, () -> new ItemStack(Items.IRON_INGOT))),
                 outputs(itemOutputStack(ModItems.MACHINE_ASHPIT_ITEM, 1)));
-        // ANY_PLASTIC currently answers to "Insulator."
         add("heater_electric", 3, Overlay.CONSTRUCTION,
-                List.of(item(ModItems.PLATE_POLYMER, 4),
+                List.of(tag("c:ingots/polymer", 4, itemStack("ingot_polymer")),
                         tag("c:ingots/copper", 8, itemStack("ingot_copper")),
                         tag("c:plates/steel", 8, itemStack("plate_steel")),
                         item(ModItems.COIL_TUNGSTEN, 8),

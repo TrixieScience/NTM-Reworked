@@ -160,6 +160,9 @@ public final class ElectricHeaterGameTests {
         check(helper, recipe.inputs().get(0).count() == 4 && recipe.inputs().get(1).count() == 8
                         && recipe.inputs().get(2).count() == 8 && recipe.inputs().get(3).count() == 8,
                 "Plastic, copper, steel plate and heating-coil counts must match source");
+        check(helper, recipe.inputs().get(0).matches(new ItemStack(ModItems.get("ingot_polymer").get()))
+                        && !recipe.inputs().get(0).matches(new ItemStack(ModItems.PLATE_POLYMER.get())),
+                "ANY_PLASTIC must use the active Polymer Bar identity, not the old Insulator stand-in");
         ItemStack basic = CircuitItem.create(ModItems.CIRCUIT.get(), CircuitItem.CircuitType.BASIC, 1);
         check(helper, recipe.inputs().get(4).matches(basic)
                         && recipe.icon().is(ModItems.HEATER_ELECTRIC_ITEM.get()),

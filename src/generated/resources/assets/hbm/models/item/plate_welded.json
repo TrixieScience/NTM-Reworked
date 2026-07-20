@@ -1,5 +1,25 @@
 {
   "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "hbm:item/plate_welded_steel",
+      "predicate": {
+        "custom_model_data": 30
+      }
+    },
+    {
+      "model": "hbm:item/plate_welded_technetium_steel",
+      "predicate": {
+        "custom_model_data": 36
+      }
+    },
+    {
+      "model": "hbm:item/plate_welded_cadmium_steel",
+      "predicate": {
+        "custom_model_data": 43
+      }
+    }
+  ],
   "textures": {
     "layer0": "hbm:item/plate_welded_steel"
   }

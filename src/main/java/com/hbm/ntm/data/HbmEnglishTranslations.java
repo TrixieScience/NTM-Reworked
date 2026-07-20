@@ -151,6 +151,7 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.pump_electric.desc.2", "Needs to be placed below Y:70");
         language.addProperty("block.hbm.machine_intake", "Air Intake");
         language.addProperty("block.hbm.machine_condenser", "Steam Condenser");
+        language.addProperty("block.hbm.machine_condenser_powered", "High-Power Steam Condenser");
         language.addProperty("item.hbm.sawblade", "Sawblade");
         language.addProperty("item.hbm.powder_sawdust", "Sawdust");
         language.addProperty("entity.hbm.entity_stray_saw", "Sawblade");
@@ -345,6 +346,7 @@ final class HbmEnglishTranslations {
         language.addProperty("recipe.hbm.chem.coltanpain", "Pandemonium(III)tantalite Production");
         language.addProperty("recipe.hbm.chem.coltancrystal", "Tantalium Crystallizing");
         language.addProperty("recipe.hbm.chem.desh", "Desh");
+        language.addProperty("recipe.hbm.chem.polymer", "Polymer");
         language.addProperty("recipe.hbm.chem.rubber", "Rubber");
         language.addProperty("recipe.hbm.chem.coallube", "Lubricant from Coal Creosote");
         language.addProperty("recipe.hbm.chem.heavylube", "Lubricant from Heavy Oil");
@@ -450,7 +452,8 @@ final class HbmEnglishTranslations {
                 Map.entry("bismuth_bronze", "Bismuth Bronze"),
                 Map.entry("arsenic_bronze", "Arsenic Bronze"), Map.entry("bscco", "BSCCO"),
                 Map.entry("magnetized_tungsten", "Magnetized Tungsten"),
-                Map.entry("gunmetal", "Gunmetal"), Map.entry("weapon_steel", "Weapon Steel"));
+                Map.entry("gunmetal", "Gunmetal"), Map.entry("weapon_steel", "Weapon Steel"),
+                Map.entry("polymer", "Polymer"));
         foundryMaterialNames.forEach((id, name) -> language.addProperty("item.hbm.wire_dense." + id,
                 "Dense " + name + " Wire"));
         Map<String, String> foundryPartNames = Map.of(
@@ -1212,6 +1215,11 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.plate_cast.steel", "Cast Steel Plate");
         language.addProperty("item.hbm.plate_cast.copper", "Cast Copper Plate");
         language.addProperty("item.hbm.plate_cast.dura_steel", "Cast High-Speed Steel Plate");
+        language.addProperty("item.hbm.plate_cast.technetium_steel", "Cast Technetium Steel Plate");
+        language.addProperty("item.hbm.plate_cast.cadmium_steel", "Cast Cadmium Steel Plate");
+        language.addProperty("item.hbm.plate_welded.steel", "Welded Steel Plate");
+        language.addProperty("item.hbm.plate_welded.technetium_steel", "Welded Technetium Steel Plate");
+        language.addProperty("item.hbm.plate_welded.cadmium_steel", "Welded Cadmium Steel Plate");
         language.addProperty("item.hbm.drill_titanium", "Titanium Drill");
         language.addProperty("item.hbm.coil_copper", "Copper Coil");
         language.addProperty("item.hbm.coil_copper_torus", "Ring Coil");
@@ -1220,6 +1228,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.coil_tungsten", "Heating Coil");
         language.addProperty("item.hbm.tank_steel", "Steel Tank");
         language.addProperty("item.hbm.motor", "Motor");
+        language.addProperty("item.hbm.motor_desh", "Desh Motor");
         language.addProperty("item.hbm.circuit.vacuum_tube", "Vacuum Tube");
         language.addProperty("item.hbm.circuit.numitron", "Incandescent Seven Segment Display");
         language.addProperty("item.hbm.circuit.capacitor", "Capacitor");

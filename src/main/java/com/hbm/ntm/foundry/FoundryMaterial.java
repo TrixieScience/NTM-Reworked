@@ -61,6 +61,7 @@ public enum FoundryMaterial {
     COMBINE_STEEL("combine_steel", 39, 0x6F6FB4, false),
     GUNMETAL("gunmetal", 49, 0xF9C62C, false),
     WEAPON_STEEL("weapon_steel", 50, 0x808080, false),
+    POLYMER("polymer", 20_001, 0x272727, false),
     SLAG("slag", 41, 0x6C6562, false);
 
     public static final int NUGGET = 8;
@@ -289,10 +290,26 @@ public enum FoundryMaterial {
                 || stack.is(ModItems.get("powder_tcalloy").get())) {
             return new MaterialAmount(TECHNETIUM_STEEL, INGOT);
         }
+        if (stack.is(ModItems.PLATE_CAST.get())
+                && CastPlateItem.material(stack) == CastPlateItem.CastPlateMaterial.TECHNETIUM_STEEL) {
+            return new MaterialAmount(TECHNETIUM_STEEL, CAST_PLATE);
+        }
+        if (stack.is(ModItems.PLATE_WELDED.get())
+                && WeldedPlateItem.material(stack) == WeldedPlateItem.WeldedPlateMaterial.TECHNETIUM_STEEL) {
+            return new MaterialAmount(TECHNETIUM_STEEL, WELDED_PLATE);
+        }
         if (stack.is(ModItems.getBlockItem("block_tcalloy").get())) {
             return new MaterialAmount(TECHNETIUM_STEEL, BLOCK);
         }
         if (stack.is(ModItems.get("ingot_cdalloy").get())) return new MaterialAmount(CADMIUM_STEEL, INGOT);
+        if (stack.is(ModItems.PLATE_CAST.get())
+                && CastPlateItem.material(stack) == CastPlateItem.CastPlateMaterial.CADMIUM_STEEL) {
+            return new MaterialAmount(CADMIUM_STEEL, CAST_PLATE);
+        }
+        if (stack.is(ModItems.PLATE_WELDED.get())
+                && WeldedPlateItem.material(stack) == WeldedPlateItem.WeldedPlateMaterial.CADMIUM_STEEL) {
+            return new MaterialAmount(CADMIUM_STEEL, WELDED_PLATE);
+        }
         if (stack.is(ModItems.getBlockItem("block_cdalloy").get())) {
             return new MaterialAmount(CADMIUM_STEEL, BLOCK);
         }
@@ -329,7 +346,7 @@ public enum FoundryMaterial {
         CasingItem.CasingType casing = CasingItem.type(stack);
         if (casing != null) return new MaterialAmount(casing.material(), casing.cost());
         FoundryMaterial partMaterial = FoundryPartItem.material(stack);
-        if (partMaterial != null && stack.getItem() instanceof FoundryPartItem part) {
+        if (partMaterial != null && partMaterial != POLYMER && stack.getItem() instanceof FoundryPartItem part) {
             return new MaterialAmount(partMaterial, part.type().cost());
         }
 
@@ -566,6 +583,10 @@ public enum FoundryMaterial {
             case COPPER -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.COPPER, 1);
             case STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.STEEL, 1);
             case DURA_STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.DURA_STEEL, 1);
+            case TECHNETIUM_STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(),
+                    CastPlateItem.CastPlateMaterial.TECHNETIUM_STEEL, 1);
+            case CADMIUM_STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(),
+                    CastPlateItem.CastPlateMaterial.CADMIUM_STEEL, 1);
             default -> ItemStack.EMPTY;
         };
     }
@@ -610,7 +631,7 @@ public enum FoundryMaterial {
     }
 
     public static List<FoundryMaterial> castPlateMaterials() {
-        return List.of(IRON, COPPER, STEEL, DURA_STEEL);
+        return List.of(IRON, TITANIUM, COPPER, STEEL, DURA_STEEL, TECHNETIUM_STEEL, CADMIUM_STEEL);
     }
 
     public record MaterialAmount(FoundryMaterial material, int amount) { }
