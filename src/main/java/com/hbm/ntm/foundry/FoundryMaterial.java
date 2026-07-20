@@ -593,6 +593,7 @@ public enum FoundryMaterial {
             case IRON -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.IRON, 1);
             case TITANIUM -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.TITANIUM, 1);
             case COPPER -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.COPPER, 1);
+            case LEAD -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.LEAD, 1);
             case STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.STEEL, 1);
             case DURA_STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(), CastPlateItem.CastPlateMaterial.DURA_STEEL, 1);
             case TECHNETIUM_STEEL -> CastPlateItem.create(ModItems.PLATE_CAST.get(),

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "hbmBreedingRodType": "pu238"
+        },
+        "minecraft:custom_model_data": 9
+      },
+      "items": "hbm:rod",
+      "strict": false
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:billet_pu238"
+  }
+}

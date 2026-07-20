@@ -114,6 +114,8 @@ public final class ShredderRecipes {
         generatedHbm(recipes, "ingot_cadmium", "powder_cadmium", 1);
         generatedHbm(recipes, "ingot_beryllium", "powder_beryllium", 1);
         generatedHbm(recipes, "ingot_cobalt", "powder_cobalt", 1);
+        generatedHbm(recipes, "ingot_co60", "powder_co60", 1);
+        generatedHbm(recipes, "ingot_neptunium", "powder_neptunium", 1);
         generatedHbm(recipes, "fragment_coltan", "powder_coltan_ore", 1);
 
         generatedHbm(recipes, "plate_iron", "powder_iron", 1);
@@ -163,6 +165,7 @@ public final class ShredderRecipes {
         storageHbm(recipes, "block_bismuth", "powder_bismuth", 9);
         storageHbm(recipes, "block_cadmium", "powder_cadmium", 9);
         storageHbm(recipes, "block_coltan", "powder_coltan_ore", 9);
+        storageHbm(recipes, "block_neptunium", "powder_neptunium", 9);
 
         exact(recipes, () -> ModItems.get("powder_steel_tiny").get(), item("dust_tiny"));
         exact(recipes, () -> ModItems.get("powder_coltan_ore").get(), item("dust"));

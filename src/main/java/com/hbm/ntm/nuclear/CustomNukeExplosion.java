@@ -58,15 +58,21 @@ public final class CustomNukeExplosion {
         // Not registered yet: det_cord, ingot_semtex, det_charge, red_barrel and pink_barrel.
 
         // === NUCLEAR (ADD) ===
-        // Pu-239, Pu-241 and neptunium are still at the store.
+        // Pu-241 is still at the store.
         add(map, item("ingot_u233"), BombType.NUKE, 15F);
         add(map, item("ingot_u235"), BombType.NUKE, 15F);
+        add(map, item("ingot_pu239"), BombType.NUKE, 25F);
+        add(map, item("ingot_neptunium"), BombType.NUKE, 30F);
         add(map, item("nugget_u233"), BombType.NUKE, 1.5F);
         add(map, item("nugget_u235"), BombType.NUKE, 1.5F);
+        add(map, item("nugget_pu239"), BombType.NUKE, 2.5F);
+        add(map, item("nugget_neptunium"), BombType.NUKE, 3F);
+        add(map, item("powder_neptunium"), BombType.NUKE, 30F);
         add(map, ModItems.CUSTOM_NUKE.get(), BombType.NUKE, 30F);
 
         // === HYDROGEN (ADD) ===
-        // cell_deuterium, cell_tritium and custom_hydro are not registered yet.
+        // cell_deuterium and custom_hydro are not registered yet.
+        add(map, ModItems.CELL_TRITIUM.get(), BombType.HYDRO, 30F);
         add(map, item("lithium"), BombType.HYDRO, 20F);
 
         // === ANTIMATTER (ADD) === waiting on cell_antimatter, custom_amat and Balefire eggs.
@@ -92,13 +98,13 @@ public final class CustomNukeExplosion {
         mult(map, item("ingot_uranium"), BombType.NUKE, 1.05F);
         mult(map, item("ingot_plutonium"), BombType.NUKE, 1.15F);
         mult(map, item("ingot_u238"), BombType.NUKE, 1.1F);
+        mult(map, item("ingot_pu238"), BombType.NUKE, 1.15F);
         mult(map, item("nugget_uranium"), BombType.NUKE, 1.005F);
         mult(map, item("nugget_plutonium"), BombType.NUKE, 1.15F);
         mult(map, item("nugget_u238"), BombType.NUKE, 1.01F);
+        mult(map, item("nugget_pu238"), BombType.NUKE, 1.015F);
         mult(map, item("powder_uranium"), BombType.NUKE, 1.05F);
         mult(map, item("powder_plutonium"), BombType.NUKE, 1.15F);
-        // ingot_pu238 and nugget_pu238 are not registered yet.
-
         mult(map, ModItems.BLOCK_WASTE_ITEM.get(), BombType.DIRTY, 1.25F);
         // ingot_pu240, the nuclear-waste item and yellow_barrel are not registered yet.
 

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "hbm:stick_dynamite"
+    },
+    "F": {
+      "item": "hbm:gun_flamer"
+    },
+    "G": {
+      "tag": "c:plates/gold"
+    },
+    "P": {
+      "item": "minecraft:blaze_powder"
+    },
+    "S": {
+      "item": "minecraft:slime_ball"
+    }
+  },
+  "pattern": [
+    "GSG",
+    "PFP",
+    "GDG"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_flamer_daybreaker"
+  }
+}

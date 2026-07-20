@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.content.HazardousMaterialDefinitions;
 import com.hbm.ntm.content.MaterialDefinitions;
+import com.hbm.ntm.item.BreedingRodItem;
 import com.hbm.ntm.item.FoundryMoldItem;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -98,7 +99,15 @@ public final class MaterialResourcesProvider implements DataProvider {
                         "c",
                         definition.form().commonTagFolder() + "/" + definition.commonMaterial()
                 );
-                writes.add(save(output, tag(definition.id()), itemTags, tag));
+                if (definition.id().equals("nugget_cobalt")) {
+                    // Both were nuggetCobalt in 1.7.10. The fragment is still the cave's cheap version.
+                    JsonArray cobaltNuggets = new JsonArray();
+                    cobaltNuggets.add("hbm:nugget_cobalt");
+                    cobaltNuggets.add("hbm:fragment_cobalt");
+                    writes.add(save(output, tag(cobaltNuggets), itemTags, tag));
+                } else {
+                    writes.add(save(output, tag(definition.id()), itemTags, tag));
+                }
 
                 JsonArray aggregate = switch (definition.form()) {
                     case INGOT -> aggregateIngots;
@@ -391,6 +400,30 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "depth_nether_tiles")) {
             writes.add(save(output, cubeAllBlockModel(block), blockModels, hbm(block)));
         }
+        writes.add(save(output, cutoutCubeAllBlockModel("reinforced_glass"), blockModels,
+                hbm("reinforced_glass")));
+        for (String part : List.of("post", "side", "side_alt", "noside", "noside_alt")) {
+            writes.add(save(output, reinforcedGlassPaneModel(part), blockModels,
+                    hbm("reinforced_glass_pane_" + part)));
+        }
+        writes.add(save(output, legacyStandardBlockItemModel("reinforced_glass"), itemModels,
+                hbm("reinforced_glass")));
+        writes.add(save(output, generatedItemModel("reinforced_glass_pane", true), itemModels,
+                hbm("reinforced_glass_pane")));
+        writes.add(save(output, simpleBlockState("reinforced_glass"), blockStates,
+                hbm("reinforced_glass")));
+        writes.add(save(output, reinforcedGlassPaneBlockState(), blockStates,
+                hbm("reinforced_glass_pane")));
+        writes.add(save(output, silkOnlyLoot("reinforced_glass"), lootTables,
+                hbm("reinforced_glass")));
+        writes.add(save(output, silkOnlyLoot("reinforced_glass_pane"), lootTables,
+                hbm("reinforced_glass_pane")));
+        writes.add(save(output, tag("reinforced_glass"), itemTags,
+                ResourceLocation.fromNamespaceAndPath("c", "glass_blocks")));
+        writes.add(save(output, tag("reinforced_glass_pane"), itemTags,
+                ResourceLocation.fromNamespaceAndPath("c", "glass_panes")));
+        mineableBlocks.add("hbm:reinforced_glass");
+        mineableBlocks.add("hbm:reinforced_glass_pane");
         writes.add(save(output, cubeColumnBlockModel("gneiss_chiseled", "gneiss_chiseled",
                 "gneiss_tile"), blockModels, hbm("gneiss_chiseled")));
         for (String block : List.of("gneiss_tile", "gneiss_brick", "gneiss_chiseled",
@@ -689,6 +722,8 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, canisterFullModel(), itemModels, hbm("canister_full")));
         writes.add(save(output, generatedItemModel("gas_empty"), itemModels, hbm("gas_empty")));
         writes.add(save(output, gasFullModel(), itemModels, hbm("gas_full")));
+        writes.add(save(output, generatedItemModel("cell_empty"), itemModels, hbm("cell_empty")));
+        writes.add(save(output, generatedItemModel("cell_tritium"), itemModels, hbm("cell_tritium")));
         writes.add(save(output, sourceContainerRecipe(true), recipes, hbm("canister_empty")));
         writes.add(save(output, sourceContainerRecipe(false), recipes, hbm("gas_empty")));
         writes.add(save(output, smeltingRecipe("hbm:ore_titanium", "hbm:ingot_titanium", 3.0F),
@@ -703,6 +738,10 @@ public final class MaterialResourcesProvider implements DataProvider {
                 recipes, hbm("ingot_tungsten_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_cobalt", "hbm:ingot_cobalt", 1.0F),
                 recipes, hbm("ingot_cobalt_from_powder")));
+        writes.add(save(output, smeltingRecipe("hbm:powder_co60", "hbm:ingot_co60", 1.0F),
+                recipes, hbm("ingot_co60_from_powder")));
+        writes.add(save(output, smeltingRecipe("hbm:powder_neptunium", "hbm:ingot_neptunium", 1.0F),
+                recipes, hbm("ingot_neptunium_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_niobium", "hbm:ingot_niobium", 1.0F),
                 recipes, hbm("ingot_niobium_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_tantalium", "hbm:ingot_tantalium", 1.0F),
@@ -781,6 +820,7 @@ public final class MaterialResourcesProvider implements DataProvider {
                 recipes, hbm("powder_cobalt")));
         writes.add(save(output, decompressionRecipe("powder_cobalt", "powder_cobalt_tiny"),
                 recipes, hbm("powder_cobalt_tiny_from_powder")));
+        addCobaltBilletRecipes(writes, output);
         writes.add(save(output, compressionRecipe("powder_lithium_tiny", "powder_lithium"),
                 recipes, hbm("powder_lithium")));
         writes.add(save(output, decompressionRecipe("powder_lithium", "powder_lithium_tiny"),
@@ -1361,6 +1401,7 @@ public final class MaterialResourcesProvider implements DataProvider {
                 hbm("plate_cast_titanium")));
         writes.add(save(output, generatedItemModel("plate_cast_steel"), itemModels, hbm("plate_cast_steel")));
         writes.add(save(output, generatedItemModel("plate_cast_copper"), itemModels, hbm("plate_cast_copper")));
+        writes.add(save(output, generatedItemModel("plate_cast_lead"), itemModels, hbm("plate_cast_lead")));
         writes.add(save(output, generatedItemModel("plate_cast_dura_steel"), itemModels, hbm("plate_cast_dura_steel")));
         writes.add(save(output, generatedItemModel("plate_cast_technetium_steel"), itemModels,
                 hbm("plate_cast_technetium_steel")));
@@ -2766,6 +2807,23 @@ public final class MaterialResourcesProvider implements DataProvider {
         return root;
     }
 
+    private JsonObject cutoutCubeAllBlockModel(String id) {
+        JsonObject root = cubeAllBlockModel(id);
+        root.addProperty("render_type", "cutout");
+        return root;
+    }
+
+    private JsonObject reinforcedGlassPaneModel(String part) {
+        JsonObject root = new JsonObject();
+        root.addProperty("parent", "minecraft:block/template_glass_pane_" + part);
+        root.addProperty("render_type", "cutout");
+        JsonObject textures = new JsonObject();
+        textures.addProperty("pane", "hbm:block/reinforced_glass_pane");
+        textures.addProperty("edge", "hbm:block/reinforced_glass_pane_edge");
+        root.add("textures", textures);
+        return root;
+    }
+
     private JsonObject translucentCubeAllBlockModel(String id) {
         JsonObject root = cubeAllBlockModel(id);
         root.addProperty("render_type", "translucent");
@@ -3209,6 +3267,42 @@ public final class MaterialResourcesProvider implements DataProvider {
         return root;
     }
 
+    private JsonObject reinforcedGlassPaneBlockState() {
+        JsonObject root = new JsonObject();
+        JsonArray multipart = new JsonArray();
+        JsonObject post = new JsonObject();
+        JsonObject postModel = new JsonObject();
+        postModel.addProperty("model", "hbm:block/reinforced_glass_pane_post");
+        post.add("apply", postModel);
+        multipart.add(post);
+
+        addPaneStatePart(multipart, "north", true, "side", 0);
+        addPaneStatePart(multipart, "east", true, "side", 90);
+        addPaneStatePart(multipart, "south", true, "side_alt", 0);
+        addPaneStatePart(multipart, "west", true, "side_alt", 90);
+        addPaneStatePart(multipart, "north", false, "noside", 0);
+        addPaneStatePart(multipart, "east", false, "noside_alt", 0);
+        addPaneStatePart(multipart, "south", false, "noside_alt", 90);
+        addPaneStatePart(multipart, "west", false, "noside", 270);
+        root.add("multipart", multipart);
+        return root;
+    }
+
+    private void addPaneStatePart(JsonArray multipart, String direction, boolean connected,
+                                  String modelPart, int rotation) {
+        JsonObject part = new JsonObject();
+        JsonObject when = new JsonObject();
+        when.addProperty(direction, Boolean.toString(connected));
+        part.add("when", when);
+        JsonObject apply = new JsonObject();
+        apply.addProperty("model", "hbm:block/reinforced_glass_pane_" + modelPart);
+        if (rotation != 0) {
+            apply.addProperty("y", rotation);
+        }
+        part.add("apply", apply);
+        multipart.add(part);
+    }
+
     private JsonObject selfDropLoot(String id) {
         JsonObject root = new JsonObject();
         root.addProperty("type", "minecraft:block");
@@ -3233,6 +3327,50 @@ public final class MaterialResourcesProvider implements DataProvider {
         pools.add(pool);
         root.add("pools", pools);
         root.addProperty("random_sequence", "hbm:blocks/" + id);
+        return root;
+    }
+
+    private JsonObject silkOnlyLoot(String block) {
+        JsonObject entry = new JsonObject();
+        entry.addProperty("type", "minecraft:item");
+        entry.addProperty("name", "hbm:" + block);
+
+        JsonObject enchantment = new JsonObject();
+        enchantment.addProperty("enchantments", "minecraft:silk_touch");
+        JsonObject levels = new JsonObject();
+        levels.addProperty("min", 1);
+        enchantment.add("levels", levels);
+        JsonArray enchantments = new JsonArray();
+        enchantments.add(enchantment);
+        JsonObject predicates = new JsonObject();
+        predicates.add("minecraft:enchantments", enchantments);
+        JsonObject predicate = new JsonObject();
+        predicate.add("predicates", predicates);
+        JsonObject matchTool = new JsonObject();
+        matchTool.addProperty("condition", "minecraft:match_tool");
+        matchTool.add("predicate", predicate);
+        JsonArray entryConditions = new JsonArray();
+        entryConditions.add(matchTool);
+        entry.add("conditions", entryConditions);
+
+        JsonArray entries = new JsonArray();
+        entries.add(entry);
+        JsonObject survives = new JsonObject();
+        survives.addProperty("condition", "minecraft:survives_explosion");
+        JsonArray poolConditions = new JsonArray();
+        poolConditions.add(survives);
+        JsonObject pool = new JsonObject();
+        pool.addProperty("rolls", 1.0F);
+        pool.addProperty("bonus_rolls", 0.0F);
+        pool.add("conditions", poolConditions);
+        pool.add("entries", entries);
+        JsonArray pools = new JsonArray();
+        pools.add(pool);
+
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "minecraft:block");
+        root.add("pools", pools);
+        root.addProperty("random_sequence", "hbm:blocks/" + block);
         return root;
     }
 
@@ -4361,6 +4499,17 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "F", itemIngredient("minecraft:cobblestone"),
                 "B", itemIngredient("minecraft:stone")), "hbm:reinforced_stone", 4),
                 recipes, hbm("reinforced_stone")));
+        writes.add(save(output, shapedItemRecipe(List.of("FBF", "BFB", "FBF"), Map.of(
+                "F", itemIngredient("minecraft:iron_bars"),
+                "B", itemIngredient("minecraft:glass")), "hbm:reinforced_glass", 4),
+                recipes, hbm("reinforced_glass")));
+        writes.add(save(output, shapedItemRecipe(List.of("GGG", "GGG"), Map.of(
+                "G", itemIngredient("hbm:reinforced_glass")), "hbm:reinforced_glass_pane", 16),
+                recipes, hbm("reinforced_glass_pane")));
+        writes.add(save(output, shapedItemRecipe(List.of(" S ", "G G", " S "), Map.of(
+                "S", tagIngredient("c:plates/steel"),
+                "G", tagIngredient("c:glass_panes")), "hbm:cell_empty", 6),
+                recipes, hbm("cell_empty")));
 
         writes.add(save(output, shapedItemRecipe(List.of("SSS", "L L", "SSS"), Map.of(
                 "S", tagIngredient("c:plates/steel"),
@@ -4388,7 +4537,140 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "B", itemIngredient("minecraft:iron_bars"),
                 "R", itemIngredient("hbm:rod_quad_empty")), "hbm:machine_waste_drum"),
                 recipes, hbm("machine_waste_drum")));
+
+        addBreedingRodRecipes(writes, output);
+        addTritiumCellRecipes(writes, output);
     }
+
+    private void addTritiumCellRecipes(List<CompletableFuture<?>> writes, CachedOutput output) {
+        for (BreedingRodItem.Form form : BreedingRodItem.Form.values()) {
+            int amount = switch (form) {
+                case SINGLE -> 1;
+                case DUAL -> 2;
+                case QUAD -> 4;
+            };
+            String formSuffix = switch (form) {
+                case SINGLE -> "";
+                case DUAL -> "_dual";
+                case QUAD -> "_quad";
+            };
+            List<JsonObject> inputs = new ArrayList<>();
+            inputs.add(breedingRodIngredient(form, BreedingRodItem.Type.TRITIUM));
+            for (int i = 0; i < amount; i++) inputs.add(itemIngredient("hbm:cell_empty"));
+            writes.add(save(output,
+                    shapelessRecipe(inputs, recipeResult("hbm:cell_tritium", amount)),
+                    recipes, hbm("cell_tritium_from_rod" + formSuffix)));
+        }
+    }
+
+    private void addBreedingRodRecipes(List<CompletableFuture<?>> writes, CachedOutput output) {
+        List<BreedingRodMaterial> materials = List.of(
+                new BreedingRodMaterial(BreedingRodItem.Type.LITHIUM,
+                        "c:ingots/lithium", "hbm:lithium"),
+                new BreedingRodMaterial(BreedingRodItem.Type.CO,
+                        "c:billets/cobalt", "hbm:billet_cobalt"),
+                new BreedingRodMaterial(BreedingRodItem.Type.CO60,
+                        "c:billets/cobalt_60", "hbm:billet_co60"),
+                new BreedingRodMaterial(BreedingRodItem.Type.TH232,
+                        "c:billets/thorium_232", "hbm:billet_th232"),
+                new BreedingRodMaterial(BreedingRodItem.Type.U235,
+                        "c:billets/uranium_235", "hbm:billet_u235"),
+                new BreedingRodMaterial(BreedingRodItem.Type.NP237,
+                        "c:billets/neptunium_237", "hbm:billet_neptunium"),
+                new BreedingRodMaterial(BreedingRodItem.Type.U238,
+                        "c:billets/uranium_238", "hbm:billet_u238"),
+                new BreedingRodMaterial(BreedingRodItem.Type.PU238,
+                        "c:billets/plutonium_238", "hbm:billet_pu238"),
+                new BreedingRodMaterial(BreedingRodItem.Type.PU239,
+                        "c:billets/plutonium_239", "hbm:billet_pu239"),
+                new BreedingRodMaterial(BreedingRodItem.Type.URANIUM,
+                        "c:billets/uranium", "hbm:billet_uranium")
+        );
+
+        for (BreedingRodMaterial material : materials) {
+            for (BreedingRodItem.Form form : BreedingRodItem.Form.values()) {
+                int amount = switch (form) {
+                    case SINGLE -> 1;
+                    case DUAL -> 2;
+                    case QUAD -> 4;
+                };
+                String formSuffix = switch (form) {
+                    case SINGLE -> "";
+                    case DUAL -> "_dual";
+                    case QUAD -> "_quad";
+                };
+
+                List<JsonObject> loadingInputs = new ArrayList<>();
+                loadingInputs.add(itemIngredient(form.emptyId().toString()));
+                for (int i = 0; i < amount; i++) {
+                    loadingInputs.add(tagIngredient(material.ingredientTag()));
+                }
+                writes.add(save(output,
+                        shapelessRecipe(loadingInputs, breedingRodResult(form, material.type())),
+                        recipes, hbm(form.id() + "_" + material.type().id())));
+
+                writes.add(save(output,
+                        shapelessRecipe(List.of(breedingRodIngredient(form, material.type())),
+                                recipeResult(material.returnedItem(), amount)),
+                        recipes, hbm(material.returnedItem().substring("hbm:".length())
+                                + "_from_rod" + formSuffix)));
+            }
+        }
+    }
+
+    private void addCobaltBilletRecipes(List<CompletableFuture<?>> writes, CachedOutput output) {
+        writes.add(save(output, compressionRecipe("nugget_cobalt", "ingot_cobalt"),
+                recipes, hbm("ingot_cobalt_from_nugget_cobalt")));
+        writes.add(save(output, decompressionRecipe("ingot_cobalt", "nugget_cobalt"),
+                recipes, hbm("nugget_cobalt_from_ingot_cobalt")));
+        writes.add(save(output, shapedRecipe(List.of("###", "###"), "nugget_cobalt", "billet_cobalt", 1),
+                recipes, hbm("billet_cobalt_from_nugget_cobalt")));
+        writes.add(save(output, shapelessRecipe(List.of("billet_cobalt"), "nugget_cobalt", 6),
+                recipes, hbm("nugget_cobalt_from_billet_cobalt")));
+        writes.add(save(output, shapelessRecipe(List.of("billet_cobalt", "billet_cobalt", "billet_cobalt"),
+                "ingot_cobalt", 2), recipes, hbm("ingot_cobalt_from_billet_cobalt")));
+        writes.add(save(output, shapedRecipe(List.of("##"), "ingot_cobalt", "billet_cobalt", 3),
+                recipes, hbm("billet_cobalt_from_ingot_cobalt")));
+    }
+
+    private JsonObject shapelessRecipe(List<JsonObject> inputs, JsonObject result) {
+        JsonObject recipe = new JsonObject();
+        recipe.addProperty("type", "minecraft:crafting_shapeless");
+        recipe.addProperty("category", "misc");
+        JsonArray ingredients = new JsonArray();
+        inputs.forEach(ingredients::add);
+        recipe.add("ingredients", ingredients);
+        recipe.add("result", result);
+        return recipe;
+    }
+
+    private JsonObject breedingRodResult(BreedingRodItem.Form form, BreedingRodItem.Type type) {
+        JsonObject customData = new JsonObject();
+        customData.addProperty("hbmBreedingRodType", type.id());
+        JsonObject components = new JsonObject();
+        components.add("minecraft:custom_data", customData);
+        components.addProperty("minecraft:custom_model_data", type.ordinal());
+        JsonObject result = recipeResult("hbm:" + form.id(), 1);
+        result.add("components", components);
+        return result;
+    }
+
+    private JsonObject breedingRodIngredient(BreedingRodItem.Form form, BreedingRodItem.Type type) {
+        JsonObject customData = new JsonObject();
+        customData.addProperty("hbmBreedingRodType", type.id());
+        JsonObject components = new JsonObject();
+        components.add("minecraft:custom_data", customData);
+        components.addProperty("minecraft:custom_model_data", type.ordinal());
+        JsonObject ingredient = new JsonObject();
+        ingredient.addProperty("type", "neoforge:components");
+        ingredient.addProperty("items", "hbm:" + form.id());
+        ingredient.add("components", components);
+        ingredient.addProperty("strict", false);
+        return ingredient;
+    }
+
+    private record BreedingRodMaterial(BreedingRodItem.Type type, String ingredientTag,
+                                       String returnedItem) { }
 
     private JsonObject craftedPartRecipe(boolean stock, JsonObject ingredient, String material, int metadata) {
         JsonObject recipe = shapedBase(stock ? List.of("WWW", "  W") : List.of("W ", " W", " W"));
@@ -4423,6 +4705,10 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "M", foundryPart("part_mechanism", "gunmetal", 49),
                 "G", foundryPart("part_grip", "wood", 3)), "gun_light_revolver"),
                 recipes, hbm("gun_light_revolver")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MAM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "A", itemIngredient("hbm:gun_light_revolver")), "gun_light_revolver_atlas"),
+                recipes, hbm("gun_light_revolver_atlas")));
         writes.add(save(output, weaponRecipe(List.of("BRP", "BMS"), Map.of(
                 "B", foundryPart("part_barrel_light", "steel", 30),
                 "R", foundryPart("part_receiver_light", "gunmetal", 49),
@@ -4430,6 +4716,11 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "M", foundryPart("part_mechanism", "gunmetal", 49),
                 "S", foundryPart("part_stock", "wood", 3)), "gun_henry"),
                 recipes, hbm("gun_henry")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "PGP", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "P", tagIngredient("c:plates/gold"),
+                "G", itemIngredient("hbm:gun_henry")), "gun_henry_lincoln"),
+                recipes, hbm("gun_henry_lincoln")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "BGS"), Map.of(
                 "B", foundryPart("part_barrel_light", "steel", 30),
                 "R", foundryPart("part_receiver_light", "steel", 30),
@@ -4437,6 +4728,15 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "G", materialComponentIngredient("hbm:bolt", "steel", 30),
                 "S", foundryPart("part_stock", "wood", 3)), "gun_maresleg"),
                 recipes, hbm("gun_maresleg")));
+        writes.add(save(output, weaponRecipe(List.of("SMS"), Map.of(
+                "S", itemIngredient("hbm:gun_maresleg"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_maresleg_akimbo"),
+                recipes, hbm("gun_maresleg_akimbo")));
+        writes.add(save(output, weaponRecipe(List.of("IPI", "PGP", "IPI"), Map.of(
+                "I", itemIngredient("minecraft:iron_bars"),
+                "P", itemIngredient("hbm:plate_weaponsteel"),
+                "G", itemIngredient("hbm:gun_maresleg")), "gun_maresleg_broken"),
+                recipes, hbm("gun_maresleg_broken")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
                 "B", foundryPart("part_barrel_heavy", "steel", 30),
                 "R", foundryPart("part_receiver_light", "steel", 30),
@@ -4468,6 +4768,17 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "B", foundryPart("part_barrel_heavy", "dura_steel", 33),
                 "R", foundryPart("part_receiver_heavy", "dura_steel", 33)), "gun_flamer"),
                 recipes, hbm("gun_flamer")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MFM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "F", itemIngredient("hbm:gun_flamer")), "gun_flamer_topaz"),
+                recipes, hbm("gun_flamer_topaz")));
+        writes.add(save(output, weaponRecipe(List.of("GSG", "PFP", "GDG"), Map.of(
+                "G", tagIngredient("c:plates/gold"),
+                "S", itemIngredient("minecraft:slime_ball"),
+                "P", itemIngredient("minecraft:blaze_powder"),
+                "F", itemIngredient("hbm:gun_flamer"),
+                "D", itemIngredient("hbm:stick_dynamite")), "gun_flamer_daybreaker"),
+                recipes, hbm("gun_flamer_daybreaker")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
                 "B", foundryPart("part_barrel_light", "desh", 42),
                 "R", foundryPart("part_receiver_light", "desh", 42),
@@ -4481,6 +4792,10 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "G", foundryPart("part_grip", "wood", 3),
                 "S", foundryPart("part_stock", "wood", 3)), "gun_carbine"),
                 recipes, hbm("gun_carbine")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MCM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "C", itemIngredient("hbm:gun_carbine")), "gun_mas36"),
+                recipes, hbm("gun_mas36")));
         writes.add(save(output, weaponRecipe(List.of("BRS", " GM"), Map.of(
                 "B", foundryPart("part_barrel_light", "desh", 42),
                 "R", foundryPart("part_receiver_light", "desh", 42),
@@ -4511,12 +4826,39 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "M", foundryPart("part_mechanism", "weapon_steel", 50),
                 "G", foundryPart("part_grip", "polymer", 20_001)), "gun_star_f"),
                 recipes, hbm("gun_star_f")));
+        writes.add(save(output, weaponRecipe(List.of("UMU"), Map.of(
+                "U", itemIngredient("hbm:gun_star_f"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_star_f_akimbo"),
+                recipes, hbm("gun_star_f_akimbo")));
+        writes.add(save(output, weaponRecipe(List.of("BRM", "WGS"), Map.of(
+                "B", foundryPart("part_barrel_light", "weapon_steel", 50),
+                "R", foundryPart("part_receiver_light", "weapon_steel", 50),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "W", foundryPart("part_grip", "wood", 3),
+                "G", foundryPart("part_grip", "rubber", 20_003),
+                "S", foundryPart("part_stock", "wood", 3)), "gun_g3"),
+                recipes, hbm("gun_g3")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MPM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "P", itemIngredient("hbm:gun_g3")), "gun_g3_zebra"),
+                recipes, hbm("gun_g3_zebra")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "G G"), Map.of(
                 "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
                 "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
                 "M", foundryPart("part_mechanism", "weapon_steel", 50),
                 "G", foundryPart("part_grip", "polymer", 20_001)), "gun_autoshotgun"),
                 recipes, hbm("gun_autoshotgun")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MAM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "A", itemIngredient("hbm:gun_autoshotgun")), "gun_autoshotgun_shredder"),
+                recipes, hbm("gun_autoshotgun_shredder")));
+        writes.add(save(output, weaponRecipe(List.of("BNB", "CAC", "BSB"), Map.of(
+                "B", materialComponentIngredient("hbm:bolt", "steel", 30),
+                "N", itemIngredient("minecraft:nether_star"),
+                "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
+                "A", itemIngredient("hbm:gun_autoshotgun"),
+                "S", tagIngredient("c:ingots/schrabidium")), "gun_autoshotgun_sexy"),
+                recipes, hbm("gun_autoshotgun_sexy")));
         writes.add(save(output, weaponRecipe(List.of("BCB", "BMB", "GG "), Map.of(
                 "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
                 "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
@@ -4542,6 +4884,53 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "B", resistantPart("part_barrel_heavy"),
                 "G", foundryPart("part_grip", "polymer", 20_001)), "gun_missile_launcher"),
                 recipes, hbm("gun_missile_launcher")));
+        writes.add(save(output, weaponRecipe(List.of(" GG", "BRM", " D "), Map.of(
+                "G", foundryPart("part_grip", "polymer", 20_001),
+                "B", foundryPart("part_barrel_heavy", "weapon_steel", 50),
+                "R", foundryPart("part_receiver_heavy", "weapon_steel", 50),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                // Source wants a Weapon Steel shell. The foundry threw it back, so Steel gets the job.
+                "D", materialComponentIngredient("hbm:shell", "steel", 30)), "gun_mk108"),
+                recipes, hbm("gun_mk108")));
+        writes.add(save(output, weaponRecipe(List.of(" D ", "BRS", "GGM"), Map.of(
+                "D", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
+                "B", foundryPart("part_barrel_light", "weapon_steel", 50),
+                "R", foundryPart("part_receiver_light", "weapon_steel", 50),
+                "S", foundryPart("part_stock", "polymer", 20_001),
+                "G", foundryPart("part_grip", "polymer", 20_001),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_stg77"),
+                recipes, hbm("gun_stg77")));
+        writes.add(save(output, weaponRecipe(List.of("  G", "BRM", "  G"), Map.of(
+                "G", foundryPart("part_grip", "wood", 3),
+                "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
+                "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_m2"),
+                recipes, hbm("gun_m2")));
+        writes.add(save(output, weaponRecipe(List.of(" C ", "BRS", " MG"), Map.of(
+                "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
+                "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
+                "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
+                "S", foundryPart("part_stock", "wood", 3),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "G", foundryPart("part_grip", "wood", 3)), "gun_amat"),
+                recipes, hbm("gun_amat")));
+        writes.add(save(output, weaponRecipe(List.of("SAS", "AGA", "SAS"), Map.of(
+                "S", tagIngredient("c:ingots/schrabidium"),
+                "A", tagIngredient("c:plates/aluminum"),
+                "G", itemIngredient("hbm:gun_amat")), "gun_amat_subtlety"),
+                recipes, hbm("gun_amat_subtlety")));
+        writes.add(save(output, weaponRecipe(List.of("SDS", "MAG", "SDS"), Map.of(
+                "S", tagIngredient("c:ingots/schrabidium"),
+                "D", materialComponentIngredient("hbm:plate_cast", "dura_steel", 33),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "A", itemIngredient("hbm:gun_amat"),
+                "G", foundryPart("part_stock", "polymer", 20_001)), "gun_amat_penance"),
+                recipes, hbm("gun_amat_penance")));
+        writes.add(save(output, weaponRecipe(List.of("NMN", "MHM", "NMN"), Map.of(
+                "N", itemIngredient("minecraft:nether_star"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "H", itemIngredient("hbm:gun_heavy_revolver")), "gun_hangman"),
+                recipes, hbm("gun_hangman")));
     }
 
     private JsonObject weaponRecipe(List<String> pattern, Map<String, JsonObject> key, String output) {
@@ -4692,9 +5081,9 @@ public final class MaterialResourcesProvider implements DataProvider {
     private JsonObject castPlateModel() {
         JsonObject root = generatedItemModel("plate_cast_iron");
         JsonArray overrides = new JsonArray();
-        int[] metadata = {30, 33, 36, 43, 2200, 2600, 2900};
+        int[] metadata = {30, 33, 36, 43, 2200, 2600, 2900, 8200};
         String[] materials = {"steel", "dura_steel", "technetium_steel", "cadmium_steel",
-                "titanium", "iron", "copper"};
+                "titanium", "iron", "copper", "lead"};
         for (int i = 0; i < metadata.length; i++) {
             JsonObject override = new JsonObject();
             JsonObject predicate = new JsonObject(); predicate.addProperty("custom_model_data", metadata[i]);

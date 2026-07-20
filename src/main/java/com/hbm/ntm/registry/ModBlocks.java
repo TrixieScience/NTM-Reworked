@@ -125,8 +125,10 @@ import com.hbm.ntm.dfc.DfcKind;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.TransparentBlock;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
@@ -219,6 +221,8 @@ public final class ModBlocks {
     public static final DeferredBlock<HighPowerCondenserBlock> MACHINE_CONDENSER_POWERED;
     public static final DeferredBlock<HeatBoilerBlock> MACHINE_BOILER;
     public static final DeferredBlock<Block> REINFORCED_STONE;
+    public static final DeferredBlock<TransparentBlock> REINFORCED_GLASS;
+    public static final DeferredBlock<IronBarsBlock> REINFORCED_GLASS_PANE;
     public static final DeferredBlock<Block> GNEISS_TILE;
     public static final DeferredBlock<Block> GNEISS_BRICK;
     public static final DeferredBlock<Block> GNEISS_CHISELED;
@@ -714,6 +718,14 @@ public final class ModBlocks {
         REINFORCED_STONE = BLOCKS.register("reinforced_stone",
                 () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                         .strength(15.0F, 60.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+        REINFORCED_GLASS = BLOCKS.register("reinforced_glass",
+                () -> new TransparentBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                        .strength(2.0F, 15.0F).sound(SoundType.GLASS).requiresCorrectToolForDrops()
+                        .noOcclusion()));
+        REINFORCED_GLASS_PANE = BLOCKS.register("reinforced_glass_pane",
+                () -> new IronBarsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                        .strength(2.0F, 15.0F).sound(SoundType.GLASS).requiresCorrectToolForDrops()
+                        .noOcclusion()));
         GNEISS_TILE = BLOCKS.register("gneiss_tile",
                 () -> new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                         .strength(1.5F, 6.0F).sound(SoundType.STONE).requiresCorrectToolForDrops()));

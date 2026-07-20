@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:plates/aluminum"
+    },
+    "G": {
+      "item": "hbm:gun_amat"
+    },
+    "S": {
+      "tag": "c:ingots/schrabidium"
+    }
+  },
+  "pattern": [
+    "SAS",
+    "AGA",
+    "SAS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_amat_subtlety"
+  }
+}

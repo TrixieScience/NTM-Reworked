@@ -55,6 +55,24 @@ public final class SourceFluidContainerHandler implements IFluidHandlerItem {
                 emptyItem, fullItem, capacity, true, false, null);
     }
 
+    public static SourceFluidContainerHandler fixedEmpty(ItemStack container,
+                                                         SourceFluidContainerItem.ContainedFluid fluid,
+                                                         Supplier<Item> emptyItem, Supplier<Item> fullItem,
+                                                         int capacity) {
+        return new SourceFluidContainerHandler(container,
+                new SourceFluidContainerItem.ContainedFluid[]{fluid}, emptyItem, fullItem,
+                capacity, false, false, fluid::fluid);
+    }
+
+    public static SourceFluidContainerHandler fixedFull(ItemStack container,
+                                                        SourceFluidContainerItem.ContainedFluid fluid,
+                                                        Supplier<Item> emptyItem, Supplier<Item> fullItem,
+                                                        int capacity) {
+        return new SourceFluidContainerHandler(container,
+                new SourceFluidContainerItem.ContainedFluid[]{fluid}, emptyItem, fullItem,
+                capacity, true, false, fluid::fluid);
+    }
+
     public static SourceFluidContainerHandler consumable(ItemStack container, Supplier<Fluid> fluid, int capacity) {
         return new SourceFluidContainerHandler(container,
                 new SourceFluidContainerItem.ContainedFluid[0],
@@ -94,7 +112,9 @@ public final class SourceFluidContainerHandler implements IFluidHandlerItem {
         if (full || container.getCount() != 1 || resource.getAmount() < capacity
                 || type == SourceFluidContainerItem.ContainedFluid.NONE) return 0;
         if (action.execute()) {
-            container = SourceFluidContainerItem.create(fullItem.get(), type, 1);
+            container = fixedFluid == null
+                    ? SourceFluidContainerItem.create(fullItem.get(), type, 1)
+                    : new ItemStack(fullItem.get());
             full = true;
         }
         return capacity;

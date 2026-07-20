@@ -7,10 +7,15 @@
     "#c:nuggets/uranium_238",
     "#c:nuggets/thorium_232",
     "#c:nuggets/plutonium",
+    "#c:nuggets/plutonium_238",
+    "#c:nuggets/plutonium_239",
+    "#c:nuggets/neptunium_237",
     "#c:nuggets/technetium_99",
     "#c:nuggets/schrabidium",
+    "#c:nuggets/cobalt_60",
     "#c:nuggets/silicon",
     "#c:nuggets/zirconium",
-    "#c:nuggets/tantalum"
+    "#c:nuggets/tantalum",
+    "#c:nuggets/cobalt"
   ]
 }

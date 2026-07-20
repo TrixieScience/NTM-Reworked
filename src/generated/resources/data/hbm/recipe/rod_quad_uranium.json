@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_quad_empty"
+    },
+    {
+      "tag": "c:billets/uranium"
+    },
+    {
+      "tag": "c:billets/uranium"
+    },
+    {
+      "tag": "c:billets/uranium"
+    },
+    {
+      "tag": "c:billets/uranium"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "uranium"
+      },
+      "minecraft:custom_model_data": 14
+    },
+    "count": 1,
+    "id": "hbm:rod_quad"
+  }
+}

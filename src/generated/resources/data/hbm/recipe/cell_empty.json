@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "tag": "c:glass_panes"
+    },
+    "S": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    " S ",
+    "G G",
+    " S "
+  ],
+  "result": {
+    "count": 6,
+    "id": "hbm:cell_empty"
+  }
+}

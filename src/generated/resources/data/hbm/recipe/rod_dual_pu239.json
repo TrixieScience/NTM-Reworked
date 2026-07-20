@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_dual_empty"
+    },
+    {
+      "tag": "c:billets/plutonium_239"
+    },
+    {
+      "tag": "c:billets/plutonium_239"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "pu239"
+      },
+      "minecraft:custom_model_data": 10
+    },
+    "count": 1,
+    "id": "hbm:rod_dual"
+  }
+}

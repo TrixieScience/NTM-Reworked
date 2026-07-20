@@ -200,6 +200,16 @@ public final class PressCapabilities {
                         ModItems.GAS_EMPTY::get, ModItems.GAS_FULL::get, 1_000),
                 ModItems.GAS_FULL.get());
         event.registerItem(Capabilities.FluidHandler.ITEM,
+                (stack, context) -> SourceFluidContainerHandler.fixedEmpty(stack,
+                        SourceFluidContainerItem.ContainedFluid.TRITIUM,
+                        ModItems.CELL_EMPTY::get, ModItems.CELL_TRITIUM::get, 1_000),
+                ModItems.CELL_EMPTY.get());
+        event.registerItem(Capabilities.FluidHandler.ITEM,
+                (stack, context) -> SourceFluidContainerHandler.fixedFull(stack,
+                        SourceFluidContainerItem.ContainedFluid.TRITIUM,
+                        ModItems.CELL_EMPTY::get, ModItems.CELL_TRITIUM::get, 1_000),
+                ModItems.CELL_TRITIUM.get());
+        event.registerItem(Capabilities.FluidHandler.ITEM,
                 (stack, context) -> SourceFluidContainerHandler.consumable(stack, ModFluids.OIL::get, 250),
                 ModItems.ORE_OIL_ITEM.get());
         event.registerItem(Capabilities.FluidHandler.ITEM,

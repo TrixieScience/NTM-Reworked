@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_dual_empty"
+    },
+    {
+      "tag": "c:ingots/lithium"
+    },
+    {
+      "tag": "c:ingots/lithium"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "lithium"
+      },
+      "minecraft:custom_model_data": 0
+    },
+    "count": 1,
+    "id": "hbm:rod_dual"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "hbm:ass.breedingreactor",
+  "name": "ass.breedingreactor",
+  "inputs": [
+    {"ingredient": {"item": "hbm:reactor_core"}, "count": 1},
+    {"ingredient": {"tag": "c:ingots/steel"}, "count": 12},
+    {"ingredient": {"tag": "c:plates/lead"}, "count": 16},
+    {"ingredient": {"item": "hbm:reinforced_glass"}, "count": 4},
+    {"ingredient": {"tag": "c:ingots/asbestos"}, "count": 4},
+    {
+      "ingredient": {
+        "type": "neoforge:compound",
+        "children": [
+          {"tag": "c:ingots/technetium_steel"},
+          {"tag": "c:ingots/cadmium_steel"}
+        ]
+      },
+      "count": 4
+    },
+    {"ingredient": {"item": "hbm:crt_display"}, "count": 1}
+  ],
+  "output": {"id": "hbm:machine_reactor_breeding", "count": 1},
+  "duration": 200,
+  "power": 100,
+  "pools": []
+}

@@ -42,6 +42,12 @@
       "predicate": {
         "custom_model_data": 2900
       }
+    },
+    {
+      "model": "hbm:item/plate_cast_lead",
+      "predicate": {
+        "custom_model_data": 8200
+      }
     }
   ],
   "textures": {

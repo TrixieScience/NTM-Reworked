@@ -51,6 +51,7 @@ public final class CastPlateItem extends Item {
         TITANIUM("titanium", 2200),
         STEEL("steel", 30),
         COPPER("copper", 2900),
+        LEAD("lead", 8200),
         DURA_STEEL("dura_steel", 33),
         TECHNETIUM_STEEL("technetium_steel", 36),
         CADMIUM_STEEL("cadmium_steel", 43);

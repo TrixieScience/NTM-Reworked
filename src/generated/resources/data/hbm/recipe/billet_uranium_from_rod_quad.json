@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "hbmBreedingRodType": "uranium"
+        },
+        "minecraft:custom_model_data": 14
+      },
+      "items": "hbm:rod_quad",
+      "strict": false
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "hbm:billet_uranium"
+  }
+}

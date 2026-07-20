@@ -1,0 +1,22 @@
+{
+  "parent": "hbm:block/reinforced_glass",
+  "display": {
+    "gui": {
+      "rotation": [
+        30,
+        315,
+        0
+      ],
+      "scale": [
+        0.625,
+        0.625,
+        0.625
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+}

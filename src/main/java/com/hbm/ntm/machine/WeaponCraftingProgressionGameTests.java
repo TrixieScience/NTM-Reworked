@@ -3,7 +3,10 @@ package com.hbm.ntm.machine;
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.foundry.FoundryMaterial;
 import com.hbm.ntm.item.BoltItem;
+import com.hbm.ntm.item.CastPlateItem;
+import com.hbm.ntm.item.CircuitItem;
 import com.hbm.ntm.item.FoundryPartItem;
+import com.hbm.ntm.item.ShellItem;
 import com.hbm.ntm.registry.ModItems;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -17,6 +20,7 @@ import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @GameTestHolder(HbmNtm.MOD_ID)
@@ -104,6 +108,120 @@ public final class WeaponCraftingProgressionGameTests {
         helper.succeed();
     }
 
+    @GameTest(template = "empty")
+    public static void remainingWeaponRecipesResolveAndCraft(GameTestHelper helper) {
+        ItemStack steelLightBarrel = part(FoundryPartItem.PartType.LIGHT_BARREL, FoundryMaterial.STEEL);
+        ItemStack steelLightReceiver = part(FoundryPartItem.PartType.LIGHT_RECEIVER, FoundryMaterial.STEEL);
+        ItemStack steelGrip = part(FoundryPartItem.PartType.GRIP, FoundryMaterial.STEEL);
+        ItemStack steelBolt = BoltItem.create(ModItems.BOLT.get(), BoltItem.BoltMaterial.STEEL, 1);
+        ItemStack gunmetalMechanism = part(FoundryPartItem.PartType.MECHANISM, FoundryMaterial.GUNMETAL);
+        ItemStack weaponMechanism = part(FoundryPartItem.PartType.MECHANISM, FoundryMaterial.WEAPON_STEEL);
+        ItemStack weaponLightBarrel = part(FoundryPartItem.PartType.LIGHT_BARREL, FoundryMaterial.WEAPON_STEEL);
+        ItemStack weaponHeavyBarrel = part(FoundryPartItem.PartType.HEAVY_BARREL, FoundryMaterial.WEAPON_STEEL);
+        ItemStack weaponLightReceiver = part(FoundryPartItem.PartType.LIGHT_RECEIVER, FoundryMaterial.WEAPON_STEEL);
+        ItemStack weaponHeavyReceiver = part(FoundryPartItem.PartType.HEAVY_RECEIVER, FoundryMaterial.WEAPON_STEEL);
+        ItemStack weaponGrip = part(FoundryPartItem.PartType.GRIP, FoundryMaterial.WEAPON_STEEL);
+        ItemStack woodStock = part(FoundryPartItem.PartType.STOCK, FoundryMaterial.WOOD);
+        ItemStack woodGrip = part(FoundryPartItem.PartType.GRIP, FoundryMaterial.WOOD);
+        ItemStack rubberGrip = part(FoundryPartItem.PartType.GRIP, FoundryMaterial.RUBBER);
+        ItemStack polymerStock = part(FoundryPartItem.PartType.STOCK, FoundryMaterial.POLYMER);
+        ItemStack polymerGrip = part(FoundryPartItem.PartType.GRIP, FoundryMaterial.POLYMER);
+        ItemStack ferroHeavyBarrel = part(FoundryPartItem.PartType.HEAVY_BARREL, FoundryMaterial.FERROURANIUM);
+        ItemStack ferroHeavyReceiver = part(FoundryPartItem.PartType.HEAVY_RECEIVER, FoundryMaterial.FERROURANIUM);
+        ItemStack advancedCircuit = CircuitItem.create(ModItems.CIRCUIT.get(), CircuitItem.CircuitType.ADVANCED, 1);
+
+        craft(helper, "gun_light_revolver_atlas", ModItems.GUN_LIGHT_REVOLVER_ATLAS.get(), Map.of(
+                'M', weaponMechanism, 'A', new ItemStack(ModItems.GUN_LIGHT_REVOLVER.get())),
+                " M ", "MAM", " M ");
+        craft(helper, "gun_henry_lincoln", ModItems.GUN_HENRY_LINCOLN.get(), Map.of(
+                'M', weaponMechanism, 'P', new ItemStack(ModItems.get("plate_gold").get()),
+                'G', new ItemStack(ModItems.GUN_HENRY.get())), " M ", "PGP", " M ");
+        craft(helper, "gun_greasegun", ModItems.GUN_GREASEGUN.get(), Map.of(
+                'B', steelLightBarrel, 'R', steelLightReceiver, 'S', steelBolt,
+                'M', gunmetalMechanism, 'G', steelGrip), "BRS", "SMG");
+        craft(helper, "gun_maresleg_akimbo", ModItems.GUN_MARESLEG_AKIMBO.get(), Map.of(
+                'S', new ItemStack(ModItems.GUN_MARESLEG.get()), 'M', weaponMechanism), "SMS");
+        craft(helper, "gun_maresleg_broken", ModItems.GUN_MARESLEG_BROKEN.get(), Map.of(
+                'I', new ItemStack(Items.IRON_BARS),
+                'P', new ItemStack(ModItems.get("plate_weaponsteel").get()),
+                'G', new ItemStack(ModItems.GUN_MARESLEG.get())), "IPI", "PGP", "IPI");
+        craft(helper, "gun_flamer_topaz", ModItems.GUN_FLAMER_TOPAZ.get(), Map.of(
+                'M', weaponMechanism, 'F', new ItemStack(ModItems.GUN_FLAMER.get())),
+                " M ", "MFM", " M ");
+        craft(helper, "gun_flamer_daybreaker", ModItems.GUN_FLAMER_DAYBREAKER.get(), Map.of(
+                'G', new ItemStack(ModItems.get("plate_gold").get()), 'S', new ItemStack(Items.SLIME_BALL),
+                'P', new ItemStack(Items.BLAZE_POWDER), 'F', new ItemStack(ModItems.GUN_FLAMER.get()),
+                'D', new ItemStack(ModItems.STICK_DYNAMITE.get())), "GSG", "PFP", "GDG");
+        craft(helper, "gun_mas36", ModItems.GUN_MAS36.get(), Map.of(
+                'M', weaponMechanism, 'C', new ItemStack(ModItems.GUN_CARBINE.get())),
+                " M ", "MCM", " M ");
+        craft(helper, "gun_star_f_akimbo", ModItems.GUN_STAR_F_AKIMBO.get(), Map.of(
+                'U', new ItemStack(ModItems.GUN_STAR_F.get()), 'M', weaponMechanism), "UMU");
+        craft(helper, "gun_g3", ModItems.GUN_G3.get(), Map.of(
+                'B', weaponLightBarrel, 'R', weaponLightReceiver, 'M', weaponMechanism,
+                'W', woodGrip, 'G', rubberGrip, 'S', woodStock), "BRM", "WGS");
+        craft(helper, "gun_g3_zebra", ModItems.GUN_G3_ZEBRA.get(), Map.of(
+                'M', weaponMechanism, 'P', new ItemStack(ModItems.GUN_G3.get())),
+                " M ", "MPM", " M ");
+        craft(helper, "gun_autoshotgun_shredder", ModItems.GUN_AUTOSHOTGUN_SHREDDER.get(), Map.of(
+                'M', weaponMechanism, 'A', new ItemStack(ModItems.GUN_AUTOSHOTGUN.get())),
+                " M ", "MAM", " M ");
+        craft(helper, "gun_autoshotgun_sexy", ModItems.GUN_AUTOSHOTGUN_SEXY.get(), Map.of(
+                'B', steelBolt, 'N', new ItemStack(Items.NETHER_STAR), 'C', advancedCircuit,
+                'A', new ItemStack(ModItems.GUN_AUTOSHOTGUN.get()),
+                'S', new ItemStack(ModItems.get("ingot_schrabidium").get())), "BNB", "CAC", "BSB");
+        craft(helper, "gun_stinger", ModItems.GUN_STINGER.get(), Map.of(
+                'B', weaponHeavyBarrel, 'P', advancedCircuit, 'G', weaponGrip, 'M', weaponMechanism),
+                "BBB", "PGM");
+        craft(helper, "gun_mk108", ModItems.GUN_MK108.get(), Map.of(
+                'G', polymerGrip, 'B', weaponHeavyBarrel, 'R', weaponHeavyReceiver,
+                'M', weaponMechanism, 'D', ShellItem.steel(ModItems.SHELL.get(), 1)),
+                " GG", "BRM", " D ");
+        craft(helper, "gun_stg77", ModItems.GUN_STG77.get(), Map.of(
+                'D', advancedCircuit, 'B', weaponLightBarrel, 'R', weaponLightReceiver,
+                'S', polymerStock, 'G', polymerGrip, 'M', weaponMechanism), " D ", "BRS", "GGM");
+        craft(helper, "gun_m2", ModItems.GUN_M2.get(), Map.of(
+                'G', woodGrip, 'B', ferroHeavyBarrel, 'R', ferroHeavyReceiver, 'M', weaponMechanism),
+                "  G", "BRM", "  G");
+        craft(helper, "gun_amat", ModItems.GUN_AMAT.get(), Map.of(
+                'C', advancedCircuit, 'B', ferroHeavyBarrel, 'R', ferroHeavyReceiver,
+                'S', woodStock, 'M', weaponMechanism, 'G', woodGrip), " C ", "BRS", " MG");
+        craft(helper, "gun_amat_subtlety", ModItems.GUN_AMAT_SUBTLETY.get(), Map.of(
+                'S', new ItemStack(ModItems.get("ingot_schrabidium").get()),
+                'A', new ItemStack(ModItems.get("plate_aluminium").get()),
+                'G', new ItemStack(ModItems.GUN_AMAT.get())), "SAS", "AGA", "SAS");
+        craft(helper, "gun_amat_penance", ModItems.GUN_AMAT_PENANCE.get(), Map.of(
+                'S', new ItemStack(ModItems.get("ingot_schrabidium").get()),
+                'D', CastPlateItem.create(ModItems.PLATE_CAST.get(),
+                        CastPlateItem.CastPlateMaterial.DURA_STEEL, 1),
+                'M', weaponMechanism, 'A', new ItemStack(ModItems.GUN_AMAT.get()),
+                'G', polymerStock), "SDS", "MAG", "SDS");
+        craft(helper, "gun_hangman", ModItems.GUN_HANGMAN.get(), Map.of(
+                'N', new ItemStack(Items.NETHER_STAR), 'M', weaponMechanism,
+                'H', new ItemStack(ModItems.GUN_HEAVY_REVOLVER.get())), "NMN", "MHM", "NMN");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void theB92TwinsAreTheOnlyGunsWithoutCraftingRecipes(GameTestHelper helper) {
+        List<String> craftable = List.of(
+                "gun_am180", "gun_amat", "gun_amat_penance", "gun_amat_subtlety", "gun_autoshotgun", "gun_autoshotgun_sexy",
+                "gun_autoshotgun_shredder", "gun_carbine", "gun_congolake", "gun_flamer", "gun_flamer_daybreaker", "gun_flamer_topaz",
+                "gun_flaregun", "gun_g3", "gun_g3_zebra", "gun_greasegun", "gun_hangman", "gun_heavy_revolver",
+                "gun_henry", "gun_henry_lincoln", "gun_lag", "gun_liberator", "gun_light_revolver", "gun_light_revolver_atlas",
+                "gun_m2", "gun_maresleg", "gun_maresleg_akimbo", "gun_maresleg_broken", "gun_mas36", "gun_minigun",
+                "gun_missile_launcher", "gun_mk108", "gun_panzerschreck", "gun_pepperbox", "gun_quadro", "gun_spas12",
+                "gun_star_f", "gun_star_f_akimbo", "gun_stg77", "gun_stinger", "gun_uzi", "gun_uzi_akimbo");
+        for (String weapon : craftable) {
+            check(helper, helper.getLevel().getRecipeManager().byKey(id(weapon)).isPresent(),
+                    "hbm:" + weapon + " must have a normal crafting recipe");
+        }
+        check(helper, helper.getLevel().getRecipeManager().byKey(id("gun_b92")).isEmpty()
+                        && helper.getLevel().getRecipeManager().byKey(id("gun_b93")).isEmpty(),
+                "B92 and B93 must remain the two recipe exceptions");
+        helper.succeed();
+    }
+
     private static ItemStack craft(GameTestHelper helper, String recipeName, Item expected,
                                    Map<Character, ItemStack> key, String... pattern) {
         int width = pattern[0].length();
@@ -117,7 +235,8 @@ public final class WeaponCraftingProgressionGameTests {
         }
         CraftingInput input = CraftingInput.of(width, pattern.length, slots);
         var recipe = helper.getLevel().getRecipeManager().getRecipeFor(
-                RecipeType.CRAFTING, input, helper.getLevel()).orElseThrow();
+                RecipeType.CRAFTING, input, helper.getLevel())
+                .orElseThrow(() -> new AssertionError("No crafting recipe matched hbm:" + recipeName));
         check(helper, recipe.id().equals(id(recipeName)), "Crafting grid must resolve to hbm:" + recipeName);
         ItemStack output = recipe.value().assemble(input, helper.getLevel().registryAccess());
         check(helper, output.is(expected) && output.getCount() == 1,

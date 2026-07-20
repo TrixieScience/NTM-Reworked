@@ -75,6 +75,8 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.rod_zirnox_les_fuel_depleted", "Depleted ZIRNOX LES Fuel Rod");
         language.addProperty("item.hbm.rod_zirnox_zfb_mox_depleted", "Depleted ZIRNOX ZFB MOX Fuel Rod");
         language.addProperty("block.hbm.machine_reactor_breeding", "Breeding Reactor");
+        language.addProperty("block.hbm.reinforced_glass", "Reinforced Glass");
+        language.addProperty("block.hbm.reinforced_glass_pane", "Reinforced Glass Pane");
         language.addProperty("container.reactorBreeding", "Breeding Reactor");
         language.addProperty("block.hbm.machine_reactor_small", "Research Reactor");
         language.addProperty("container.reactorResearch", "Research Reactor");
@@ -113,6 +115,8 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.rod_empty", "Empty Rod");
         language.addProperty("item.hbm.rod_dual_empty", "Empty Dual Rod");
         language.addProperty("item.hbm.rod_quad_empty", "Empty Quad Rod");
+        language.addProperty("item.hbm.cell_empty", "Empty Cell");
+        language.addProperty("item.hbm.cell_tritium", "Tritium Cell");
         Map.ofEntries(
                 Map.entry("lithium", "Lithium"), Map.entry("tritium", "Tritium"),
                 Map.entry("co", "Cobalt"), Map.entry("co60", "Cobalt-60"),
@@ -1224,6 +1228,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.plate_cast.titanium", "Cast Titanium Plate");
         language.addProperty("item.hbm.plate_cast.steel", "Cast Steel Plate");
         language.addProperty("item.hbm.plate_cast.copper", "Cast Copper Plate");
+        language.addProperty("item.hbm.plate_cast.lead", "Cast Lead Plate");
         language.addProperty("item.hbm.plate_cast.dura_steel", "Cast High-Speed Steel Plate");
         language.addProperty("item.hbm.plate_cast.technetium_steel", "Cast Technetium Steel Plate");
         language.addProperty("item.hbm.plate_cast.cadmium_steel", "Cast Cadmium Steel Plate");
@@ -1252,6 +1257,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.circuit.capacitor_board", "Capacitor Board");
         language.addProperty("item.hbm.circuit.controller_chassis", "Control Unit Casing");
         language.addProperty("item.hbm.crt_display", "Cathode Ray Tube");
+        language.addProperty("item.hbm.reactor_core", "Reactor Core");
         language.addProperty("item.hbm.steel_sword", "Steel Sword");
         language.addProperty("item.hbm.steel_pickaxe", "Steel Pickaxe");
         language.addProperty("item.hbm.steel_axe", "Steel Axe");

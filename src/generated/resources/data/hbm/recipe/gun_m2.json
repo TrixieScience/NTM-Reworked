@@ -1,0 +1,59 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "ferrouranium"
+        },
+        "minecraft:custom_model_data": 37
+      },
+      "items": "hbm:part_barrel_heavy",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "wood"
+        },
+        "minecraft:custom_model_data": 3
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "R": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "ferrouranium"
+        },
+        "minecraft:custom_model_data": 37
+      },
+      "items": "hbm:part_receiver_heavy",
+      "strict": false
+    }
+  },
+  "pattern": [
+    "  G",
+    "BRM",
+    "  G"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_m2"
+  }
+}

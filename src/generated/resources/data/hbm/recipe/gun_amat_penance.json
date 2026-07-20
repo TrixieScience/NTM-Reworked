@@ -1,0 +1,54 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "hbm:gun_amat"
+    },
+    "D": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "dura_steel"
+        },
+        "minecraft:custom_model_data": 33
+      },
+      "items": "hbm:plate_cast",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "polymer"
+        },
+        "minecraft:custom_model_data": 20001
+      },
+      "items": "hbm:part_stock",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "S": {
+      "tag": "c:ingots/schrabidium"
+    }
+  },
+  "pattern": [
+    "SDS",
+    "MAG",
+    "SDS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_amat_penance"
+  }
+}

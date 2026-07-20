@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "hbmBreedingRodType": "np237"
+        },
+        "minecraft:custom_model_data": 7
+      },
+      "items": "hbm:rod_dual",
+      "strict": false
+    }
+  ],
+  "result": {
+    "count": 2,
+    "id": "hbm:billet_neptunium"
+  }
+}

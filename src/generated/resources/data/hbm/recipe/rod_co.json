@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_empty"
+    },
+    {
+      "tag": "c:billets/cobalt"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "co"
+      },
+      "minecraft:custom_model_data": 2
+    },
+    "count": 1,
+    "id": "hbm:rod"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_quad_empty"
+    },
+    {
+      "tag": "c:billets/thorium_232"
+    },
+    {
+      "tag": "c:billets/thorium_232"
+    },
+    {
+      "tag": "c:billets/thorium_232"
+    },
+    {
+      "tag": "c:billets/thorium_232"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "th232"
+      },
+      "minecraft:custom_model_data": 4
+    },
+    "count": 1,
+    "id": "hbm:rod_quad"
+  }
+}

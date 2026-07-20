@@ -1,0 +1,70 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_barrel_heavy",
+      "strict": false
+    },
+    "D": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:shell",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "polymer"
+        },
+        "minecraft:custom_model_data": 20001
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "R": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_receiver_heavy",
+      "strict": false
+    }
+  },
+  "pattern": [
+    " GG",
+    "BRM",
+    " D "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_mk108"
+  }
+}

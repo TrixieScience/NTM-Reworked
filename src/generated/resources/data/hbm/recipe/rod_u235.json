@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_empty"
+    },
+    {
+      "tag": "c:billets/uranium_235"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "u235"
+      },
+      "minecraft:custom_model_data": 6
+    },
+    "count": 1,
+    "id": "hbm:rod"
+  }
+}

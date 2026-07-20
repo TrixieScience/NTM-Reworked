@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_empty"
+    },
+    {
+      "tag": "c:billets/neptunium_237"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "np237"
+      },
+      "minecraft:custom_model_data": 7
+    },
+    "count": 1,
+    "id": "hbm:rod"
+  }
+}

@@ -85,6 +85,8 @@ public final class MaterialDefinitions {
             new ItemDefinition("ingot_niobium", "Niobium Ingot", ItemForm.INGOT, "niobium"),
             new ItemDefinition("ingot_beryllium", "Beryllium Ingot", ItemForm.INGOT, "beryllium"),
             new ItemDefinition("ingot_cobalt", "Cobalt Ingot", ItemForm.INGOT, "cobalt"),
+            new ItemDefinition("billet_cobalt", "Cobalt Billet", ItemForm.BILLET, "cobalt"),
+            new ItemDefinition("nugget_cobalt", "Cobalt Nugget", ItemForm.NUGGET, "cobalt"),
             new ItemDefinition("ingot_boron", "Boron Ingot", ItemForm.INGOT, "boron"),
             new ItemDefinition("ingot_graphite", "Graphite Ingot", ItemForm.INGOT, "graphite"),
             new ItemDefinition("ingot_firebrick", "Firebrick", ItemForm.INGOT, "firebrick"),

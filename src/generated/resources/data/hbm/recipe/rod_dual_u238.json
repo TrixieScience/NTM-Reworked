@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_dual_empty"
+    },
+    {
+      "tag": "c:billets/uranium_238"
+    },
+    {
+      "tag": "c:billets/uranium_238"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "u238"
+      },
+      "minecraft:custom_model_data": 8
+    },
+    "count": 1,
+    "id": "hbm:rod_dual"
+  }
+}

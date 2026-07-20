@@ -4,6 +4,7 @@ import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.block.AssemblyMachineBlock;
 import com.hbm.ntm.anvil.AnvilRecipes;
 import com.hbm.ntm.item.CircuitItem;
+import com.hbm.ntm.item.CastPlateItem;
 import com.hbm.ntm.blockentity.AssemblyMachineBlockEntity;
 import com.hbm.ntm.blockentity.AssemblyMachineProxyBlockEntity;
 import com.hbm.ntm.item.MachineUpgradeItem;
@@ -66,6 +67,47 @@ public final class AssemblyMachineGameTests {
                 "ass.shredder must preserve 8 Steel Plates, 4 Copper Plates, and 2 Motors");
         helper.assertTrue(recipe.output().is(ModItems.MACHINE_SHREDDER_ITEM.get()) && recipe.output().getCount() == 1,
                 "ass.shredder must output exactly one Shredder");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void breedingReactorConstructionKeepsBothSourceAssemblySteps(GameTestHelper helper) {
+        AssemblyRecipe core = AssemblyRecipes.byName("ass.reactorcore");
+        helper.assertTrue(core != null && core.duration() == 100 && core.power() == 100L
+                        && core.inputs().size() == 4
+                        && core.inputs().get(0).count() == 4
+                        && core.inputs().get(0).ingredient().test(CastPlateItem.create(ModItems.PLATE_CAST.get(),
+                        CastPlateItem.CastPlateMaterial.LEAD, 1))
+                        && core.inputs().get(1).count() == 8
+                        && core.inputs().get(1).ingredient().test(new ItemStack(ModItems.get("ingot_beryllium").get()))
+                        && core.inputs().get(2).count() == 8
+                        && core.inputs().get(2).ingredient().test(new ItemStack(ModItems.get("plate_dura_steel").get()))
+                        && core.inputs().get(3).count() == 4
+                        && core.inputs().get(3).ingredient().test(new ItemStack(ModItems.get("ingot_asbestos").get()))
+                        && core.output().is(ModItems.REACTOR_CORE.get()) && core.output().getCount() == 1,
+                "ass.reactorcore must preserve Lead Cast Plate, Beryllium, Dura Steel, and Asbestos");
+
+        AssemblyRecipe breeder = AssemblyRecipes.byName("ass.breedingreactor");
+        helper.assertTrue(breeder != null && breeder.duration() == 200 && breeder.power() == 100L
+                        && breeder.inputs().size() == 7
+                        && breeder.inputs().get(0).count() == 1
+                        && breeder.inputs().get(0).ingredient().test(new ItemStack(ModItems.REACTOR_CORE.get()))
+                        && breeder.inputs().get(1).count() == 12
+                        && breeder.inputs().get(1).ingredient().test(new ItemStack(ModItems.get("ingot_steel").get()))
+                        && breeder.inputs().get(2).count() == 16
+                        && breeder.inputs().get(2).ingredient().test(new ItemStack(ModItems.get("plate_lead").get()))
+                        && breeder.inputs().get(3).count() == 4
+                        && breeder.inputs().get(3).ingredient().test(new ItemStack(ModItems.REINFORCED_GLASS_ITEM.get()))
+                        && breeder.inputs().get(4).count() == 4
+                        && breeder.inputs().get(4).ingredient().test(new ItemStack(ModItems.get("ingot_asbestos").get()))
+                        && breeder.inputs().get(5).count() == 4
+                        && breeder.inputs().get(5).ingredient().test(new ItemStack(ModItems.get("ingot_tcalloy").get()))
+                        && breeder.inputs().get(5).ingredient().test(new ItemStack(ModItems.get("ingot_cdalloy").get()))
+                        && breeder.inputs().get(6).count() == 1
+                        && breeder.inputs().get(6).ingredient().test(new ItemStack(ModItems.CRT_DISPLAY.get()))
+                        && breeder.output().is(ModItems.MACHINE_REACTOR_BREEDING_ITEM.get())
+                        && breeder.output().getCount() == 1,
+                "ass.breedingreactor must preserve its exact seven source inputs and output");
         helper.succeed();
     }
 
