@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "hbm:block/machine_combustion_engine"
+      }
+    }
+  ]
+}

@@ -839,6 +839,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:machine_steam_engine");
         mineableBlocks.add("hbm:machine_industrial_turbine");
         mineableBlocks.add("hbm:machine_turbinegas");
+        mineableBlocks.add("hbm:machine_combustion_engine");
         mineableBlocks.add("hbm:machine_turbofan");
         mineableBlocks.add("hbm:machine_turbine");
         mineableBlocks.add("hbm:pump_steam");
@@ -969,6 +970,14 @@ public final class MaterialResourcesProvider implements DataProvider {
                 hbm("machine_turbinegas")));
         writes.add(save(output, selfDropLoot("machine_turbinegas"), lootTables,
                 hbm("machine_turbinegas")));
+        writes.add(save(output, emptyModel("block_steel"), blockModels,
+                hbm("machine_combustion_engine")));
+        writes.add(save(output, unconditionalMultipartState("machine_combustion_engine"), blockStates,
+                hbm("machine_combustion_engine")));
+        writes.add(save(output, legacyBuiltinEntityItemModel(), itemModels,
+                hbm("machine_combustion_engine")));
+        writes.add(save(output, selfDropLoot("machine_combustion_engine"), lootTables,
+                hbm("machine_combustion_engine")));
         writes.add(save(output, emptyModel("block_steel"), blockModels,
                 hbm("machine_turbofan")));
         writes.add(save(output, unconditionalMultipartState("machine_turbofan"), blockStates,

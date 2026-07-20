@@ -378,6 +378,11 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.MACHINE_STEAM_ENGINE_ITEM.get());
                         output.accept(ModItems.MACHINE_INDUSTRIAL_TURBINE_ITEM.get());
                         output.accept(ModItems.MACHINE_TURBINE_GAS_ITEM.get());
+                        output.accept(ModItems.MACHINE_COMBUSTION_ENGINE_ITEM.get());
+                        output.accept(ModItems.PISTON_SET_STEEL.get());
+                        output.accept(ModItems.PISTON_SET_DURA.get());
+                        output.accept(ModItems.PISTON_SET_DESH.get());
+                        output.accept(ModItems.PISTON_SET_STARMETAL.get());
                         output.accept(ModItems.MACHINE_TURBOFAN_ITEM.get());
                         output.accept(ModItems.MACHINE_TURBINE_ITEM.get());
                         output.accept(ModItems.REACTOR_ZIRNOX_ITEM.get());

@@ -33,6 +33,7 @@ import com.hbm.ntm.item.DefuserItem;
 import com.hbm.ntm.item.DetonatorItem;
 import com.hbm.ntm.item.DepletedPlateFuelItem;
 import com.hbm.ntm.item.DieselGeneratorBlockItem;
+import com.hbm.ntm.item.CombustionEngineBlockItem;
 import com.hbm.ntm.item.DfcCatalystItem;
 import com.hbm.ntm.item.DfcCoreItem;
 import com.hbm.ntm.item.DfcLensItem;
@@ -77,6 +78,7 @@ import com.hbm.ntm.item.HazmatArmorItem;
 import com.hbm.ntm.item.HazmatFilterItem;
 import com.hbm.ntm.item.ClothRagItem;
 import com.hbm.ntm.item.ProtectiveMaskItem;
+import com.hbm.ntm.item.PistonSetItem;
 import com.hbm.ntm.item.RadioactiveItem;
 import com.hbm.ntm.item.FleijaPartItem;
 import com.hbm.ntm.item.N2ChargeItem;
@@ -591,6 +593,11 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> MACHINE_MICROWAVE_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_ASSEMBLY_MACHINE_ITEM;
     public static final DeferredItem<DieselGeneratorBlockItem> MACHINE_DIESEL_ITEM;
+    public static final DeferredItem<CombustionEngineBlockItem> MACHINE_COMBUSTION_ENGINE_ITEM;
+    public static final DeferredItem<PistonSetItem> PISTON_SET_STEEL;
+    public static final DeferredItem<PistonSetItem> PISTON_SET_DURA;
+    public static final DeferredItem<PistonSetItem> PISTON_SET_DESH;
+    public static final DeferredItem<PistonSetItem> PISTON_SET_STARMETAL;
     public static final DeferredItem<FluidStorageTankBlockItem> MACHINE_FLUIDTANK_ITEM;
     public static final DeferredItem<BlockItem> DFC_CORE_ITEM;
     public static final DeferredItem<BlockItem> DFC_EMITTER_ITEM;
@@ -1453,6 +1460,12 @@ public final class ModItems {
                 "machine_assembly_machine", ModBlocks.MACHINE_ASSEMBLY_MACHINE);
         MACHINE_DIESEL_ITEM = ITEMS.register("machine_diesel",
                 () -> new DieselGeneratorBlockItem(ModBlocks.MACHINE_DIESEL.get(), new Item.Properties()));
+        MACHINE_COMBUSTION_ENGINE_ITEM = ITEMS.register("machine_combustion_engine",
+                () -> new CombustionEngineBlockItem(ModBlocks.MACHINE_COMBUSTION_ENGINE.get(), new Item.Properties()));
+        PISTON_SET_STEEL = ITEMS.register("piston_set_steel", () -> new PistonSetItem(PistonSetItem.Type.STEEL));
+        PISTON_SET_DURA = ITEMS.register("piston_set_dura", () -> new PistonSetItem(PistonSetItem.Type.DURA));
+        PISTON_SET_DESH = ITEMS.register("piston_set_desh", () -> new PistonSetItem(PistonSetItem.Type.DESH));
+        PISTON_SET_STARMETAL = ITEMS.register("piston_set_starmetal", () -> new PistonSetItem(PistonSetItem.Type.STARMETAL));
         MACHINE_FLUIDTANK_ITEM = ITEMS.register("machine_fluidtank",
                 () -> new FluidStorageTankBlockItem(ModBlocks.MACHINE_FLUIDTANK.get(), new Item.Properties()));
         MACHINE_CHEMICAL_PLANT_ITEM = ITEMS.registerSimpleBlockItem(

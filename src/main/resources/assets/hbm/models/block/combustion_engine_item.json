@@ -1,0 +1,4 @@
+{
+  "parent": "hbm:block/combustion_engine_obj",
+  "visibility": {"Engine": true, "Canister": true, "Hatch": true}
+}

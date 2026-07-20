@@ -1,0 +1,37 @@
+{
+  "id": "hbm:ass.combustiongen",
+  "name": "ass.combustiongen",
+  "inputs": [
+    {"ingredient": {"item": "hbm:plate_steel"}, "count": 16},
+    {"ingredient": {"item": "hbm:ingot_copper"}, "count": 12},
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:wire_dense",
+        "components": {
+          "minecraft:custom_data": {"material": "gold"},
+          "minecraft:custom_model_data": 7900
+        },
+        "strict": true
+      },
+      "count": 8
+    },
+    {"ingredient": {"item": "hbm:canister_empty"}, "count": 4},
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:circuit",
+        "components": {
+          "minecraft:custom_data": {"type": "basic"},
+          "minecraft:custom_model_data": 8
+        },
+        "strict": true
+      },
+      "count": 1
+    }
+  ],
+  "output": {"id": "hbm:machine_combustion_engine", "count": 1},
+  "duration": 300,
+  "power": 100,
+  "pools": []
+}

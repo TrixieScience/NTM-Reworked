@@ -1,0 +1,25 @@
+{
+  "id": "hbm:ass.pistonsetsteel",
+  "name": "ass.pistonsetsteel",
+  "inputs": [
+    {"ingredient": {"item": "hbm:plate_steel"}, "count": 16},
+    {"ingredient": {"item": "hbm:plate_copper"}, "count": 4},
+    {"ingredient": {"item": "hbm:ingot_tungsten"}, "count": 8},
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:bolt",
+        "components": {
+          "minecraft:custom_data": {"material": "tungsten"},
+          "minecraft:custom_model_data": 7400
+        },
+        "strict": true
+      },
+      "count": 16
+    }
+  ],
+  "output": {"id": "hbm:piston_set_steel", "count": 1},
+  "duration": 200,
+  "power": 100,
+  "pools": []
+}

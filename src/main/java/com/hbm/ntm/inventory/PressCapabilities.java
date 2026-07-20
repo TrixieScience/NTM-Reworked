@@ -92,6 +92,12 @@ public final class PressCapabilities {
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,
                 ModBlockEntities.MACHINE_TURBINE_GAS_PROXY.get(),
                 (proxy, side) -> proxy.fluidHandler(side));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK,
+                ModBlockEntities.MACHINE_COMBUSTION_ENGINE.get(),
+                (engine, side) -> new SidedInvWrapper(engine, side == null ? Direction.DOWN : side));
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,
+                ModBlockEntities.MACHINE_COMBUSTION_ENGINE_PROXY.get(),
+                (proxy, side) -> proxy.fluidHandler(side));
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.MACHINE_TURBOFAN.get(),
                 (turbofan, side) -> new SidedInvWrapper(turbofan, side == null ? Direction.DOWN : side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK,

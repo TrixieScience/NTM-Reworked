@@ -1,0 +1,26 @@
+{
+  "id": "hbm:ass.pistonsetdesh",
+  "name": "ass.pistonsetdesh",
+  "inputs": [
+    {"ingredient": {"item": "hbm:ingot_desh"}, "count": 24},
+    {"ingredient": {"item": "hbm:plate_polymer"}, "count": 12},
+    {"ingredient": {"item": "hbm:plate_copper"}, "count": 24},
+    {"ingredient": {"item": "hbm:ingot_tungsten"}, "count": 16},
+    {
+      "ingredient": {
+        "type": "neoforge:components",
+        "items": "hbm:pipe",
+        "components": {
+          "minecraft:custom_data": {"material": "dura_steel"},
+          "minecraft:custom_model_data": 33
+        },
+        "strict": true
+      },
+      "count": 4
+    }
+  ],
+  "output": {"id": "hbm:piston_set_desh", "count": 1},
+  "duration": 200,
+  "power": 100,
+  "pools": []
+}

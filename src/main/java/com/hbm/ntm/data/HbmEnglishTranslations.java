@@ -311,6 +311,12 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.machine_well", "Oil Derrick");
         language.addProperty("container.oilWell", "Oil Derrick");
         language.addProperty("block.hbm.machine_diesel", "Diesel Generator");
+        language.addProperty("block.hbm.machine_combustion_engine", "Industrial Combustion Engine");
+        language.addProperty("container.combustionEngine", "Industrial Combustion Engine");
+        language.addProperty("item.hbm.piston_set_steel", "Steel Piston Set");
+        language.addProperty("item.hbm.piston_set_dura", "High-Speed Steel Piston Set");
+        language.addProperty("item.hbm.piston_set_desh", "Desh Piston Set");
+        language.addProperty("item.hbm.piston_set_starmetal", "Starmetal Piston Set");
         language.addProperty("container.machineDiesel", "Diesel Generator");
         language.addProperty("block.hbm.machine_diesel.desc.0", "Fuel efficiency:");
         language.addProperty("block.hbm.machine_diesel.desc.1", "-Medium: 50%");

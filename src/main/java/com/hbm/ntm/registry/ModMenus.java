@@ -13,6 +13,7 @@ import com.hbm.ntm.inventory.BlastFurnaceMenu;
 import com.hbm.ntm.inventory.BrickFurnaceMenu;
 import com.hbm.ntm.inventory.BreedingReactorMenu;
 import com.hbm.ntm.inventory.CombinationOvenMenu;
+import com.hbm.ntm.inventory.CombustionEngineMenu;
 import com.hbm.ntm.inventory.CrucibleMenu;
 import com.hbm.ntm.inventory.ChemicalPlantMenu;
 import com.hbm.ntm.inventory.CentrifugeMenu;
@@ -188,6 +189,9 @@ public final class ModMenus {
 
     public static final DeferredHolder<MenuType<?>, MenuType<DieselGeneratorMenu>> MACHINE_DIESEL = MENUS.register(
             "machine_diesel", () -> IMenuTypeExtension.create(DieselGeneratorMenu::new));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<CombustionEngineMenu>> MACHINE_COMBUSTION_ENGINE = MENUS.register(
+            "machine_combustion_engine", () -> IMenuTypeExtension.create(CombustionEngineMenu::new));
 
     public static final DeferredHolder<MenuType<?>, MenuType<TurbofanMenu>> MACHINE_TURBOFAN = MENUS.register(
             "machine_turbofan", () -> IMenuTypeExtension.create(TurbofanMenu::new));

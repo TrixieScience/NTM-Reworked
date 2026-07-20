@@ -164,6 +164,8 @@ public final class ModSounds {
                     ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block.centrifugeoperate"), 10F));
     public static final DeferredHolder<SoundEvent, SoundEvent> STEAM_ENGINE_OPERATE =
             register("block.steamengineoperate");
+    public static final DeferredHolder<SoundEvent, SoundEvent> COMBUSTION_ENGINE_OPERATE =
+            register("block.combustion_engine_operate");
     public static final DeferredHolder<SoundEvent, SoundEvent> TURBINE_LEVER = register("block.turbine_lever");
     public static final DeferredHolder<SoundEvent, SoundEvent> TURBINE_LARGE_LOOP = SOUNDS.register(
             "block.turbine_large_loop", () -> SoundEvent.createFixedRangeEvent(

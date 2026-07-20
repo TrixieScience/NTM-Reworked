@@ -22,6 +22,7 @@ import com.hbm.ntm.block.CoalDustGasBlock;
 import com.hbm.ntm.block.CarbonMonoxideGasBlock;
 import com.hbm.ntm.block.ChemicalPlantBlock;
 import com.hbm.ntm.block.CombinationOvenBlock;
+import com.hbm.ntm.block.CombustionEngineBlock;
 import com.hbm.ntm.block.CentrifugeBlock;
 import com.hbm.ntm.block.ConventionalExplosiveBlock;
 import com.hbm.ntm.block.ConveyorBlock;
@@ -177,6 +178,7 @@ public final class ModBlocks {
     public static final DeferredBlock<RadioTorchBlock> RADIO_TORCH_READER;
     public static final DeferredBlock<RadioTorchBlock> RADIO_TORCH_CONTROLLER;
     public static final DeferredBlock<DieselGeneratorBlock> MACHINE_DIESEL;
+    public static final DeferredBlock<CombustionEngineBlock> MACHINE_COMBUSTION_ENGINE;
     public static final DeferredBlock<DfcCoreBlock> DFC_CORE;
     public static final DeferredBlock<DfcComponentBlock> DFC_EMITTER;
     public static final DeferredBlock<DfcComponentBlock> DFC_INJECTOR;
@@ -488,6 +490,9 @@ public final class ModBlocks {
         RADIO_TORCH_CONTROLLER = radioTorch("radio_torch_controller", RadioTorchBlock.Kind.CONTROLLER);
         MACHINE_DIESEL = BLOCKS.register("machine_diesel", () -> new DieselGeneratorBlock(
                 BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 6.0F)
+                        .sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+        MACHINE_COMBUSTION_ENGINE = BLOCKS.register("machine_combustion_engine", () -> new CombustionEngineBlock(
+                BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 10.0F)
                         .sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
         DFC_CORE = BLOCKS.register("dfc_core", () -> new DfcCoreBlock(BlockBehaviour.Properties.of()
                 .mapColor(MapColor.METAL).strength(5.0F, 10.0F).sound(SoundType.METAL)

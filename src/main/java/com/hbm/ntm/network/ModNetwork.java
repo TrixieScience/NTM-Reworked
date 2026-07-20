@@ -90,6 +90,11 @@ public final class ModNetwork {
                 GasTurbineControlPayload.STREAM_CODEC,
                 GasTurbineControlPayload::handle
         );
+        registrar.playToServer(
+                CombustionEngineControlPayload.TYPE,
+                CombustionEngineControlPayload.STREAM_CODEC,
+                CombustionEngineControlPayload::handle
+        );
         registrar.playToClient(
                 VomitPayload.TYPE,
                 VomitPayload.STREAM_CODEC,

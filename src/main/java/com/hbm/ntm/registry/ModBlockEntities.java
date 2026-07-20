@@ -24,6 +24,8 @@ import com.hbm.ntm.blockentity.ChemicalPlantBlockEntity;
 import com.hbm.ntm.blockentity.ChemicalPlantProxyBlockEntity;
 import com.hbm.ntm.blockentity.CombinationOvenBlockEntity;
 import com.hbm.ntm.blockentity.CombinationOvenProxyBlockEntity;
+import com.hbm.ntm.blockentity.CombustionEngineBlockEntity;
+import com.hbm.ntm.blockentity.CombustionEngineProxyBlockEntity;
 import com.hbm.ntm.blockentity.CentrifugeBlockEntity;
 import com.hbm.ntm.blockentity.CentrifugeProxyBlockEntity;
 import com.hbm.ntm.blockentity.ConveyorBoxerBlockEntity;
@@ -489,6 +491,16 @@ public final class ModBlockEntities {
             BLOCK_ENTITY_TYPES.register("machine_diesel",
                     () -> BlockEntityType.Builder.of(DieselGeneratorBlockEntity::new,
                             ModBlocks.MACHINE_DIESEL.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CombustionEngineBlockEntity>> MACHINE_COMBUSTION_ENGINE =
+            BLOCK_ENTITY_TYPES.register("machine_combustion_engine",
+                    () -> BlockEntityType.Builder.of(CombustionEngineBlockEntity::new,
+                            ModBlocks.MACHINE_COMBUSTION_ENGINE.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CombustionEngineProxyBlockEntity>> MACHINE_COMBUSTION_ENGINE_PROXY =
+            BLOCK_ENTITY_TYPES.register("machine_combustion_engine_proxy",
+                    () -> BlockEntityType.Builder.of(CombustionEngineProxyBlockEntity::new,
+                            ModBlocks.MACHINE_COMBUSTION_ENGINE.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidDuctBlockEntity>> FLUID_DUCT =
             BLOCK_ENTITY_TYPES.register("fluid_duct",

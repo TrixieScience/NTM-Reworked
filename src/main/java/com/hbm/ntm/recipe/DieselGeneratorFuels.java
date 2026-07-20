@@ -6,7 +6,13 @@ import net.minecraft.world.level.material.Fluid;
 
 /** Source fuel-grade table and integer-first HE conversion used by the Diesel Generator. */
 public final class DieselGeneratorFuels {
-    public enum Grade { LOW, MEDIUM, HIGH, AERO, GAS, NONE }
+    public enum Grade {
+        LOW("Low"), MEDIUM("Medium"), HIGH("High"), AERO("Aviation"), GAS("Gaseous"), NONE("None");
+
+        private final String displayName;
+        Grade(String displayName) { this.displayName = displayName; }
+        public String displayName() { return displayName; }
+    }
 
     private DieselGeneratorFuels() { }
 

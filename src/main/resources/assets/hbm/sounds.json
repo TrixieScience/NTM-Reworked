@@ -389,6 +389,10 @@
     "category": "block",
     "sounds": [{"name": "hbm:block/steam_engine_operate", "stream": false}]
   },
+  "block.combustion_engine_operate": {
+    "category": "block",
+    "sounds": [{"name": "hbm:block/combustion_engine_operate", "stream": true}]
+  },
   "block.turbine_lever": {
     "category": "block",
     "sounds": [{"name": "hbm:block/chungus_lever", "stream": false}]
