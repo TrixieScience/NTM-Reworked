@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "hbm:gun_carbine"
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    }
+  },
+  "pattern": [
+    " M ",
+    "MCM",
+    " M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_mas36"
+  }
+}

@@ -4705,6 +4705,10 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "M", foundryPart("part_mechanism", "gunmetal", 49),
                 "G", foundryPart("part_grip", "wood", 3)), "gun_light_revolver"),
                 recipes, hbm("gun_light_revolver")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MAM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "A", itemIngredient("hbm:gun_light_revolver")), "gun_light_revolver_atlas"),
+                recipes, hbm("gun_light_revolver_atlas")));
         writes.add(save(output, weaponRecipe(List.of("BRP", "BMS"), Map.of(
                 "B", foundryPart("part_barrel_light", "steel", 30),
                 "R", foundryPart("part_receiver_light", "gunmetal", 49),
@@ -4712,6 +4716,11 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "M", foundryPart("part_mechanism", "gunmetal", 49),
                 "S", foundryPart("part_stock", "wood", 3)), "gun_henry"),
                 recipes, hbm("gun_henry")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "PGP", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "P", tagIngredient("c:plates/gold"),
+                "G", itemIngredient("hbm:gun_henry")), "gun_henry_lincoln"),
+                recipes, hbm("gun_henry_lincoln")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "BGS"), Map.of(
                 "B", foundryPart("part_barrel_light", "steel", 30),
                 "R", foundryPart("part_receiver_light", "steel", 30),
@@ -4719,6 +4728,15 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "G", materialComponentIngredient("hbm:bolt", "steel", 30),
                 "S", foundryPart("part_stock", "wood", 3)), "gun_maresleg"),
                 recipes, hbm("gun_maresleg")));
+        writes.add(save(output, weaponRecipe(List.of("SMS"), Map.of(
+                "S", itemIngredient("hbm:gun_maresleg"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_maresleg_akimbo"),
+                recipes, hbm("gun_maresleg_akimbo")));
+        writes.add(save(output, weaponRecipe(List.of("IPI", "PGP", "IPI"), Map.of(
+                "I", itemIngredient("minecraft:iron_bars"),
+                "P", itemIngredient("hbm:plate_weaponsteel"),
+                "G", itemIngredient("hbm:gun_maresleg")), "gun_maresleg_broken"),
+                recipes, hbm("gun_maresleg_broken")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
                 "B", foundryPart("part_barrel_heavy", "steel", 30),
                 "R", foundryPart("part_receiver_light", "steel", 30),
@@ -4750,6 +4768,17 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "B", foundryPart("part_barrel_heavy", "dura_steel", 33),
                 "R", foundryPart("part_receiver_heavy", "dura_steel", 33)), "gun_flamer"),
                 recipes, hbm("gun_flamer")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MFM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "F", itemIngredient("hbm:gun_flamer")), "gun_flamer_topaz"),
+                recipes, hbm("gun_flamer_topaz")));
+        writes.add(save(output, weaponRecipe(List.of("GSG", "PFP", "GDG"), Map.of(
+                "G", tagIngredient("c:plates/gold"),
+                "S", itemIngredient("minecraft:slime_ball"),
+                "P", itemIngredient("minecraft:blaze_powder"),
+                "F", itemIngredient("hbm:gun_flamer"),
+                "D", itemIngredient("hbm:stick_dynamite")), "gun_flamer_daybreaker"),
+                recipes, hbm("gun_flamer_daybreaker")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "  G"), Map.of(
                 "B", foundryPart("part_barrel_light", "desh", 42),
                 "R", foundryPart("part_receiver_light", "desh", 42),
@@ -4763,6 +4792,10 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "G", foundryPart("part_grip", "wood", 3),
                 "S", foundryPart("part_stock", "wood", 3)), "gun_carbine"),
                 recipes, hbm("gun_carbine")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MCM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "C", itemIngredient("hbm:gun_carbine")), "gun_mas36"),
+                recipes, hbm("gun_mas36")));
         writes.add(save(output, weaponRecipe(List.of("BRS", " GM"), Map.of(
                 "B", foundryPart("part_barrel_light", "desh", 42),
                 "R", foundryPart("part_receiver_light", "desh", 42),
@@ -4793,12 +4826,39 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "M", foundryPart("part_mechanism", "weapon_steel", 50),
                 "G", foundryPart("part_grip", "polymer", 20_001)), "gun_star_f"),
                 recipes, hbm("gun_star_f")));
+        writes.add(save(output, weaponRecipe(List.of("UMU"), Map.of(
+                "U", itemIngredient("hbm:gun_star_f"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_star_f_akimbo"),
+                recipes, hbm("gun_star_f_akimbo")));
+        writes.add(save(output, weaponRecipe(List.of("BRM", "WGS"), Map.of(
+                "B", foundryPart("part_barrel_light", "weapon_steel", 50),
+                "R", foundryPart("part_receiver_light", "weapon_steel", 50),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "W", foundryPart("part_grip", "wood", 3),
+                "G", foundryPart("part_grip", "rubber", 20_003),
+                "S", foundryPart("part_stock", "wood", 3)), "gun_g3"),
+                recipes, hbm("gun_g3")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MPM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "P", itemIngredient("hbm:gun_g3")), "gun_g3_zebra"),
+                recipes, hbm("gun_g3_zebra")));
         writes.add(save(output, weaponRecipe(List.of("BRM", "G G"), Map.of(
                 "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
                 "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
                 "M", foundryPart("part_mechanism", "weapon_steel", 50),
                 "G", foundryPart("part_grip", "polymer", 20_001)), "gun_autoshotgun"),
                 recipes, hbm("gun_autoshotgun")));
+        writes.add(save(output, weaponRecipe(List.of(" M ", "MAM", " M "), Map.of(
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "A", itemIngredient("hbm:gun_autoshotgun")), "gun_autoshotgun_shredder"),
+                recipes, hbm("gun_autoshotgun_shredder")));
+        writes.add(save(output, weaponRecipe(List.of("BNB", "CAC", "BSB"), Map.of(
+                "B", materialComponentIngredient("hbm:bolt", "steel", 30),
+                "N", itemIngredient("minecraft:nether_star"),
+                "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
+                "A", itemIngredient("hbm:gun_autoshotgun"),
+                "S", tagIngredient("c:ingots/schrabidium")), "gun_autoshotgun_sexy"),
+                recipes, hbm("gun_autoshotgun_sexy")));
         writes.add(save(output, weaponRecipe(List.of("BCB", "BMB", "GG "), Map.of(
                 "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
                 "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
@@ -4824,6 +4884,53 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "B", resistantPart("part_barrel_heavy"),
                 "G", foundryPart("part_grip", "polymer", 20_001)), "gun_missile_launcher"),
                 recipes, hbm("gun_missile_launcher")));
+        writes.add(save(output, weaponRecipe(List.of(" GG", "BRM", " D "), Map.of(
+                "G", foundryPart("part_grip", "polymer", 20_001),
+                "B", foundryPart("part_barrel_heavy", "weapon_steel", 50),
+                "R", foundryPart("part_receiver_heavy", "weapon_steel", 50),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                // Source wants a Weapon Steel shell. The foundry threw it back, so Steel gets the job.
+                "D", materialComponentIngredient("hbm:shell", "steel", 30)), "gun_mk108"),
+                recipes, hbm("gun_mk108")));
+        writes.add(save(output, weaponRecipe(List.of(" D ", "BRS", "GGM"), Map.of(
+                "D", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
+                "B", foundryPart("part_barrel_light", "weapon_steel", 50),
+                "R", foundryPart("part_receiver_light", "weapon_steel", 50),
+                "S", foundryPart("part_stock", "polymer", 20_001),
+                "G", foundryPart("part_grip", "polymer", 20_001),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_stg77"),
+                recipes, hbm("gun_stg77")));
+        writes.add(save(output, weaponRecipe(List.of("  G", "BRM", "  G"), Map.of(
+                "G", foundryPart("part_grip", "wood", 3),
+                "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
+                "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_m2"),
+                recipes, hbm("gun_m2")));
+        writes.add(save(output, weaponRecipe(List.of(" C ", "BRS", " MG"), Map.of(
+                "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
+                "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
+                "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
+                "S", foundryPart("part_stock", "wood", 3),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "G", foundryPart("part_grip", "wood", 3)), "gun_amat"),
+                recipes, hbm("gun_amat")));
+        writes.add(save(output, weaponRecipe(List.of("SAS", "AGA", "SAS"), Map.of(
+                "S", tagIngredient("c:ingots/schrabidium"),
+                "A", tagIngredient("c:plates/aluminum"),
+                "G", itemIngredient("hbm:gun_amat")), "gun_amat_subtlety"),
+                recipes, hbm("gun_amat_subtlety")));
+        writes.add(save(output, weaponRecipe(List.of("SDS", "MAG", "SDS"), Map.of(
+                "S", tagIngredient("c:ingots/schrabidium"),
+                "D", materialComponentIngredient("hbm:plate_cast", "dura_steel", 33),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "A", itemIngredient("hbm:gun_amat"),
+                "G", foundryPart("part_stock", "polymer", 20_001)), "gun_amat_penance"),
+                recipes, hbm("gun_amat_penance")));
+        writes.add(save(output, weaponRecipe(List.of("NMN", "MHM", "NMN"), Map.of(
+                "N", itemIngredient("minecraft:nether_star"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "H", itemIngredient("hbm:gun_heavy_revolver")), "gun_hangman"),
+                recipes, hbm("gun_hangman")));
     }
 
     private JsonObject weaponRecipe(List<String> pattern, Map<String, JsonObject> key, String output) {

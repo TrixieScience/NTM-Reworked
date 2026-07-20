@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "hbm:gun_maresleg"
+    },
+    "I": {
+      "item": "minecraft:iron_bars"
+    },
+    "P": {
+      "item": "hbm:plate_weaponsteel"
+    }
+  },
+  "pattern": [
+    "IPI",
+    "PGP",
+    "IPI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_maresleg_broken"
+  }
+}

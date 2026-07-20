@@ -1,0 +1,80 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_barrel_light",
+      "strict": false
+    },
+    "G": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "rubber"
+        },
+        "minecraft:custom_model_data": 20003
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "R": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_receiver_light",
+      "strict": false
+    },
+    "S": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "wood"
+        },
+        "minecraft:custom_model_data": 3
+      },
+      "items": "hbm:part_stock",
+      "strict": false
+    },
+    "W": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "wood"
+        },
+        "minecraft:custom_model_data": 3
+      },
+      "items": "hbm:part_grip",
+      "strict": false
+    }
+  },
+  "pattern": [
+    "BRM",
+    "WGS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_g3"
+  }
+}

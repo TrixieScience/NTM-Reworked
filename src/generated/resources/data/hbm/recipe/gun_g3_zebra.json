@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "P": {
+      "item": "hbm:gun_g3"
+    }
+  },
+  "pattern": [
+    " M ",
+    "MPM",
+    " M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_g3_zebra"
+  }
+}

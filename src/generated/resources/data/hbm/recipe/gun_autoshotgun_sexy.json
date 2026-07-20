@@ -1,0 +1,46 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "hbm:gun_autoshotgun"
+    },
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:bolt",
+      "strict": false
+    },
+    "C": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "type": "advanced"
+        },
+        "minecraft:custom_model_data": 9
+      },
+      "items": "hbm:circuit",
+      "strict": false
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    },
+    "S": {
+      "tag": "c:ingots/schrabidium"
+    }
+  },
+  "pattern": [
+    "BNB",
+    "CAC",
+    "BSB"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_autoshotgun_sexy"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "hbm:gun_henry"
+    },
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "P": {
+      "tag": "c:plates/gold"
+    }
+  },
+  "pattern": [
+    " M ",
+    "PGP",
+    " M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_henry_lincoln"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "weapon_steel"
+        },
+        "minecraft:custom_model_data": 50
+      },
+      "items": "hbm:part_mechanism",
+      "strict": false
+    },
+    "U": {
+      "item": "hbm:gun_star_f"
+    }
+  },
+  "pattern": [
+    "UMU"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:gun_star_f_akimbo"
+  }
+}
