@@ -4,6 +4,7 @@ import com.hbm.ntm.item.SourceFluidContainerHandler;
 import com.hbm.ntm.item.SourceFluidContainerItem;
 import com.hbm.ntm.item.BlowtorchFluidHandler;
 import com.hbm.ntm.item.InfiniteFluidBarrelHandler;
+import com.hbm.ntm.item.LegacyFluidCellHandler;
 import com.hbm.ntm.item.UniversalFluidContainerHandler;
 import com.hbm.ntm.registry.ModBlockEntities;
 import com.hbm.ntm.registry.ModFluids;
@@ -12,6 +13,8 @@ import net.minecraft.core.Direction;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
+
+import java.util.List;
 
 public final class PressCapabilities {
     private PressCapabilities() {
@@ -200,15 +203,23 @@ public final class PressCapabilities {
                         ModItems.GAS_EMPTY::get, ModItems.GAS_FULL::get, 1_000),
                 ModItems.GAS_FULL.get());
         event.registerItem(Capabilities.FluidHandler.ITEM,
-                (stack, context) -> SourceFluidContainerHandler.fixedEmpty(stack,
-                        SourceFluidContainerItem.ContainedFluid.TRITIUM,
-                        ModItems.CELL_EMPTY::get, ModItems.CELL_TRITIUM::get, 1_000),
+                (stack, context) -> LegacyFluidCellHandler.empty(stack, List.of(
+                                new LegacyFluidCellHandler.Filling(ModFluids.TRITIUM::get,
+                                        ModItems.CELL_TRITIUM::get),
+                                new LegacyFluidCellHandler.Filling(ModFluids.SAS3::get,
+                                        ModItems.CELL_SAS3::get)),
+                        ModItems.CELL_EMPTY::get, 1_000),
                 ModItems.CELL_EMPTY.get());
         event.registerItem(Capabilities.FluidHandler.ITEM,
-                (stack, context) -> SourceFluidContainerHandler.fixedFull(stack,
-                        SourceFluidContainerItem.ContainedFluid.TRITIUM,
-                        ModItems.CELL_EMPTY::get, ModItems.CELL_TRITIUM::get, 1_000),
+                (stack, context) -> LegacyFluidCellHandler.full(stack,
+                        new LegacyFluidCellHandler.Filling(ModFluids.TRITIUM::get,
+                                ModItems.CELL_TRITIUM::get), ModItems.CELL_EMPTY::get, 1_000),
                 ModItems.CELL_TRITIUM.get());
+        event.registerItem(Capabilities.FluidHandler.ITEM,
+                (stack, context) -> LegacyFluidCellHandler.full(stack,
+                        new LegacyFluidCellHandler.Filling(ModFluids.SAS3::get,
+                                ModItems.CELL_SAS3::get), ModItems.CELL_EMPTY::get, 1_000),
+                ModItems.CELL_SAS3.get());
         event.registerItem(Capabilities.FluidHandler.ITEM,
                 (stack, context) -> SourceFluidContainerHandler.consumable(stack, ModFluids.OIL::get, 250),
                 ModItems.ORE_OIL_ITEM.get());

@@ -56,7 +56,7 @@ public final class ConcreteProgressionGameTests {
     @GameTest(template = "empty")
     public static void concreteChemicalRecipeAndTagMatchSource(GameTestHelper helper) {
         var concrete = ChemicalPlantRecipes.get(ChemicalPlantRecipes.CONCRETE);
-        check(helper, concrete != null && ChemicalPlantRecipes.all().size() == 21
+        check(helper, concrete != null && ChemicalPlantRecipes.all().size() == 22
                         && concrete.duration() == 100 && concrete.power() == 100
                         && concrete.itemInputs().size() == 3
                         && concrete.itemInputs().get(0).count() == 1

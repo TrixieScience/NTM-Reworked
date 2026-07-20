@@ -405,9 +405,22 @@ public final class CoreProgressionRecipeGameTests {
         check(helper, drained.is(ModFluids.TRITIUM.get()) && drained.getAmount() == 1_000
                         && handler.getContainer().is(ModItems.CELL_EMPTY.get()),
                 "Draining a Tritium Cell must return 1,000 mB and its empty shell");
+        check(helper, handler.fill(new FluidStack(ModFluids.SAS3.get(), 1_000),
+                        IFluidHandler.FluidAction.EXECUTE) == 1_000
+                        && handler.getContainer().is(ModItems.CELL_SAS3.get()),
+                "The same Empty Cell must also accept a full bucket of SAS3");
+        drained = handler.drain(1_000, IFluidHandler.FluidAction.EXECUTE);
+        check(helper, drained.is(ModFluids.SAS3.get()) && drained.getAmount() == 1_000
+                        && handler.getContainer().is(ModItems.CELL_EMPTY.get()),
+                "Draining an SAS3 Cell must return 1,000 mB and its empty shell");
         check(helper, ModItems.CELL_TRITIUM.get()
                         .hbm$getHazards(new ItemStack(ModItems.CELL_TRITIUM.get())).radiation() == 0.001F,
                 "Tritium Cells must retain the source 0.001 RAD/s hazard");
+        check(helper, ModItems.CELL_SAS3.get()
+                        .hbm$getHazards(new ItemStack(ModItems.CELL_SAS3.get())).radiation() == 5.0F
+                        && ModItems.CELL_SAS3.get()
+                        .hbm$getHazards(new ItemStack(ModItems.CELL_SAS3.get())).blinding() == 60.0F,
+                "SAS3 Cells must retain the source 5 RAD/s and 60-tick blinding hazards");
 
         CustomNukeExplosion.Yields yields = CustomNukeExplosion.computeYields(List.of(
                 new ItemStack(ModItems.CUSTOM_TNT.get(), 2),
@@ -415,6 +428,12 @@ public final class CoreProgressionRecipeGameTests {
                 new ItemStack(ModItems.CELL_TRITIUM.get())));
         check(helper, yields.hydro() == 30F,
                 "One Tritium Cell must contribute the source 30 hydrogen-stage points");
+        yields = CustomNukeExplosion.computeYields(List.of(
+                new ItemStack(ModItems.CUSTOM_TNT.get(), 2),
+                new ItemStack(ModItems.get("ingot_u235").get(), 4),
+                new ItemStack(ModItems.CELL_SAS3.get())));
+        check(helper, yields.schrab() == 7.5F,
+                "One SAS3 Cell must contribute the source 7.5 schrabidium-stage points");
         helper.succeed();
     }
 

@@ -117,6 +117,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.rod_quad_empty", "Empty Quad Rod");
         language.addProperty("item.hbm.cell_empty", "Empty Cell");
         language.addProperty("item.hbm.cell_tritium", "Tritium Cell");
+        language.addProperty("item.hbm.cell_sas3", "Schrabidium Trisulfide Cell");
         Map.ofEntries(
                 Map.entry("lithium", "Lithium"), Map.entry("tritium", "Tritium"),
                 Map.entry("co", "Cobalt"), Map.entry("co60", "Cobalt-60"),
@@ -299,6 +300,9 @@ final class HbmEnglishTranslations {
         language.addProperty("fluid.hbm.deuterium", "Deuterium");
         language.addProperty("hbmfluid.tritium", "Tritium");
         language.addProperty("fluid.hbm.tritium", "Tritium");
+        language.addProperty("hbmfluid.sas3", "Schrabidium Trisulfide");
+        language.addProperty("fluid.hbm.sas3", "Schrabidium Trisulfide");
+        language.addProperty("fluid.hbm.flowing_sas3", "Schrabidium Trisulfide");
         language.addProperty("hbmfluid.cryogel", "Cryogel");
         language.addProperty("fluid.hbm.cryogel", "Cryogel");
         language.addProperty("hbmfluid.mercury", "Mercury");
@@ -362,6 +366,7 @@ final class HbmEnglishTranslations {
         language.addProperty("recipe.hbm.chem.lubeelectrodes", "Instant Electrodes (Lubricant)");
         language.addProperty("recipe.hbm.chem.cordite", "Cordite");
         language.addProperty("recipe.hbm.chem.dynamite", "Dynamite");
+        language.addProperty("recipe.hbm.chem.sas3", "Schrabidium Trisulfide Production");
         language.addProperty("block.hbm.machine_soldering_station", "Soldering Station");
         language.addProperty("container.machineSolderingStation", "Soldering Station");
         language.addProperty("block.hbm.machine_transformer", "10k-20Hz Transformer");

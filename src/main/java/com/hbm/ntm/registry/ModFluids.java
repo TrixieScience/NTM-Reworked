@@ -208,6 +208,13 @@ public final class ModFluids {
             "tritium", () -> new BaseFlowingFluid.Source(tritiumProperties()));
     public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_TRITIUM = FLUIDS.register(
             "flowing_tritium", () -> new BaseFlowingFluid.Flowing(tritiumProperties()));
+    public static final DeferredHolder<FluidType, FluidType> SAS3_TYPE = FLUID_TYPES.register(
+            "sas3", () -> new FluidType(FluidType.Properties.create().density(1_000).viscosity(1_000)
+                    .temperature(293)));
+    public static final DeferredHolder<Fluid, FlowingFluid> SAS3 = FLUIDS.register(
+            "sas3", () -> new BaseFlowingFluid.Source(sas3Properties()));
+    public static final DeferredHolder<Fluid, FlowingFluid> FLOWING_SAS3 = FLUIDS.register(
+            "flowing_sas3", () -> new BaseFlowingFluid.Flowing(sas3Properties()));
     public static final DeferredHolder<FluidType, FluidType> CRYOGEL_TYPE = FLUID_TYPES.register(
             "cryogel", () -> new FluidType(FluidType.Properties.create().density(1_000).viscosity(3_000)
                     .temperature(103)));
@@ -391,6 +398,10 @@ public final class ModFluids {
     private static BaseFlowingFluid.Properties tritiumProperties() {
         return new BaseFlowingFluid.Properties(TRITIUM_TYPE::get, TRITIUM::get, FLOWING_TRITIUM::get)
                 .slopeFindDistance(1).levelDecreasePerBlock(1);
+    }
+    private static BaseFlowingFluid.Properties sas3Properties() {
+        return new BaseFlowingFluid.Properties(SAS3_TYPE::get, SAS3::get, FLOWING_SAS3::get)
+                .slopeFindDistance(4).levelDecreasePerBlock(1);
     }
     private static BaseFlowingFluid.Properties cryogelProperties() {
         return new BaseFlowingFluid.Properties(CRYOGEL_TYPE::get, CRYOGEL::get, FLOWING_CRYOGEL::get)

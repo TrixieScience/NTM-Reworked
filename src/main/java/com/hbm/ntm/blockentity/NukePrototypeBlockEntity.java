@@ -3,13 +3,12 @@ package com.hbm.ntm.blockentity;
 import com.hbm.ntm.inventory.NukePrototypeMenu;
 import com.hbm.ntm.item.BreedingRodItem;
 import com.hbm.ntm.registry.ModBlockEntities;
+import com.hbm.ntm.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -45,22 +43,18 @@ public final class NukePrototypeBlockEntity extends BlockEntity implements World
      *   <li>slots 4, 5, 8, 9   = {@code rod_quad} of {@code BreedingRodType.LEAD}</li>
      *   <li>slots 6, 7         = {@code rod_quad} of {@code BreedingRodType.NP237}</li>
      * </ul>
-     * <p>{@code cell_sas3} is still absent, so the bomb cannot arm in survival yet.
      */
     public boolean isReady() {
-        Item cell = resolve("cell_sas3");
-        if (cell == null) return false;
         for (ItemStack stack : items) {
             if (stack.isEmpty()) return false;
         }
-        return items.get(0).is(cell) && items.get(1).is(cell)
-                && items.get(12).is(cell) && items.get(13).is(cell)
+        return items.get(0).is(ModItems.CELL_SAS3.get()) && items.get(1).is(ModItems.CELL_SAS3.get())
+                && items.get(12).is(ModItems.CELL_SAS3.get()) && items.get(13).is(ModItems.CELL_SAS3.get())
                 && hasCorrectRodLayout();
     }
 
     public boolean hasCorrectRodLayout() {
-        Item rod = resolve("rod_quad");
-        if (rod == null) return false;
+        Item rod = ModItems.ROD_QUAD.get();
         return isRod(2, rod, BreedingRodItem.Type.URANIUM)
                 && isRod(3, rod, BreedingRodItem.Type.URANIUM)
                 && isRod(4, rod, BreedingRodItem.Type.LEAD)
@@ -76,12 +70,6 @@ public final class NukePrototypeBlockEntity extends BlockEntity implements World
     private boolean isRod(int slot, Item rod, BreedingRodItem.Type type) {
         ItemStack stack = items.get(slot);
         return stack.is(rod) && BreedingRodItem.type(stack) == type;
-    }
-
-    @Nullable
-    private static Item resolve(String id) {
-        Item item = BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath("hbm", id));
-        return item == Items.AIR ? null : item;
     }
 
     public void clearForDetonation() {

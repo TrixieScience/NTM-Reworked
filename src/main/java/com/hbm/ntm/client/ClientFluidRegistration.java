@@ -293,6 +293,15 @@ public class ClientFluidRegistration {
             @Override
             public ResourceLocation getFlowingTexture() {return LIQUID_FLOW; }
             @Override
+            public int getTintColor() {return 0xFF4FFFFC; }
+        }, ModFluids.SAS3_TYPE.get());
+
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {return LIQUID_STILL; }
+            @Override
+            public ResourceLocation getFlowingTexture() {return LIQUID_FLOW; }
+            @Override
             public int getTintColor() {return 0xFF7DE7FF; }
         }, ModFluids.CRYOGEL_TYPE.get());
 

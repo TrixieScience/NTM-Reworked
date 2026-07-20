@@ -208,6 +208,7 @@ public final class ModItems {
     public static final DeferredItem<SourceFluidContainerItem> GAS_FULL;
     public static final DeferredItem<Item> CELL_EMPTY;
     public static final DeferredItem<FluidCellItem> CELL_TRITIUM;
+    public static final DeferredItem<FluidCellItem> CELL_SAS3;
     public static final DeferredItem<OilDerrickBlockItem> MACHINE_WELL_ITEM;
     public static final DeferredItem<BlockItem> RADIO_TORCH_SENDER_ITEM;
     public static final DeferredItem<BlockItem> RADIO_TORCH_RECEIVER_ITEM;
@@ -797,6 +798,9 @@ public final class ModItems {
         CELL_EMPTY = ITEMS.registerSimpleItem("cell_empty", new Item.Properties());
         CELL_TRITIUM = ITEMS.register("cell_tritium", () -> new FluidCellItem(
                 new Item.Properties(), HazardProfile.radiation(0.001F), CELL_EMPTY::get));
+        CELL_SAS3 = ITEMS.register("cell_sas3", () -> new FluidCellItem(
+                new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE),
+                HazardProfile.radiation(5.0F).withBlinding(60.0F), CELL_EMPTY::get));
         MACHINE_WELL_ITEM = ITEMS.register("machine_well",
                 () -> new OilDerrickBlockItem(ModBlocks.MACHINE_WELL.get(), new Item.Properties()));
         RADIO_TORCH_SENDER_ITEM = ITEMS.registerSimpleBlockItem("radio_torch_sender", ModBlocks.RADIO_TORCH_SENDER);

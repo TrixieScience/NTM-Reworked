@@ -85,8 +85,9 @@ public final class CustomNukeExplosion {
         add(map, item("ingot_schrabidium"), BombType.SCHRAB, 5F);
         add(map, item("nugget_schrabidium"), BombType.SCHRAB, 0.5F);
         add(map, item("powder_schrabidium"), BombType.SCHRAB, 5F);
+        add(map, ModItems.CELL_SAS3.get(), BombType.SCHRAB, 7.5F);
         add(map, ModItems.CUSTOM_SCHRAB.get(), BombType.SCHRAB, 15F);
-        // block_schrabidium, cell_sas3 and cell_anti_schrabidium are not registered yet.
+        // block_schrabidium and cell_anti_schrabidium are not registered yet.
 
         // === EUPHEMIUM (ADD) === waiting on Euphemium ingots and nuggets.
 

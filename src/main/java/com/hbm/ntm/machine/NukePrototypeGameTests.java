@@ -64,17 +64,28 @@ public final class NukePrototypeGameTests {
         helper.succeed();
     }
 
-    /** cell_sas3 is still absent, so the gate must reject empty or incorrect fills. */
     @GameTest(template = "empty")
-    public static void readinessStaysGatedWithoutArmingComponents(GameTestHelper helper) {
+    public static void readinessRequiresTheExactFourteenSourceComponents(GameTestHelper helper) {
         BlockPos pos = placeBomb(helper);
         NukePrototypeBlockEntity bomb = bomb(helper, pos);
         check(helper, !bomb.isReady(), "An empty Prototype must not be ready");
         for (int slot = 0; slot < NukePrototypeBlockEntity.SLOTS; slot++) {
             bomb.setItem(slot, new ItemStack(Items.IRON_INGOT));
         }
-        check(helper, !bomb.isReady(),
-                "The Prototype must stay unarmed without cell_sas3");
+        check(helper, !bomb.isReady(), "Fourteen random items must not arm the Prototype");
+
+        int[] cells = {0, 1, 12, 13};
+        int[] uranium = {2, 3, 10, 11};
+        int[] lead = {4, 5, 8, 9};
+        int[] neptunium = {6, 7};
+        for (int slot : cells) bomb.setItem(slot, new ItemStack(ModItems.CELL_SAS3.get()));
+        for (int slot : uranium) bomb.setItem(slot, quadRod(BreedingRodItem.Type.URANIUM));
+        for (int slot : lead) bomb.setItem(slot, quadRod(BreedingRodItem.Type.LEAD));
+        for (int slot : neptunium) bomb.setItem(slot, quadRod(BreedingRodItem.Type.NP237));
+        check(helper, bomb.isReady(), "Four SAS3 Cells and the exact U/Lead/Np rod layout must arm the Prototype");
+
+        bomb.setItem(13, new ItemStack(ModItems.CELL_TRITIUM.get()));
+        check(helper, !bomb.isReady(), "A Tritium Cell must not pass for SAS3 in the Prototype");
         helper.succeed();
     }
 

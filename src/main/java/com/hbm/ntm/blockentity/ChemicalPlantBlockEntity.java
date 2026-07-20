@@ -12,6 +12,7 @@ import com.hbm.ntm.item.UniversalFluidTankItem;
 import com.hbm.ntm.recipe.ChemicalPlantRecipes;
 import com.hbm.ntm.recipe.ChemicalPlantRecipes.ChemicalRecipe;
 import com.hbm.ntm.registry.ModBlockEntities;
+import com.hbm.ntm.registry.ModFluids;
 import com.hbm.ntm.registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -255,6 +256,12 @@ public final class ChemicalPlantBlockEntity extends BlockEntity
                     fluid = contained.fluid();
                     remainder = new ItemStack(ModItems.GAS_EMPTY.get());
                 }
+            } else if (stack.is(ModItems.CELL_TRITIUM.get())) {
+                fluid = ModFluids.TRITIUM.get();
+                remainder = new ItemStack(ModItems.CELL_EMPTY.get());
+            } else if (stack.is(ModItems.CELL_SAS3.get())) {
+                fluid = ModFluids.SAS3.get();
+                remainder = new ItemStack(ModItems.CELL_EMPTY.get());
             } else if (stack.is(ModItems.get("nugget_mercury").get())) {
                 fluid = com.hbm.ntm.registry.ModFluids.MERCURY.get();
                 amount = 125;
@@ -293,6 +300,13 @@ public final class ChemicalPlantBlockEntity extends BlockEntity
                         && type != SourceFluidContainerItem.ContainedFluid.HYDROGEN
                         && type != SourceFluidContainerItem.ContainedFluid.OXYGEN) continue;
                 full = SourceFluidContainerItem.create(ModItems.GAS_FULL.get(), type, 1);
+            } else if (empty.is(ModItems.CELL_EMPTY.get())) {
+                Fluid fluid = tank.getFluid().getFluid();
+                if (fluid.isSame(ModFluids.TRITIUM.get())) {
+                    full = new ItemStack(ModItems.CELL_TRITIUM.get());
+                } else if (fluid.isSame(ModFluids.SAS3.get())) {
+                    full = new ItemStack(ModItems.CELL_SAS3.get());
+                } else continue;
             } else continue;
             if (!canMerge(items.get(resultSlot), full)) continue;
             empty.shrink(1);

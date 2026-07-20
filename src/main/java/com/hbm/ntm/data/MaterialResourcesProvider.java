@@ -724,6 +724,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, gasFullModel(), itemModels, hbm("gas_full")));
         writes.add(save(output, generatedItemModel("cell_empty"), itemModels, hbm("cell_empty")));
         writes.add(save(output, generatedItemModel("cell_tritium"), itemModels, hbm("cell_tritium")));
+        writes.add(save(output, generatedItemModel("cell_sas3"), itemModels, hbm("cell_sas3")));
         writes.add(save(output, sourceContainerRecipe(true), recipes, hbm("canister_empty")));
         writes.add(save(output, sourceContainerRecipe(false), recipes, hbm("gas_empty")));
         writes.add(save(output, smeltingRecipe("hbm:ore_titanium", "hbm:ingot_titanium", 3.0F),

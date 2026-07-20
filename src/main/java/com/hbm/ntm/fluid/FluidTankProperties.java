@@ -53,6 +53,7 @@ public final class FluidTankProperties {
             case BLOOD -> profile(0, 0, 0, Symbol.NONE, Phase.LIQUID, false);
             case OXYGEN -> profile(3, 0, 0, Symbol.CRYOGENIC, Phase.LIQUID, false);
             case PAIN -> profile(2, 0, 1, Symbol.ACID, Phase.LIQUID, false);
+            case SAS3 -> profile(5, 0, 4, Symbol.RADIATION, Phase.LIQUID, false);
         };
     }
 

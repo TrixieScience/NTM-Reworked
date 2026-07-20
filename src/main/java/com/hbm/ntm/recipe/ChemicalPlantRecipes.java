@@ -26,6 +26,7 @@ public final class ChemicalPlantRecipes {
     public static final ResourceLocation OXYGEN = id("chem.oxygen");
     public static final ResourceLocation PEROXIDE = id("chem.peroxide");
     public static final ResourceLocation SULFURIC_ACID = id("chem.sulfuricacid");
+    public static final ResourceLocation SAS3 = id("chem.sas3");
     public static final ResourceLocation COLTAN_CLEANING = id("chem.coltancleaning");
     public static final ResourceLocation COLTAN_PAIN = id("chem.coltanpain");
     public static final ResourceLocation COLTAN_CRYSTAL = id("chem.coltancrystal");
@@ -127,6 +128,13 @@ public final class ChemicalPlantRecipes {
                     List.of(new FluidInput(ModFluids.PEROXIDE, 1_000),
                             new FluidInput(() -> net.minecraft.world.level.material.Fluids.WATER, 1_000)),
                     List.of(), List.of(new FluidOutput(ModFluids.SULFURIC_ACID, 2_000)), List.of()),
+            new ChemicalRecipe(SAS3, "chem.sas3", 200, 5_000,
+                    List.of(
+                            new ItemInput(Ingredient.of(ModItems.get("powder_schrabidium").get()), 1),
+                            new ItemInput(Ingredient.of(TagKey.create(Registries.ITEM,
+                                    ResourceLocation.fromNamespaceAndPath("c", "dusts/sulfur"))), 2)),
+                    List.of(new FluidInput(ModFluids.PEROXIDE, 2_000)),
+                    List.of(), List.of(new FluidOutput(ModFluids.SAS3, 1_000)), List.of()),
             new ChemicalRecipe(COLTAN_CLEANING, "chem.coltancleaning", 60, 100,
                     List.of(
                             new ItemInput(Ingredient.of(TagKey.create(Registries.ITEM,
@@ -209,6 +217,7 @@ public final class ChemicalPlantRecipes {
             if (id.equals(SULFURIC_ACID)) return com.hbm.ntm.item.UniversalFluidTankItem.create(
                     ModItems.FLUID_TANK_FULL.get(),
                     com.hbm.ntm.item.UniversalFluidTankItem.ContainedFluid.SULFURIC_ACID, 1);
+            if (id.equals(SAS3)) return new ItemStack(ModItems.CELL_SAS3.get());
             if (id.equals(COLTAN_PAIN)) return com.hbm.ntm.item.UniversalFluidTankItem.create(
                     ModItems.FLUID_TANK_FULL.get(),
                     com.hbm.ntm.item.UniversalFluidTankItem.ContainedFluid.PAIN, 1);
@@ -223,6 +232,7 @@ public final class ChemicalPlantRecipes {
             if (id.equals(OXYGEN)) return 0x98BDF9;
             if (id.equals(PEROXIDE)) return 0xFFF7AA;
             if (id.equals(SULFURIC_ACID)) return 0xB0AA64;
+            if (id.equals(SAS3)) return 0x4FFFFC;
             if (id.equals(COLTAN_PAIN) || id.equals(COLTAN_CRYSTAL)) return 0x938541;
             if (id.equals(DESH)) return 0x808080;
             if (id.equals(RUBBER)) return 0x2A2927;

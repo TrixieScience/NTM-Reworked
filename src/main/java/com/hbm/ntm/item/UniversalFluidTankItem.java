@@ -96,7 +96,8 @@ public final class UniversalFluidTankItem extends Item {
         FLUE("flue", "hbmfluid.flue", 0x131313, () -> ModFluids.FLUE.get()),
         MERCURY("mercury", "hbmfluid.mercury", 0x808080, () -> ModFluids.MERCURY.get()),
         BLOOD("blood", "hbmfluid.blood", 0xB22424, () -> ModFluids.BLOOD.get()),
-        PAIN("pain", "hbmfluid.pain", 0x938541, () -> ModFluids.PAIN.get());
+        PAIN("pain", "hbmfluid.pain", 0x938541, () -> ModFluids.PAIN.get()),
+        SAS3("sas3", "hbmfluid.sas3", 0x4FFFFC, () -> ModFluids.SAS3.get());
 
         private final String id;
         private final String translationKey;

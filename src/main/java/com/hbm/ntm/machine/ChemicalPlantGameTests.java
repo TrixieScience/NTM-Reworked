@@ -13,6 +13,7 @@ import com.hbm.ntm.item.BlueprintItem;
 import com.hbm.ntm.item.FluidIdentifierItem;
 import com.hbm.ntm.item.PipeItem;
 import com.hbm.ntm.item.UniversalFluidTankItem;
+import com.hbm.ntm.fluid.FluidTankProperties;
 import com.hbm.ntm.recipe.AssemblyRecipes;
 import com.hbm.ntm.recipe.ChemicalPlantRecipes;
 import com.hbm.ntm.registry.ModBlocks;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 import net.neoforged.neoforge.gametest.GameTestHolder;
 import net.neoforged.neoforge.gametest.PrefixGameTestTemplate;
 
@@ -153,8 +155,9 @@ public final class ChemicalPlantGameTests {
         var lubeElectrodes = ChemicalPlantRecipes.get(ChemicalPlantRecipes.LUBE_ELECTRODES);
         var cordite = ChemicalPlantRecipes.get(ChemicalPlantRecipes.CORDITE);
         var dynamite = ChemicalPlantRecipes.get(ChemicalPlantRecipes.DYNAMITE);
-        check(helper, ChemicalPlantRecipes.all().size() == 21,
-                "The Chemical Plant table must contain exactly twenty-one registered source recipes");
+        var sas3 = ChemicalPlantRecipes.get(ChemicalPlantRecipes.SAS3);
+        check(helper, ChemicalPlantRecipes.all().size() == 22,
+                "The Chemical Plant table must contain exactly twenty-two registered source recipes");
         check(helper, coalLube != null && coalLube.duration() == 40 && coalLube.power() == 100
                         && coalLube.pools().equals(java.util.List.of("alt..lube"))
                         && coalLube.fluidInputs().getFirst().amount() == 1_000
@@ -210,6 +213,59 @@ public final class ChemicalPlantGameTests {
                         && dynamite.itemOutputs().getFirst().is(ModItems.BALL_DYNAMITE.get())
                         && dynamite.itemOutputs().getFirst().getCount() == 2,
                 "Dynamite must preserve Sugar, Niter, Sand, two-output count and 50x100");
+        check(helper, sas3 != null && sas3.duration() == 200 && sas3.power() == 5_000
+                        && sas3.itemInputs().size() == 2
+                        && sas3.itemInputs().get(0).count() == 1
+                        && sas3.itemInputs().get(0).matches(
+                                new ItemStack(ModItems.get("powder_schrabidium").get()))
+                        && sas3.itemInputs().get(1).count() == 2
+                        && sas3.itemInputs().get(1).matches(new ItemStack(ModItems.get("sulfur").get(), 2))
+                        && sas3.fluidInputs().getFirst().amount() == 2_000
+                        && sas3.fluidInputs().getFirst().fluid().get().isSame(ModFluids.PEROXIDE.get())
+                        && sas3.fluidOutputs().getFirst().amount() == 1_000
+                        && sas3.fluidOutputs().getFirst().fluid().get().isSame(ModFluids.SAS3.get()),
+                "SAS3 must preserve one Schrabidium dust, two Sulfur, 2,000 mB Peroxide and 200x5,000");
+        FluidTankProperties.Profile sas3Profile = FluidTankProperties.get(FluidIdentifierItem.Selection.SAS3);
+        check(helper, sas3Profile.health() == 5 && sas3Profile.flammability() == 0
+                        && sas3Profile.reactivity() == 4
+                        && sas3Profile.symbol() == FluidTankProperties.Symbol.RADIATION
+                        && sas3Profile.phase() == FluidTankProperties.Phase.LIQUID,
+                "SAS3 tanks must show the source 5/0/4 radioactive-liquid warning diamond");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void sas3RunsAndFillsItsLegacyCell(GameTestHelper helper) {
+        ChemicalPlantBlockEntity plant = barePlant(helper, new BlockPos(3, 1, 3));
+        check(helper, plant.selectRecipe(ChemicalPlantRecipes.SAS3), "SAS3 recipe must be selectable");
+        tick(helper, plant);
+        plant.inputTank(0).fill(new FluidStack(ModFluids.PEROXIDE.get(), 2_000),
+                IFluidHandler.FluidAction.EXECUTE);
+        plant.setItem(4, new ItemStack(ModItems.get("powder_schrabidium").get()));
+        plant.setItem(5, new ItemStack(ModItems.get("sulfur").get(), 2));
+        for (int i = 0; i < 200; i++) {
+            plant.setPower(plant.getMaxPower());
+            tick(helper, plant);
+        }
+        check(helper, plant.outputTank(0).getFluidAmount() == 1_000
+                        && plant.outputTank(0).getFluid().is(ModFluids.SAS3.get())
+                        && plant.inputTank(0).isEmpty() && plant.getItem(4).isEmpty()
+                        && plant.getItem(5).isEmpty(),
+                "The full source batch must consume its solids and Peroxide into 1,000 mB SAS3");
+
+        plant.setItem(ChemicalPlantBlockEntity.FLUID_OUTPUT_CONTAINER_START,
+                new ItemStack(ModItems.CELL_EMPTY.get()));
+        tick(helper, plant);
+        check(helper, plant.outputTank(0).isEmpty()
+                        && plant.getItem(ChemicalPlantBlockEntity.FLUID_OUTPUT_RESULT_START)
+                        .is(ModItems.CELL_SAS3.get()),
+                "An Empty Cell must bottle the finished SAS3 exactly like the legacy container registry");
+
+        ItemStack cell = new ItemStack(ModItems.CELL_SAS3.get());
+        IFluidHandlerItem handler = cell.getCapability(Capabilities.FluidHandler.ITEM);
+        check(helper, handler != null && handler.getFluidInTank(0).is(ModFluids.SAS3.get())
+                        && handler.getFluidInTank(0).getAmount() == 1_000,
+                "The bottled SAS3 Cell must expose its full 1,000 mB fluid capability");
         helper.succeed();
     }
 
