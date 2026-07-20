@@ -32,7 +32,7 @@ public final class GasTurbineScreen extends AbstractContainerScreen<GasTurbineMe
         imageWidth = 176;
         imageHeight = 223;
         inventoryLabelX = 8;
-        inventoryLabelY = 130;
+        inventoryLabelY = 129;
     }
 
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
@@ -109,7 +109,8 @@ public final class GasTurbineScreen extends AbstractContainerScreen<GasTurbineMe
         graphics.blit(UTILITY, leftPos - 16, topPos + 34, 8, 0, 16, 16, 256, 256);
         graphics.blit(UTILITY, leftPos - 16, topPos + 50, 24, 0, 16, 16, 256, 256);
         if (menu.fuel() < 5_000 || menu.lubricant() < 1_000) {
-            graphics.blit(UTILITY, leftPos - 16, topPos + 66, 8, 16, 16, 16, 256, 256);
+            int warningU = menu.fuel() == 0 || menu.lubricant() == 0 ? 8 : 24;
+            graphics.blit(UTILITY, leftPos - 16, topPos + 66, warningU, 16, 16, 16, 256, 256);
         }
     }
 

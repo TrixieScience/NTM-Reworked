@@ -38,6 +38,8 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.machine_steam_engine.desc.0", "Efficiency: 85%");
         language.addProperty("block.hbm.machine_industrial_turbine", "Industrial Steam Turbine");
         language.addProperty("block.hbm.machine_industrial_turbine.desc.0", "Efficiency: 100%");
+        language.addProperty("block.hbm.machine_turbinegas", "Combined Cycle Gas Turbine");
+        language.addProperty("container.turbinegas", "Combined Cycle Gas Turbine");
         language.addProperty("block.hbm.machine_turbofan", "Turbofan");
         language.addProperty("block.hbm.machine_turbofan.desc.0", "Fuel efficiency:");
         language.addProperty("block.hbm.machine_turbofan.desc.1", "-Aviation: 100%");

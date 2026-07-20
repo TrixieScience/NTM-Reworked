@@ -18,8 +18,8 @@ public final class GasTurbineItemRenderer extends BlockEntityWithoutLevelRendere
     public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack poses,
                              MultiBufferSource buffers, int packedLight, int packedOverlay) {
         poses.pushPose();
-        poses.translate(0.5D, 0.5D, 0.5D);
         if (context == ItemDisplayContext.GUI) {
+            poses.translate(0.5D, 0.5D, 0.5D);
             poses.translate(0D, -1D, 1.5D);
             poses.scale(2.5F, 2.5F, 2.5F);
         }

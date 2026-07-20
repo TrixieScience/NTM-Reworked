@@ -400,7 +400,7 @@ public final class GasTurbineBlockEntity extends BlockEntity
 
     public void setCustomName(Component name) { customName = name; setChanged(); }
     @Override public Component getDisplayName() {
-        return customName != null ? customName : Component.translatable("container.turbineGas");
+        return customName != null ? customName : Component.translatable("container.turbinegas");
     }
     @Nullable @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new GasTurbineMenu(id, inventory, this, data);

@@ -967,7 +967,7 @@ public final class MaterialResourcesProvider implements DataProvider {
                 hbm("machine_turbinegas")));
         writes.add(save(output, unconditionalMultipartState("machine_turbinegas"), blockStates,
                 hbm("machine_turbinegas")));
-        writes.add(save(output, legacyBuiltinEntityItemModel(), itemModels,
+        writes.add(save(output, gasTurbineItemModel(), itemModels,
                 hbm("machine_turbinegas")));
         writes.add(save(output, selfDropLoot("machine_turbinegas"), lootTables,
                 hbm("machine_turbinegas")));
@@ -2496,6 +2496,24 @@ public final class MaterialResourcesProvider implements DataProvider {
                 List.of(0.25, 0.25, 0.25)));
         display.add("firstperson_righthand", displayTransform(List.of(0, 90, 0), List.of(8, 4, 0),
                 List.of(0.25, 0.25, 0.25)));
+        root.add("display", display);
+        return root;
+    }
+
+    /** Same ancient item camera, now with 75% more turbine. */
+    private JsonObject gasTurbineItemModel() {
+        JsonObject root = parentItemModel("builtin/entity");
+        JsonObject display = new JsonObject();
+        display.add("gui", displayTransform(List.of(30, 225, 0), List.of(0, -2, 0),
+                List.of(0.0625, 0.0625, 0.0625)));
+        display.add("ground", displayTransform(List.of(0, 90, 0), List.of(0, 0, 0),
+                List.of(0.375, 0.375, 0.375)));
+        display.add("fixed", displayTransform(List.of(0, 90, 0), List.of(0, 0, 0),
+                List.of(0.25, 0.25, 0.25)));
+        display.add("thirdperson_righthand", displayTransform(List.of(0, 0, 0), List.of(8, 4, 0),
+                List.of(0.125, 0.125, 0.125)));
+        display.add("firstperson_righthand", displayTransform(List.of(0, 90, 0), List.of(8, 4, 0),
+                List.of(0.125, 0.125, 0.125)));
         root.add("display", display);
         return root;
     }
