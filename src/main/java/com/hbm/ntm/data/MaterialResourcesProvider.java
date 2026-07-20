@@ -742,6 +742,8 @@ public final class MaterialResourcesProvider implements DataProvider {
                 recipes, hbm("ingot_co60_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_neptunium", "hbm:ingot_neptunium", 1.0F),
                 recipes, hbm("ingot_neptunium_from_powder")));
+        writes.add(save(output, smeltingRecipe("hbm:powder_ra226", "hbm:ingot_ra226", 1.0F),
+                recipes, hbm("ingot_ra226_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_niobium", "hbm:ingot_niobium", 1.0F),
                 recipes, hbm("ingot_niobium_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_tantalium", "hbm:ingot_tantalium", 1.0F),
@@ -4575,6 +4577,10 @@ public final class MaterialResourcesProvider implements DataProvider {
                         "c:billets/cobalt", "hbm:billet_cobalt"),
                 new BreedingRodMaterial(BreedingRodItem.Type.CO60,
                         "c:billets/cobalt_60", "hbm:billet_co60"),
+                new BreedingRodMaterial(BreedingRodItem.Type.RA226,
+                        "c:billets/radium_226", "hbm:billet_ra226"),
+                new BreedingRodMaterial(BreedingRodItem.Type.AC227,
+                        "c:billets/actinium_227", "hbm:billet_actinium"),
                 new BreedingRodMaterial(BreedingRodItem.Type.TH232,
                         "c:billets/thorium_232", "hbm:billet_th232"),
                 new BreedingRodMaterial(BreedingRodItem.Type.U235,
@@ -5488,6 +5494,8 @@ public final class MaterialResourcesProvider implements DataProvider {
             case "uranium_235" -> List.of("uranium235", "u235");
             case "uranium_238" -> List.of("uranium238", "u238");
             case "thorium_232" -> List.of("thorium232", "th232", "thorium");
+            case "radium_226" -> List.of("radium226", "ra226");
+            case "actinium_227" -> List.of("actinium227", "ac227");
             default -> List.of();
         };
     }

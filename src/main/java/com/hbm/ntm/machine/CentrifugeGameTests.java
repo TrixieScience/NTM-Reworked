@@ -83,8 +83,8 @@ public final class CentrifugeGameTests {
     @GameTest(template = "empty")
     public static void redstoneUsesExactOutputsAndSourceFreeFirstTick(GameTestHelper helper) {
         CentrifugeBlockEntity centrifuge = bareCentrifuge(helper, new BlockPos(3, 1, 3));
-        check(helper, CentrifugeRecipes.recipeCount() == 11,
-                "The Centrifuge table must expose its eleven registered source recipes");
+        check(helper, CentrifugeRecipes.recipeCount() == 13,
+                "The Centrifuge table must expose its thirteen registered source recipes");
         centrifuge.setItem(CentrifugeBlockEntity.INPUT, new ItemStack(Items.REDSTONE_ORE));
         centrifuge.setPower(40_000L);
 
@@ -106,6 +106,35 @@ public final class CentrifugeGameTests {
                         && centrifuge.getItem(4).getCount() == 1
                         && centrifuge.getItem(5).is(Items.GRAVEL),
                 "Redstone Ore must become 3+3 Redstone, one Mercury Drop and one Gravel atomically");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void uraniumAndThoriumOresKeepTheirSourceOutputs(GameTestHelper helper) {
+        ItemStack[] uranium = CentrifugeRecipes.getOutput(
+                new ItemStack(ModItems.legacyOreBlockItem("ore_uranium").get()));
+        check(helper, uranium != null && uranium.length == 4
+                        && uranium[0].is(ModItems.get("powder_uranium").get()) && uranium[0].getCount() == 1
+                        && uranium[1].is(ModItems.get("powder_uranium").get()) && uranium[1].getCount() == 1
+                        && uranium[2].is(ModItems.get("nugget_ra226").get()) && uranium[2].getCount() == 1
+                        && uranium[3].is(Items.GRAVEL) && uranium[3].getCount() == 1,
+                "Uranium Ore must centrifuge into 1+1 Uranium Powder, one Ra-226 Nugget and Gravel");
+        for (String variant : new String[]{"ore_gneiss_uranium", "ore_nether_uranium"}) {
+            ItemStack[] variantOutput = CentrifugeRecipes.getOutput(
+                    new ItemStack(ModItems.legacyOreBlockItem(variant).get()));
+            check(helper, variantOutput != null && variantOutput.length == 4
+                            && variantOutput[2].is(ModItems.get("nugget_ra226").get()),
+                    variant + " must retain the shared source Uranium ore-dictionary recipe");
+        }
+
+        ItemStack[] thorium = CentrifugeRecipes.getOutput(
+                new ItemStack(ModItems.legacyOreBlockItem("ore_thorium").get()));
+        check(helper, thorium != null && thorium.length == 4
+                        && thorium[0].is(ModItems.get("powder_thorium").get()) && thorium[0].getCount() == 1
+                        && thorium[1].is(ModItems.get("powder_thorium").get()) && thorium[1].getCount() == 1
+                        && thorium[2].is(ModItems.get("powder_uranium").get()) && thorium[2].getCount() == 1
+                        && thorium[3].is(Items.GRAVEL) && thorium[3].getCount() == 1,
+                "Thorium Ore must centrifuge into 1+1 Thorium Powder, one Uranium Powder and Gravel");
         helper.succeed();
     }
 

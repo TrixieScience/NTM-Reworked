@@ -216,6 +216,8 @@ public final class HazardousMaterialDefinitions {
                 "ingot_technetium", "billet_technetium", "nugget_technetium",
                 "ingot_schrabidium", "billet_schrabidium", "nugget_schrabidium", "powder_schrabidium",
                 "ingot_co60", "billet_co60", "nugget_co60", "powder_co60",
+                "ingot_ra226", "billet_ra226", "nugget_ra226", "powder_ra226",
+                "ingot_actinium", "billet_actinium", "nugget_actinium",
                 "ingot_mox_fuel", "billet_ra226be", "billet_pu238be",
                 "ingot_mud",
                 "powder_coal",
@@ -255,7 +257,7 @@ public final class HazardousMaterialDefinitions {
         Set<String> activeBlocks = Set.of(
                 "block_uranium", "block_u233", "block_u235", "block_u238", "block_thorium",
                 "block_plutonium", "block_neptunium", "block_pu238", "block_pu239", "block_pu_mix",
-                "block_lithium", "block_white_phosphorus"
+                "block_lithium", "block_white_phosphorus", "block_ra226", "block_actinium"
         );
         BLOCKS = CATALOG_BLOCKS.stream()
                 .filter(definition -> activeBlocks.contains(definition.id()))

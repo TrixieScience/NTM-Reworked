@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_empty"
+    },
+    {
+      "tag": "c:billets/radium_226"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "ra226"
+      },
+      "minecraft:custom_model_data": 15
+    },
+    "count": 1,
+    "id": "hbm:rod"
+  }
+}

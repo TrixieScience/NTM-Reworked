@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "hbm:rod_dual_empty"
+    },
+    {
+      "tag": "c:billets/actinium_227"
+    },
+    {
+      "tag": "c:billets/actinium_227"
+    }
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "hbmBreedingRodType": "ac227"
+      },
+      "minecraft:custom_model_data": 16
+    },
+    "count": 1,
+    "id": "hbm:rod_dual"
+  }
+}

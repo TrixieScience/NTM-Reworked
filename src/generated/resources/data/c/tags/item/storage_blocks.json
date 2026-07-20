@@ -16,6 +16,8 @@
     "#c:storage_blocks/thorium_232",
     "#c:storage_blocks/lithium",
     "#c:storage_blocks/white_phosphorus",
+    "#c:storage_blocks/radium_226",
+    "#c:storage_blocks/actinium_227",
     "#c:storage_blocks/titanium",
     "#c:storage_blocks/sulfur",
     "#c:storage_blocks/niter",

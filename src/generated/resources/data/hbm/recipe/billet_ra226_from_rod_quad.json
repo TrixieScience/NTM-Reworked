@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "hbmBreedingRodType": "ra226"
+        },
+        "minecraft:custom_model_data": 15
+      },
+      "items": "hbm:rod_quad",
+      "strict": false
+    }
+  ],
+  "result": {
+    "count": 4,
+    "id": "hbm:billet_ra226"
+  }
+}

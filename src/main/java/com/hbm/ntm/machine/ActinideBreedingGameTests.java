@@ -38,6 +38,7 @@ public final class ActinideBreedingGameTests {
         assertBreedingStep(helper, BreedingRodItem.Type.U238, BreedingRodItem.Type.RGP, 300);
         assertBreedingStep(helper, BreedingRodItem.Type.URANIUM, BreedingRodItem.Type.RGP, 200);
         assertBreedingStep(helper, BreedingRodItem.Type.RGP, BreedingRodItem.Type.WASTE, 200);
+        assertBreedingStep(helper, BreedingRodItem.Type.RA226, BreedingRodItem.Type.AC227, 300);
         helper.succeed();
     }
 
@@ -87,6 +88,37 @@ public final class ActinideBreedingGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void radiumPowderClosesItsSourceRecoveryLoop(GameTestHelper helper) {
+        Item ingot = item("ingot_ra226");
+        Item powder = item("powder_ra226");
+        ItemStack shredded = ShredderRecipes.getResult(new ItemStack(ingot));
+        check(helper, shredded.is(powder) && shredded.getCount() == 1,
+                "The Shredder must turn one Radium-226 Ingot into one Radium-226 Powder");
+
+        ItemStack blockDust = ShredderRecipes.getResult(new ItemStack(ModBlocks.get("block_ra226").get()));
+        check(helper, blockDust.is(powder) && blockDust.getCount() == 9,
+                "A Radium-226 block must shred into all nine powder units");
+
+        SingleRecipeInput input = new SingleRecipeInput(shredded);
+        var recipe = helper.getLevel().getRecipeManager().getRecipeFor(
+                RecipeType.SMELTING, input, helper.getLevel()).orElseThrow();
+        ItemStack remelted = recipe.value().assemble(input, helper.getLevel().registryAccess());
+        check(helper, recipe.id().equals(id("ingot_ra226_from_powder")) && remelted.is(ingot),
+                "Radium-226 Powder must smelt back into its ingot");
+        check(helper, recipe.value() instanceof AbstractCookingRecipe cooking
+                        && close(cooking.getExperience(), 1F),
+                "Radium-226 remelting must retain the source 1.0 experience");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void radiumAndActiniumRodsLoadAndUnloadEverySourceSize(GameTestHelper helper) {
+        assertRodRecipes(helper, BreedingRodItem.Type.RA226, "billet_ra226");
+        assertRodRecipes(helper, BreedingRodItem.Type.AC227, "billet_actinium");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void actinidesKeepTheirSourceHazardsAndBlockLight(GameTestHelper helper) {
         assertHazards(helper, "ingot_neptunium", 2.5F, 0F);
         assertHazards(helper, "billet_neptunium", 1.25F, 0F);
@@ -103,6 +135,17 @@ public final class ActinideBreedingGameTests {
         assertHazards(helper, "billet_pu239", 2.5F, 0F);
         assertHazards(helper, "nugget_pu239", 0.5F, 0F);
         assertHazards(helper, "block_pu239", 50F, 0F);
+
+        assertHazards(helper, "ingot_ra226", 7.5F, 0F);
+        assertHazards(helper, "billet_ra226", 3.75F, 0F);
+        assertHazards(helper, "nugget_ra226", 0.75F, 0F);
+        assertHazards(helper, "powder_ra226", 22.5F, 0F);
+        assertHazards(helper, "block_ra226", 75F, 0F);
+
+        assertHazards(helper, "ingot_actinium", 30F, 0F);
+        assertHazards(helper, "billet_actinium", 15F, 0F);
+        assertHazards(helper, "nugget_actinium", 3F, 0F);
+        assertHazards(helper, "block_actinium", 300F, 0F);
 
         for (String blockId : new String[]{"block_neptunium", "block_pu238", "block_pu239"}) {
             check(helper, ((RadioactiveBlock) ModBlocks.get(blockId).get()).radiationFog(),
@@ -168,8 +211,34 @@ public final class ActinideBreedingGameTests {
             new Material("pu239", "ingot_pu239", "billet_pu239", "nugget_pu239",
                     "block_pu239", "pu239_block"),
             new Material("pu_mix", "ingot_pu_mix", "billet_pu_mix", "nugget_pu_mix",
-                    "block_pu_mix", "pu_mix_block")
+                    "block_pu_mix", "pu_mix_block"),
+            new Material("ra226", "ingot_ra226", "billet_ra226", "nugget_ra226",
+                    "block_ra226", "ra226_block"),
+            new Material("actinium", "ingot_actinium", "billet_actinium", "nugget_actinium",
+                    "block_actinium", "actinium_block")
     };
+
+    private static void assertRodRecipes(GameTestHelper helper, BreedingRodItem.Type type, String billet) {
+        for (BreedingRodItem.Form form : BreedingRodItem.Form.values()) {
+            String suffix = switch (form) {
+                case SINGLE -> "";
+                case DUAL -> "_dual";
+                case QUAD -> "_quad";
+            };
+            int count = switch (form) {
+                case SINGLE -> 1;
+                case DUAL -> 2;
+                case QUAD -> 4;
+            };
+            ItemStack rod = helper.getLevel().getRecipeManager()
+                    .byKey(id(form.id() + "_" + type.id()))
+                    .map(holder -> holder.value().getResultItem(helper.getLevel().registryAccess()))
+                    .orElse(ItemStack.EMPTY);
+            check(helper, rod.is(item(form.id())) && BreedingRodItem.type(rod) == type,
+                    form.id() + " must load " + type.id() + " from its source billet");
+            assertRecipe(helper, billet + "_from_rod" + suffix, billet, count);
+        }
+    }
 
     private static void assertBreedingStep(
             GameTestHelper helper,
