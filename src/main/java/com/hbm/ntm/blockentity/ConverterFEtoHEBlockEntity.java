@@ -20,10 +20,10 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 import javax.annotation.Nullable;
 
 public class ConverterFEtoHEBlockEntity extends BlockEntity implements HeProvider {
-    public static long HE_OUTPUT = ConverterHEtoFEBlockEntity.HE_INPUT;
-    public static long RF_INPUT = ConverterHEtoFEBlockEntity.RF_OUTPUT;
+    public static int RF_INPUT = 2;
+    public static long HE_OUTPUT = 5;
     private static final long MAX_POWER = 1_000_000L * HE_OUTPUT;
-    private final EnergyStorage ENERGY_STORAGE = new EnergyStorage(1_000_000);
+    private final EnergyStorage ENERGY_STORAGE = new EnergyStorage(1_000_000 * RF_INPUT);
 
     public ConverterFEtoHEBlockEntity(BlockPos position, BlockState state) {
         super(ModBlockEntities.MACHINE_CONVERTER_FE_HE.get(), position, state);
@@ -41,7 +41,7 @@ public class ConverterFEtoHEBlockEntity extends BlockEntity implements HeProvide
         }
 
         int currentEnergy = ENERGY_STORAGE.getEnergyStored();
-        if (currentEnergy > RF_INPUT) {
+        if (currentEnergy >= RF_INPUT) {
             int converted = (int) Math.floor(Math.min((double) currentEnergy / RF_INPUT, (double) (MAX_POWER-power) / HE_OUTPUT));
             if (converted > 0) {
                 ENERGY_STORAGE.extractEnergy((int) (converted * RF_INPUT), false);
@@ -49,7 +49,7 @@ public class ConverterFEtoHEBlockEntity extends BlockEntity implements HeProvide
             }
         }
 
-        if (ENERGY_STORAGE.getEnergyStored() > 0) {
+        if (ENERGY_STORAGE.getEnergyStored() < ENERGY_STORAGE.getMaxEnergyStored()) {
             pullEnergy(level, position);
         }
 
@@ -98,7 +98,7 @@ public class ConverterFEtoHEBlockEntity extends BlockEntity implements HeProvide
                     direction.getOpposite()
             );
 
-            if (targetStorage != null && targetStorage.canReceive()) {
+            if (targetStorage != null && targetStorage.canExtract()) {
                 int maxExtract = ENERGY_STORAGE.getMaxEnergyStored() - ENERGY_STORAGE.getEnergyStored();
 
                 int simulatedExtract = targetStorage.extractEnergy(maxExtract, true);

@@ -86,8 +86,8 @@ public final class PressCapabilities {
                     @Override public int extractEnergy(int maxExtract, boolean simulate) { return converter.getEnergy().extractEnergy(maxExtract, simulate); }
                     @Override public int getEnergyStored() { return converter.getEnergy().getEnergyStored(); }
                     @Override public int getMaxEnergyStored() { return converter.getEnergy().getMaxEnergyStored(); }
-                    @Override public boolean canExtract() { return false; }
-                    @Override public boolean canReceive() { return true; }
+                    @Override public boolean canExtract() { return true; }
+                    @Override public boolean canReceive() { return false; }
                 });
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.MACHINE_CONVERTER_FE_HE.get(),
                 (converter, side) -> new IEnergyStorage() {

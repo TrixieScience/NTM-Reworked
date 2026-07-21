@@ -3033,8 +3033,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         root.add("pattern", pattern);
         JsonObject key = new JsonObject();
         key.add("R", customComponentIngredient("hbm:circuit", "type", "capacitor", 1));
-        key.add("W",  materialComponentOrExternalTagIngredient(
-                "hbm:wire_fine", "copper", 2900, "c:wires/fine/copper"));
+        key.add("W",  itemIngredient("minecraft:redstone"));
         key.add("I", tagIngredient("c:ingots/steel"));
         root.add("key", key);
         root.add("result", recipeResult("hbm:machine_converter_he_fe", 1));

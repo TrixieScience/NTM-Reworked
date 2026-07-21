@@ -17,29 +17,7 @@
       "strict": false
     },
     "W": {
-      "type": "neoforge:compound",
-      "children": [
-        {
-          "type": "neoforge:components",
-          "components": {
-            "minecraft:custom_data": {
-              "material": "copper"
-            },
-            "minecraft:custom_model_data": 2900
-          },
-          "items": "hbm:wire_fine",
-          "strict": false
-        },
-        {
-          "type": "neoforge:difference",
-          "base": {
-            "tag": "c:wires/fine/copper"
-          },
-          "subtracted": {
-            "item": "hbm:wire_fine"
-          }
-        }
-      ]
+      "item": "minecraft:redstone"
     }
   },
   "pattern": [

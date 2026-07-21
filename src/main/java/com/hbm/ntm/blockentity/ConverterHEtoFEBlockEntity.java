@@ -19,9 +19,9 @@ import net.neoforged.neoforge.energy.IEnergyStorage;
 
 public class ConverterHEtoFEBlockEntity extends BlockEntity implements HeReceiver {
     public static long HE_INPUT = 5;
-    public static long RF_OUTPUT = 1;
+    public static int RF_OUTPUT = 1;
     private static final long MAX_POWER = 1_000_000L * HE_INPUT;
-    private final EnergyStorage ENERGY_STORAGE = new EnergyStorage(1_000_000);
+    private final EnergyStorage ENERGY_STORAGE = new EnergyStorage(1_000_000 * RF_OUTPUT);
 
     public ConverterHEtoFEBlockEntity(BlockPos position, BlockState state) {
         super(ModBlockEntities.MACHINE_CONVERTER_HE_FE.get(), position, state);
@@ -38,7 +38,7 @@ public class ConverterHEtoFEBlockEntity extends BlockEntity implements HeReceive
             trySubscribe(level, position.relative(direction), direction);
         }
 
-        if (power > HE_INPUT) {
+        if (power >= HE_INPUT) {
             int converted = (int) Math.floor(Math.min((double) power / HE_INPUT, (double) (ENERGY_STORAGE.getMaxEnergyStored() - ENERGY_STORAGE.getEnergyStored()) / RF_OUTPUT));
             if (converted > 0) {
                 ENERGY_STORAGE.receiveEnergy((int) (converted * RF_OUTPUT), false);
