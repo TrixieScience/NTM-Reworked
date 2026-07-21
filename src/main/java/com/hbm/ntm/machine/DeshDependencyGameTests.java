@@ -211,6 +211,62 @@ public final class DeshDependencyGameTests {
         helper.succeed();
     }
 
+    @GameTest(template = "empty")
+    public static void duraSteelPowderAndBlockMatchSource(GameTestHelper helper) {
+        Block block = BuiltInRegistries.BLOCK.get(id("block_dura_steel"));
+        check(helper, block != Blocks.AIR, "block_dura_steel must be registered");
+        BlockState state = block.defaultBlockState();
+        check(helper, block.defaultDestroyTime() == 5.0F, "block_dura_steel hardness must be the source 5.0");
+        check(helper, Math.abs(block.getExplosionResistance() - 120.0F) < 0.01F,
+                "block_dura_steel must keep the modern 120 resistance (legacy 200)");
+        check(helper, state.getSoundType() == SoundType.METAL, "block_dura_steel must keep the metal step sound");
+        check(helper, state.is(BlockTags.BEACON_BASE_BLOCKS),
+                "block_dura_steel must remain a beacon base, matching the source BlockBeaconable");
+
+        var compress = helper.getLevel().getRecipeManager().byKey(id("dura_steel_block"));
+        ItemStack compressed = compress.map(r -> r.value()
+                .getResultItem(helper.getLevel().registryAccess())).orElse(ItemStack.EMPTY);
+        check(helper, compressed.is(block.asItem()) && compressed.getCount() == 1,
+                "Nine High-Speed Steel Ingots must craft one Reinforced Block of High-Speed Steel");
+        var decompress = helper.getLevel().getRecipeManager().byKey(id("ingot_dura_steel_from_block_dura_steel"));
+        ItemStack loose = decompress.map(r -> r.value()
+                .getResultItem(helper.getLevel().registryAccess())).orElse(ItemStack.EMPTY);
+        check(helper, loose.is(ModItems.get("ingot_dura_steel").get()) && loose.getCount() == 9,
+                "One Reinforced Block of High-Speed Steel must uncraft into nine ingots");
+
+        var powder = ModItems.get("powder_dura_steel").get();
+        check(helper, powder != null && new ItemStack(powder).is(ItemTags.create(
+                        ResourceLocation.fromNamespaceAndPath("c", "dusts/dura_steel"))),
+                "powder_dura_steel must be registered with the c:dusts/dura_steel tag");
+        ItemStack fromIngot = ShredderRecipes.getResult(new ItemStack(ModItems.get("ingot_dura_steel").get()));
+        check(helper, fromIngot.is(powder) && fromIngot.getCount() == 1,
+                "Shredding a High-Speed Steel Ingot must yield one powder");
+        ItemStack fromBlock = ShredderRecipes.getResult(new ItemStack(block.asItem()));
+        check(helper, fromBlock.is(powder) && fromBlock.getCount() == 9,
+                "Shredding a Reinforced Block of High-Speed Steel must yield nine powder");
+        check(helper, ShredderRecipes.getResult(new ItemStack(powder)).is(ModItems.get("dust").get()),
+                "High-Speed Steel Powder must itself shred to scrap dust");
+
+        var smelt = helper.getLevel().getRecipeManager().byKey(id("ingot_dura_steel_from_powder"));
+        ItemStack smelted = smelt.map(r -> r.value()
+                .getResultItem(helper.getLevel().registryAccess())).orElse(ItemStack.EMPTY);
+        check(helper, smelted.is(ModItems.get("ingot_dura_steel").get()),
+                "High-Speed Steel Powder must smelt back into an ingot");
+
+        FoundryMaterial.MaterialAmount blockMelt = FoundryMaterial.fromItem(new ItemStack(block.asItem()));
+        check(helper, blockMelt != null && blockMelt.material() == FoundryMaterial.DURA_STEEL
+                        && blockMelt.amount() == FoundryMaterial.BLOCK,
+                "block_dura_steel must melt as 648mB of High-Speed Steel");
+        FoundryMaterial.MaterialAmount powderMelt = FoundryMaterial.fromItem(new ItemStack(powder));
+        check(helper, powderMelt != null && powderMelt.material() == FoundryMaterial.DURA_STEEL
+                        && powderMelt.amount() == FoundryMaterial.INGOT,
+                "powder_dura_steel must melt as one High-Speed Steel ingot quantum");
+        ItemStack cast = FoundryMaterial.DURA_STEEL.output(FoundryMoldItem.Mold.BLOCK);
+        check(helper, cast.is(block.asItem()) && cast.getCount() == 1,
+                "The Foundry must cast High-Speed Steel back into its reinforced block");
+        helper.succeed();
+    }
+
     private static void checkWeld(GameTestHelper helper, CastPlateItem.CastPlateMaterial cast,
                                   WeldedPlateItem.WeldedPlateMaterial welded,
                                   FoundryMaterial foundryMaterial) {

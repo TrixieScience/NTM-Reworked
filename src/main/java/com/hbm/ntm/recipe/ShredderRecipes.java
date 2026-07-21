@@ -111,6 +111,7 @@ public final class ShredderRecipes {
         generatedHbm(recipes, "ingot_tcalloy", "powder_tcalloy", 1);
         generatedHbm(recipes, "ingot_polymer", "powder_polymer", 1);
         generatedHbm(recipes, "ingot_desh", "powder_desh", 1);
+        generatedHbm(recipes, "ingot_dura_steel", "powder_dura_steel", 1);
         generatedHbm(recipes, "ingot_calcium", "powder_calcium", 1);
         generatedHbm(recipes, "ingot_cadmium", "powder_cadmium", 1);
         generatedHbm(recipes, "ingot_beryllium", "powder_beryllium", 1);
@@ -164,6 +165,7 @@ public final class ShredderRecipes {
         storageHbm(recipes, "block_beryllium", "powder_beryllium", 9);
         storageHbm(recipes, "block_steel", "powder_steel", 9);
         storageHbm(recipes, "block_desh", "powder_desh", 9);
+        storageHbm(recipes, "block_dura_steel", "powder_dura_steel", 9);
         storageHbm(recipes, "block_tcalloy", "powder_tcalloy", 9);
         storageHbm(recipes, "block_bismuth", "powder_bismuth", 9);
         storageHbm(recipes, "block_cadmium", "powder_cadmium", 9);

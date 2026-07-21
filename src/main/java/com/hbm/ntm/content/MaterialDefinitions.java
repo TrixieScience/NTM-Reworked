@@ -145,6 +145,7 @@ public final class MaterialDefinitions {
             new ItemDefinition("powder_polymer", "Polymer Powder", ItemForm.DUST, "polymer"),
             new ItemDefinition("powder_magnetized_tungsten", "Magnetized Tungsten Powder", ItemForm.DUST, "magnetized_tungsten"),
             new ItemDefinition("powder_combine_steel", "CMB Steel Powder", ItemForm.DUST, "combine_steel"),
+            new ItemDefinition("powder_dura_steel", "High-Speed Steel Powder", ItemForm.DUST, "dura_steel"),
 
             // Things the press can flatten today.
             new ItemDefinition("plate_iron", "Iron Plate", ItemForm.PLATE, "iron"),
@@ -189,6 +190,8 @@ public final class MaterialDefinitions {
             block("block_zirconium", "Block of Zirconium", SoundType.METAL, 5.0F, 30.0F, "ingot_zirconium", "zirconium"),
             block("block_boron", "Block of Boron", SoundType.METAL, 5.0F, 10.0F, "ingot_boron", "boron"),
             block("block_desh", "Reinforced Block of Desh", SoundType.METAL, 5.0F, 300.0F, "ingot_desh", "desh"),
+            block("block_dura_steel", "Reinforced Block of High-Speed Steel", SoundType.METAL, 5.0F, 200.0F,
+                    "ingot_dura_steel", "dura_steel"),
             rockBlock("block_polymer", "Block of Polymer", 3.0F, 10.0F, "ingot_polymer", "polymer"),
             rockBlock("block_bakelite", "Block of Bakelite", 3.0F, 5.0F, null, "bakelite"),
             rockBlock("block_rubber", "Block of Rubber", 3.0F, 15.0F, "ingot_rubber", "rubber"),

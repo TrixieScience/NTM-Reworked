@@ -792,6 +792,8 @@ public final class MaterialResourcesProvider implements DataProvider {
                 recipes, hbm("ingot_polymer_from_powder")));
         writes.add(save(output, smeltingRecipe("hbm:powder_desh", "hbm:ingot_desh", 1.0F),
                 recipes, hbm("ingot_desh_from_powder")));
+        writes.add(save(output, smeltingRecipe("hbm:powder_dura_steel", "hbm:ingot_dura_steel", 1.0F),
+                recipes, hbm("ingot_dura_steel_from_powder")));
         writes.add(save(output, powderAlloyScrapsRecipe(List.of("c:dusts/tungsten", "c:nuggets/schrabidium"),
                         "magnetized_tungsten", 38, 72),
                 recipes, hbm("scraps_magnetized_tungsten")));

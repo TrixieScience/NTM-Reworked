@@ -38,6 +38,7 @@
     "#c:dusts/desh",
     "#c:dusts/polymer",
     "#c:dusts/magnetized_tungsten",
-    "#c:dusts/combine_steel"
+    "#c:dusts/combine_steel",
+    "#c:dusts/dura_steel"
   ]
 }
