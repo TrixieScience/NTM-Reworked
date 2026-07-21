@@ -5,6 +5,7 @@ import com.hbm.ntm.client.screen.AnvilScreen;
 import com.hbm.ntm.client.screen.AssemblyMachineScreen;
 import com.hbm.ntm.client.screen.CentrifugeScreen;
 import com.hbm.ntm.client.screen.ChemicalPlantScreen;
+import com.hbm.ntm.client.screen.CrucibleScreen;
 import com.hbm.ntm.client.screen.MachinePressScreen;
 import com.hbm.ntm.client.screen.MachineShredderScreen;
 import com.hbm.ntm.recipe.AssemblyClientRecipes;
@@ -15,6 +16,7 @@ import com.hbm.ntm.recipe.ChemicalPlantRecipes;
 import com.hbm.ntm.recipe.ChemicalPlantRecipes.ChemicalRecipe;
 import com.hbm.ntm.recipe.CrackingRecipes;
 import com.hbm.ntm.recipe.CrackingRecipes.CrackingRecipe;
+import com.hbm.ntm.recipe.CrucibleRecipes;
 import com.hbm.ntm.recipe.FractionRecipes;
 import com.hbm.ntm.recipe.FractionRecipes.FractionRecipe;
 import com.hbm.ntm.recipe.PressRecipes;
@@ -53,6 +55,8 @@ public final class HbmJeiPlugin implements IModPlugin {
             RecipeType.create(HbmNtm.MOD_ID, "fraction", FractionRecipe.class);
     public static final RecipeType<RefineryJeiRecipe> REFINERY =
             RecipeType.create(HbmNtm.MOD_ID, "refinery", RefineryJeiRecipe.class);
+    public static final RecipeType<CrucibleRecipes.Recipe> CRUCIBLE =
+            RecipeType.create(HbmNtm.MOD_ID, "crucible", CrucibleRecipes.Recipe.class);
 
     private static final ResourceLocation UID =
             ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "jei");
@@ -77,7 +81,8 @@ public final class HbmJeiPlugin implements IModPlugin {
                 new ShredderRecipeCategory(gui),
                 new CrackingRecipeCategory(gui),
                 new FractionRecipeCategory(gui),
-                new RefineryRecipeCategory(gui));
+                new RefineryRecipeCategory(gui),
+                new CrucibleRecipeCategory(gui));
     }
 
     @Override
@@ -90,6 +95,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipes(CRACKING, CrackingRecipes.all());
         registration.addRecipes(FRACTION, FractionRecipes.all());
         registration.addRecipes(REFINERY, RefineryJeiRecipe.all());
+        registration.addRecipes(CRUCIBLE, CrucibleRecipes.all());
         registeredAssemblyRecipes = AssemblyClientRecipes.all();
         registration.addRecipes(ASSEMBLY, registeredAssemblyRecipes);
     }
@@ -111,6 +117,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipeCatalysts(CRACKING, ModItems.MACHINE_CATALYTIC_CRACKER_ITEM.get());
         registration.addRecipeCatalysts(FRACTION, ModItems.MACHINE_FRACTION_TOWER_ITEM.get());
         registration.addRecipeCatalysts(REFINERY, ModItems.MACHINE_REFINERY_ITEM.get());
+        registration.addRecipeCatalysts(CRUCIBLE, ModItems.MACHINE_CRUCIBLE_ITEM.get());
     }
 
     @Override
@@ -121,6 +128,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipeClickArea(ChemicalPlantScreen.class, 62, 126, 70, 16, CHEMICAL_PLANT);
         registration.addRecipeClickArea(CentrifugeScreen.class, 44, 18, 90, 20, CENTRIFUGE);
         registration.addRecipeClickArea(MachineShredderScreen.class, 63, 89, 34, 18, SHREDDER);
+        registration.addRecipeClickArea(CrucibleScreen.class, 151, 71, 18, 18, CRUCIBLE);
     }
 
     @Override

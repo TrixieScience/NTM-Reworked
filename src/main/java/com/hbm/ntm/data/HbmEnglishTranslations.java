@@ -1096,6 +1096,7 @@ final class HbmEnglishTranslations {
         language.addProperty("jei.hbm.cracking", "Catalytic Cracking Tower");
         language.addProperty("jei.hbm.fraction", "Fractioning Tower");
         language.addProperty("jei.hbm.refinery", "Oil Refinery");
+        language.addProperty("jei.hbm.crucible", "Crucible");
         language.addProperty("jei.hbm.anvil.tier", "Anvil tier: %s");
         language.addProperty("jei.hbm.anvil.tier_range", "Anvil tiers: %s-%s");
         language.addProperty("jei.hbm.chance", "Chance: %s%%");
