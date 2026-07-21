@@ -19,11 +19,13 @@ public final class RadGenItemRenderer extends BlockEntityWithoutLevelRenderer {
                              MultiBufferSource buffers, int packedLight, int packedOverlay) {
         poses.pushPose();
         if (context == ItemDisplayContext.GUI) {
-            // Old inventory camera, translated from sixteen-pixel space.
-            poses.translate(0.5D, 0.625D, 0.0D);
-            poses.mulPose(Axis.XP.rotationDegrees(-30.0F));
+            // Old inventory camera. Mirror X/Z for the GUI handedness but keep Y upright:
+            // scaling Y by -1 (with the -30 tilt) point-reflects the engine onto its head.
+            // The three-tall model grows up from its base, so sit its origin low to centre it.
+            poses.translate(0.5D, 0.35D, 0.0D);
+            poses.mulPose(Axis.XP.rotationDegrees(30.0F));
             poses.mulPose(Axis.YP.rotationDegrees(45.0F));
-            poses.scale(-1.0F, -1.0F, -1.0F);
+            poses.scale(-1.0F, 1.0F, -1.0F);
             poses.translate(0.0D, -1.0D / 16.0D, 0.0D);
             float inventoryScale = 4.5F / 16.0F;
             poses.scale(inventoryScale, inventoryScale, inventoryScale);
