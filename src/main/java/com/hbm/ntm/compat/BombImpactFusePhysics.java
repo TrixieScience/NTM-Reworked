@@ -4,16 +4,14 @@ package com.hbm.ntm.compat;
 public final class BombImpactFusePhysics {
     /** Matches Sable's own impact-prime threshold for vanilla TNT. */
     public static final double MIN_IMPACT_SPEED = 5.0D;
-    /** Prevents deck bumps, rough landings and low releases from arming an HBM bomb. */
-    public static final double MIN_DROP_HEIGHT = 8.0D;
 
     private BombImpactFusePhysics() { }
 
-    public static boolean shouldDetonate(double impactSpeed, double releaseAltitude,
-                                         double currentAltitude) {
-        if (!Double.isFinite(impactSpeed) || !Double.isFinite(releaseAltitude)
-                || !Double.isFinite(currentAltitude)) return false;
-        return Math.abs(impactSpeed) >= MIN_IMPACT_SPEED
-                && releaseAltitude - currentAltitude >= MIN_DROP_HEIGHT;
+    /**
+     * A hard enough impact arms the bomb, no matter how far it fell -- so a launched or staff-thrown
+     * contraption detonates on a fast slam. Gentle taxiing and deck bumps stay under the threshold.
+     */
+    public static boolean shouldDetonate(double impactSpeed) {
+        return Double.isFinite(impactSpeed) && Math.abs(impactSpeed) >= MIN_IMPACT_SPEED;
     }
 }

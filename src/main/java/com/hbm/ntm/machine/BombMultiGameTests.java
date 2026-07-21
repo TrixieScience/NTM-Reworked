@@ -36,14 +36,14 @@ public final class BombMultiGameTests {
     private static ItemStack pelletGas() { return new ItemStack(ModItems.PELLET_GAS.get()); }
 
     @GameTest(template = "empty")
-    public static void aeronauticsImpactFuseRequiresBothSpeedAndDropAltitude(GameTestHelper helper) {
-        check(helper, !BombImpactFusePhysics.shouldDetonate(4.99D, 100.0D, 80.0D),
-                "A long fall below Sable's impact-speed threshold must not fire the bomb");
-        check(helper, !BombImpactFusePhysics.shouldDetonate(20.0D, 100.0D, 92.01D),
-                "A hard bump before the eight-block altitude arm must not fire the bomb");
-        check(helper, BombImpactFusePhysics.shouldDetonate(5.0D, 100.0D, 92.0D),
-                "The fuse must fire at the exact five-speed and eight-block source thresholds");
-        check(helper, BombImpactFusePhysics.shouldDetonate(-12.0D, 160.0D, 120.0D),
+    public static void aeronauticsImpactFuseArmsOnHardImpact(GameTestHelper helper) {
+        check(helper, !BombImpactFusePhysics.shouldDetonate(4.99D),
+                "An impact below Sable's five-speed threshold must not fire the bomb");
+        check(helper, BombImpactFusePhysics.shouldDetonate(5.0D),
+                "The fuse must fire at the exact five-speed source threshold");
+        check(helper, BombImpactFusePhysics.shouldDetonate(20.0D),
+                "A hard slam must fire regardless of how far the bomb fell or was thrown");
+        check(helper, BombImpactFusePhysics.shouldDetonate(-12.0D),
                 "Sable may report signed collision speed, so a fast downward impact must still fire");
         helper.succeed();
     }
