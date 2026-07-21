@@ -78,6 +78,10 @@ public final class CentrifugeRecipes {
         return RECIPES.size();
     }
 
+    public static List<CentrifugeRecipe> all() {
+        return RECIPES;
+    }
+
     private static CentrifugeRecipe recipe(Ingredient input,
                                            Supplier<ItemStack> first,
                                            Supplier<ItemStack> second,
@@ -90,6 +94,6 @@ public final class CentrifugeRecipes {
         return () -> new ItemStack(ModItems.get(id).get(), count);
     }
 
-    private record CentrifugeRecipe(Ingredient input, List<Supplier<ItemStack>> outputs) {
+    public record CentrifugeRecipe(Ingredient input, List<Supplier<ItemStack>> outputs) {
     }
 }
