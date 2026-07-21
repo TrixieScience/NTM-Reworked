@@ -593,5 +593,17 @@
   "alarm.razortrain_horn": {
     "category": "record",
     "sounds": [{"name": "hbm:alarm/razortrainhorn", "stream": false}]
+  },
+  "weapon.fire.tesla": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/tesla", "stream": false}]
+  },
+  "entity.ufo_blast": {
+    "category": "hostile",
+    "sounds": [{"name": "hbm:entity/ufo_blast", "stream": false}]
+  },
+  "weapon.tesla_yomi": {
+    "category": "player",
+    "sounds": [{"name": "hbm:block/squeaky_toy", "stream": false}]
   }
 }

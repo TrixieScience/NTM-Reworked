@@ -65,6 +65,9 @@
     {"predicate": {"custom_model_data": 64}, "model": "hbm:item/ammo_standard_flame_gas"},
     {"predicate": {"custom_model_data": 65}, "model": "hbm:item/ammo_standard_flame_napalm"},
     {"predicate": {"custom_model_data": 66}, "model": "hbm:item/ammo_standard_flame_balefire"},
+    {"predicate": {"custom_model_data": 67}, "model": "hbm:item/ammo_standard_capacitor"},
+    {"predicate": {"custom_model_data": 68}, "model": "hbm:item/ammo_standard_capacitor_overcharge"},
+    {"predicate": {"custom_model_data": 69}, "model": "hbm:item/ammo_standard_capacitor_ir"},
     {"predicate": {"custom_model_data": 82}, "model": "hbm:item/ammo_standard_r762_he"},
     {"predicate": {"custom_model_data": 83}, "model": "hbm:item/ammo_standard_bmg50_he"},
     {"predicate": {"custom_model_data": 94}, "model": "hbm:item/ammo_standard_bmg50_sm"}

@@ -59,6 +59,7 @@ import com.hbm.ntm.item.GeigerCounterItem;
 import com.hbm.ntm.item.G3Item;
 import com.hbm.ntm.item.Stg77Item;
 import com.hbm.ntm.item.M2Item;
+import com.hbm.ntm.item.TeslaCannonItem;
 import com.hbm.ntm.item.AmatItem;
 import com.hbm.ntm.item.SubtletyItem;
 import com.hbm.ntm.item.PenanceItem;
@@ -457,6 +458,7 @@ public final class ModItems {
     public static final DeferredItem<G3Item> GUN_G3_ZEBRA;
     public static final DeferredItem<Stg77Item> GUN_STG77;
     public static final DeferredItem<M2Item> GUN_M2;
+    public static final DeferredItem<TeslaCannonItem> GUN_TESLA_CANNON;
     public static final DeferredItem<AmatItem> GUN_AMAT;
     public static final DeferredItem<SubtletyItem> GUN_AMAT_SUBTLETY;
     public static final DeferredItem<PenanceItem> GUN_AMAT_PENANCE;
@@ -1244,6 +1246,7 @@ public final class ModItems {
         GUN_AMAT_SUBTLETY = ITEMS.register("gun_amat_subtlety", SubtletyItem::new);
         GUN_AMAT_PENANCE = ITEMS.register("gun_amat_penance", PenanceItem::new);
         GUN_M2 = ITEMS.register("gun_m2", M2Item::new);
+        GUN_TESLA_CANNON = ITEMS.register("gun_tesla_cannon", TeslaCannonItem::new);
         WEAPONIZED_STARBLASTER_CELL = ITEMS.register(
                 "weaponized_starblaster_cell", WeaponizedStarblasterCellItem::new);
         MULTITOOL_DIG = ITEMS.register("multitool_dig",

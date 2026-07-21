@@ -128,6 +128,8 @@ public final class WeaponCraftingProgressionGameTests {
         ItemStack polymerGrip = part(FoundryPartItem.PartType.GRIP, FoundryMaterial.POLYMER);
         ItemStack ferroHeavyBarrel = part(FoundryPartItem.PartType.HEAVY_BARREL, FoundryMaterial.FERROURANIUM);
         ItemStack ferroHeavyReceiver = part(FoundryPartItem.PartType.HEAVY_RECEIVER, FoundryMaterial.FERROURANIUM);
+        ItemStack tcHeavyBarrel = part(FoundryPartItem.PartType.HEAVY_BARREL, FoundryMaterial.TECHNETIUM_STEEL);
+        ItemStack tcHeavyReceiver = part(FoundryPartItem.PartType.HEAVY_RECEIVER, FoundryMaterial.TECHNETIUM_STEEL);
         ItemStack advancedCircuit = CircuitItem.create(ModItems.CIRCUIT.get(), CircuitItem.CircuitType.ADVANCED, 1);
 
         craft(helper, "gun_light_revolver_atlas", ModItems.GUN_LIGHT_REVOLVER_ATLAS.get(), Map.of(
@@ -183,6 +185,10 @@ public final class WeaponCraftingProgressionGameTests {
         craft(helper, "gun_m2", ModItems.GUN_M2.get(), Map.of(
                 'G', woodGrip, 'B', ferroHeavyBarrel, 'R', ferroHeavyReceiver, 'M', weaponMechanism),
                 "  G", "BRM", "  G");
+        craft(helper, "gun_tesla_cannon", ModItems.GUN_TESLA_CANNON.get(), Map.of(
+                'C', new ItemStack(ModItems.get("coil_copper").get()), 'B', tcHeavyBarrel,
+                'R', tcHeavyReceiver, 'M', weaponMechanism, 'G', polymerGrip, 'E', advancedCircuit),
+                "CCC", "BRB", "MGE");
         craft(helper, "gun_amat", ModItems.GUN_AMAT.get(), Map.of(
                 'C', advancedCircuit, 'B', ferroHeavyBarrel, 'R', ferroHeavyReceiver,
                 'S', woodStock, 'M', weaponMechanism, 'G', woodGrip), " C ", "BRS", " MG");
@@ -211,7 +217,7 @@ public final class WeaponCraftingProgressionGameTests {
                 "gun_henry", "gun_henry_lincoln", "gun_lag", "gun_liberator", "gun_light_revolver", "gun_light_revolver_atlas",
                 "gun_m2", "gun_maresleg", "gun_maresleg_akimbo", "gun_maresleg_broken", "gun_mas36", "gun_minigun",
                 "gun_missile_launcher", "gun_mk108", "gun_panzerschreck", "gun_pepperbox", "gun_quadro", "gun_spas12",
-                "gun_star_f", "gun_star_f_akimbo", "gun_stg77", "gun_stinger", "gun_uzi", "gun_uzi_akimbo");
+                "gun_star_f", "gun_star_f_akimbo", "gun_stg77", "gun_stinger", "gun_tesla_cannon", "gun_uzi", "gun_uzi_akimbo");
         for (String weapon : craftable) {
             check(helper, helper.getLevel().getRecipeManager().byKey(id(weapon)).isPresent(),
                     "hbm:" + weapon + " must have a normal crafting recipe");

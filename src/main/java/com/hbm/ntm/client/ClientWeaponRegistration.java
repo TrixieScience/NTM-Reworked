@@ -52,6 +52,9 @@ import com.hbm.ntm.client.render.StingerItemRenderer;
 import com.hbm.ntm.client.render.Stg77ItemRenderer;
 import com.hbm.ntm.client.render.M2ItemRenderer;
 import com.hbm.ntm.client.render.AmatItemRenderer;
+import com.hbm.ntm.client.render.TeslaBeamRenderer;
+import com.hbm.ntm.client.render.TeslaImpactRenderer;
+import com.hbm.ntm.client.render.TeslaCannonItemRenderer;
 import com.hbm.ntm.network.DetonatorInfoPayload;
 import com.hbm.ntm.item.PenanceItem;
 import com.hbm.ntm.registry.ModEntities;
@@ -142,6 +145,8 @@ public final class ClientWeaponRegistration {
         event.registerEntityRenderer(ModEntities.FLATTENED_MOB.get(), FlattenedMobRenderer::new);
         event.registerEntityRenderer(ModEntities.SHREDDER_BEAM.get(), ShredderBeamRenderer::new);
         event.registerEntityRenderer(ModEntities.SHREDDER_SUBMUNITION.get(), ShredderSubmunitionRenderer::new);
+        event.registerEntityRenderer(ModEntities.TESLA_BEAM.get(), TeslaBeamRenderer::new);
+        event.registerEntityRenderer(ModEntities.TESLA_IMPACT.get(), TeslaImpactRenderer::new);
     }
 
     private static void registerModels(ModelEvent.RegisterAdditional event) {
@@ -560,6 +565,7 @@ public final class ClientWeaponRegistration {
         }, ModItems.GUN_M2.get());
 
         event.registerItem(weaponExtension(new AmatItemRenderer()), ModItems.GUN_AMAT.get());
+        event.registerItem(weaponExtension(new TeslaCannonItemRenderer()), ModItems.GUN_TESLA_CANNON.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(ResourceLocation.fromNamespaceAndPath(
                 "hbm", "textures/models/weapons/amat_subtlety.png"))), ModItems.GUN_AMAT_SUBTLETY.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(PenanceItem.PENANCE_TEXTURE, true)),

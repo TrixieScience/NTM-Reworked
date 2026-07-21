@@ -880,6 +880,12 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.gun_amat_subtlety", "Subtlety");
         language.addProperty("item.hbm.gun_amat_penance", "Penance");
         language.addProperty("item.hbm.gun_m2", "Ma Deuce");
+        language.addProperty("item.hbm.gun_tesla_cannon", "Tesla Cannon");
+        language.addProperty("item.hbm.ammo_standard.capacitor", "Capacitor (Standard)");
+        language.addProperty("item.hbm.ammo_standard.capacitor_overcharge", "Capacitor (Overcharge)");
+        language.addProperty("item.hbm.ammo_standard.capacitor_ir", "Capacitor (Low Wavelength)");
+        language.addProperty("entity.hbm.entity_tesla_beam", "Tesla Beam");
+        language.addProperty("entity.hbm.entity_tesla_impact", "Tesla Impact");
         language.addProperty("item.hbm.ammo_standard.flame_diesel", "Flamer Fuel, Diesel");
         language.addProperty("item.hbm.ammo_standard.flame_gas", "Flamer Fuel, Gas");
         language.addProperty("item.hbm.ammo_standard.flame_napalm", "Flamer Fuel, Napalm");

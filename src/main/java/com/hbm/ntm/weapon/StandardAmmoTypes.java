@@ -49,6 +49,9 @@ public final class StandardAmmoTypes {
             for (FiftyCalAmmoType type : FiftyCalAmmoType.values()) {
                 if (type.serializedName().equals(name)) return type;
             }
+            for (EnergyAmmoType type : EnergyAmmoType.values()) {
+                if (type.serializedName().equals(name)) return type;
+            }
         }
         CustomModelData modelData = stack.get(DataComponents.CUSTOM_MODEL_DATA);
         return fromLegacyMetadata(modelData == null ? 0 : modelData.value());
@@ -65,6 +68,7 @@ public final class StandardAmmoTypes {
         }
         if (metadata == 104 || metadata == 106) return FiftyCalAmmoType.fromLegacyBulletConfig(metadata);
         if (metadata >= 63 && metadata <= 66) return FlamerFuelType.fromLegacyMetadata(metadata);
+        if (metadata >= 67 && metadata <= 69) return EnergyAmmoType.fromLegacyMetadata(metadata);
         if (metadata >= 58 && metadata <= 62) return RocketAmmoType.fromLegacyMetadata(metadata);
         if (metadata >= 41 && metadata <= 49) return Shotgun12GaugeAmmoType.fromLegacyMetadata(metadata);
         if (metadata == 50 || metadata >= 53 && metadata <= 57) {

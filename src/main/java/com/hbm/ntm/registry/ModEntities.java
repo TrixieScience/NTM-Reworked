@@ -19,6 +19,8 @@ import com.hbm.ntm.entity.PowerFistBeamEntity;
 import com.hbm.ntm.entity.PowerFistRubbleEntity;
 import com.hbm.ntm.entity.ShredderBeamEntity;
 import com.hbm.ntm.entity.ShredderSubmunitionEntity;
+import com.hbm.ntm.entity.TeslaBeamEntity;
+import com.hbm.ntm.entity.TeslaImpactEntity;
 import com.hbm.ntm.entity.PrimedExplosiveEntity;
 import com.hbm.ntm.entity.RagingVortexEntity;
 import com.hbm.ntm.entity.SawbladeEntity;
@@ -238,6 +240,19 @@ public final class ModEntities {
                     () -> EntityType.Builder.<ShredderSubmunitionEntity>of(ShredderSubmunitionEntity::new, MobCategory.MISC)
                             .sized(0.5F, 0.5F).clientTrackingRange(16).updateInterval(1)
                             .build("hbm:entity_shredder_submunition"));
+
+    // The source shared EntityBulletBeamBase between Shredder and Tesla. Registries prefer one name per thing.
+    public static final DeferredHolder<EntityType<?>, EntityType<TeslaBeamEntity>> TESLA_BEAM =
+            ENTITY_TYPES.register("entity_tesla_beam",
+                    () -> EntityType.Builder.<TeslaBeamEntity>of(TeslaBeamEntity::new, MobCategory.MISC)
+                            .sized(0.5F, 0.5F).clientTrackingRange(63).updateInterval(1).noSave()
+                            .build("hbm:entity_tesla_beam"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<TeslaImpactEntity>> TESLA_IMPACT =
+            ENTITY_TYPES.register("entity_tesla_impact",
+                    () -> EntityType.Builder.<TeslaImpactEntity>of(TeslaImpactEntity::new, MobCategory.MISC)
+                            .sized(0.1F, 0.1F).clientTrackingRange(63).updateInterval(1).noSave()
+                            .build("hbm:entity_tesla_impact"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<CogEntity>> COG = ENTITY_TYPES.register(
             "cog",

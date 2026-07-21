@@ -5073,6 +5073,20 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "R", foundryPart("part_receiver_heavy", "ferrouranium", 37),
                 "M", foundryPart("part_mechanism", "weapon_steel", 50)), "gun_m2"),
                 recipes, hbm("gun_m2")));
+        writes.add(save(output, weaponRecipe(List.of("CCC", "BRB", "MGE"), Map.of(
+                "C", itemIngredient("hbm:coil_copper"),
+                "B", resistantPart("part_barrel_heavy"),
+                "R", resistantPart("part_receiver_heavy"),
+                "M", foundryPart("part_mechanism", "weapon_steel", 50),
+                "G", foundryPart("part_grip", "polymer", 20_001),
+                "E", customComponentIngredient("hbm:circuit", "type", "advanced", 9)),
+                "gun_tesla_cannon"), recipes, hbm("gun_tesla_cannon")));
+        writes.add(save(output, capacitorRecipe("capacitor", 67, 4, false),
+                recipes, hbm("ammo_capacitor")));
+        writes.add(save(output, capacitorRecipe("capacitor_overcharge", 68, 6, false),
+                recipes, hbm("ammo_capacitor_overcharge")));
+        writes.add(save(output, capacitorRecipe("capacitor_ir", 69, 0, true),
+                recipes, hbm("ammo_capacitor_low")));
         writes.add(save(output, weaponRecipe(List.of(" C ", "BRS", " MG"), Map.of(
                 "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
                 "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
@@ -5102,6 +5116,25 @@ public final class MaterialResourcesProvider implements DataProvider {
 
     private JsonObject weaponRecipe(List<String> pattern, Map<String, JsonObject> key, String output) {
         return shapedItemRecipe(pattern, key, "hbm:" + output);
+    }
+
+    /** Ammo press inputs flattened into shapeless crafting until that machine arrives. */
+    private JsonObject capacitorRecipe(String type, int model, int silicon, boolean niobium) {
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "minecraft:crafting_shapeless");
+        root.addProperty("category", "combat");
+        JsonArray ingredients = new JsonArray();
+        ingredients.add(itemIngredient("hbm:ingot_polymer"));
+        ingredients.add(itemIngredient("hbm:ingot_polymer"));
+        for (int i = 0; i < silicon; i++) ingredients.add(itemIngredient("hbm:billet_silicon"));
+        if (niobium) ingredients.add(itemIngredient("hbm:ingot_niobium"));
+        root.add("ingredients", ingredients);
+        JsonObject customData = new JsonObject(); customData.addProperty("hbm_ammo_type", type);
+        JsonObject components = new JsonObject(); components.add("minecraft:custom_data", customData);
+        components.addProperty("minecraft:custom_model_data", model);
+        JsonObject result = new JsonObject(); result.addProperty("id", "hbm:ammo_standard");
+        result.addProperty("count", 4); result.add("components", components); root.add("result", result);
+        return root;
     }
 
     private JsonObject foundryPart(String part, String material, int metadata) {
