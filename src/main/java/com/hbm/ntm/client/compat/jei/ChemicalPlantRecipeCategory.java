@@ -103,7 +103,8 @@ public final class ChemicalPlantRecipeCategory implements IRecipeCategory<Chemic
                 0x404040, false);
         Component time = Component.translatable("jei.hbm.time", recipe.duration());
         graphics.drawString(font, time, 173 - font.width(time), 73, 0x404040, false);
-        graphics.drawString(font, Component.literal(recipe.name()), 3, 84, 0x606060, false);
+        graphics.drawString(font, Component.translatable("recipe.hbm." + recipe.name()), 3, 84,
+                0x606060, false);
     }
 
     @Override
