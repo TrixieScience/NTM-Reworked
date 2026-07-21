@@ -31,7 +31,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.List;
 import java.util.Locale;
 
-/** Source {@code XFactoryEnergy} A-side Laser Pistol. */
+/** Source {@code XFactoryEnergy} ordinary and B-side Laser Pistols. */
 public final class LaserPistolItem extends SednaGunItem {
     public static final int DURABILITY = 500;
     public static final int CAPACITY = 30;
@@ -45,6 +45,12 @@ public final class LaserPistolItem extends SednaGunItem {
     public static final float INNATE_SPREAD = 1.0F;
     public static final float HIP_SPREAD = 1.0F;
     public static final float MAX_WEAR_SPREAD = 0.125F;
+    public static final int PEW_PEW_CAPACITY = 10;
+    public static final int PEW_PEW_FIRE_DELAY = 10;
+    public static final int PEW_PEW_ROUNDS_PER_CYCLE = 5;
+    public static final float PEW_PEW_BASE_DAMAGE = 30.0F;
+    public static final float PEW_PEW_INNATE_SPREAD = 0.25F;
+    public static final float PEW_PEW_FIRE_PITCH = 0.8F;
 
     private static final String INITIALIZED = "hbm_initialized";
     private static final String STATE = "state_0";
@@ -60,6 +66,20 @@ public final class LaserPistolItem extends SednaGunItem {
     private static final String LAST_ANIM = "lastanim_0";
     private static final String ANIM_TIMER = "animtimer_0";
 
+    private final Variant variant;
+
+    public LaserPistolItem() {
+        this(Variant.STANDARD);
+    }
+
+    public LaserPistolItem(Variant variant) {
+        this.variant = variant;
+    }
+
+    public Variant variant() { return variant; }
+    public float baseDamage() { return variant.baseDamage; }
+    public int roundsPerCycle() { return variant.roundsPerCycle; }
+
     @Override
     protected void handleGunInput(Player player, ItemStack stack, GunInput input) {
         switch (input) {
@@ -73,7 +93,7 @@ public final class LaserPistolItem extends SednaGunItem {
     @Override public boolean gunAiming(ItemStack stack) { return aiming(stack); }
     @Override public SednaCrosshair gunCrosshair() { return SednaCrosshair.CIRCLE; }
     @Override public int gunRounds(ItemStack stack) { return rounds(stack); }
-    @Override public int gunCapacity() { return CAPACITY; }
+    @Override public int gunCapacity() { return variant.capacity; }
     @Override public float gunWear(ItemStack stack) { return wear(stack); }
     @Override public float gunDurability() { return DURABILITY; }
     @Override public ItemStack gunAmmoIcon(ItemStack stack) {
@@ -114,7 +134,7 @@ public final class LaserPistolItem extends SednaGunItem {
         save(stack, tag);
     }
 
-    private static void decide(LivingEntity living, CompoundTag tag, GunState previous) {
+    private void decide(LivingEntity living, CompoundTag tag, GunState previous) {
         if (previous == GunState.DRAWING || previous == GunState.JAMMED
                 || previous == GunState.COOLDOWN) {
             setState(tag, GunState.IDLE);
@@ -125,7 +145,7 @@ public final class LaserPistolItem extends SednaGunItem {
 
         if (!tag.getBoolean(CANCEL_RELOAD)) reloadAction(player, tag);
         tag.putBoolean(CANCEL_RELOAD, false);
-        tag.putInt(MAG_AFTER, rounds(tag));
+        tag.putInt(MAG_AFTER, roundsValue(tag));
         if (jamChance(tag.getFloat(WEAR)) > living.getRandom().nextFloat()) {
             setState(tag, GunState.JAMMED);
             tag.putInt(TIMER, JAM_TICKS);
@@ -136,7 +156,7 @@ public final class LaserPistolItem extends SednaGunItem {
         }
     }
 
-    private static void pressPrimary(Player player, ItemStack stack) {
+    private void pressPrimary(Player player, ItemStack stack) {
         CompoundTag tag = data(stack);
         GunState current = state(tag);
         if (current == GunState.RELOADING) {
@@ -145,10 +165,10 @@ public final class LaserPistolItem extends SednaGunItem {
             return;
         }
         if (current != GunState.IDLE) return;
-        if (rounds(tag) <= 0) {
+        if (roundsValue(tag) <= 0) {
             playAnimation(tag, GunAnimation.CYCLE_DRY);
             setState(tag, GunState.DRAWING);
-            tag.putInt(TIMER, DRY_TICKS);
+            tag.putInt(TIMER, variant.fireDelay);
             save(stack, tag);
             return;
         }
@@ -156,40 +176,46 @@ public final class LaserPistolItem extends SednaGunItem {
         save(stack, tag);
     }
 
-    private static void fire(Player player, CompoundTag tag) {
+    private void fire(Player player, CompoundTag tag) {
         if (!(player.level() instanceof ServerLevel level)) return;
         EnergyAmmoType ammo = EnergyAmmoType.fromLegacyBulletConfig(tag.getInt(MAG_TYPE));
         float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, DURABILITY);
-        float damage = BASE_DAMAGE * wearDamageMultiplier(currentWear) * ammo.damageMultiplier();
         boolean aiming = tag.getBoolean(AIMING);
-        float spread = INNATE_SPREAD + (aiming ? 0.0F : HIP_SPREAD) + wearSpread(currentWear);
         Vec3 origin = projectileOrigin(player);
         Vec3 heading = player.getLookAngle();
+        int fired = Math.min(roundsValue(tag), variant.roundsPerCycle);
 
-        LaserPistolBeamEntity beam = new LaserPistolBeamEntity(level, player, ammo, damage,
-                spread, new Vec3(-0.1875D, -0.09375D, 0.75D));
-        beam.performHitscan();
-        level.addFreshEntity(beam);
-        play(level, player, ModSounds.GUN_LASER_PISTOL_FIRE.get(), 1.0F, 1.0F);
+        for (int round = 0; round < fired; round++) {
+            float damage = variant.baseDamage * wearDamageMultiplier(currentWear)
+                    * ammo.damageMultiplier();
+            float spread = variant.innateSpread + (aiming ? 0.0F : HIP_SPREAD)
+                    + wearSpread(currentWear);
+            LaserPistolBeamEntity beam = new LaserPistolBeamEntity(level, player, ammo, damage,
+                    spread, new Vec3(-0.1875D, -0.09375D, 0.75D));
+            beam.performHitscan();
+            level.addFreshEntity(beam);
+            currentWear = Math.min(currentWear + ammo.wear(), DURABILITY);
+        }
+        play(level, player, ModSounds.GUN_LASER_PISTOL_FIRE.get(), 1.0F, variant.firePitch);
         if (player instanceof ServerPlayer serverPlayer
                 && serverPlayer.connection.getConnection().isConnected()) {
             PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,
                     GunEffectPayload.fired(player.getId(), origin, heading, false));
         }
 
-        tag.putInt(MAG_COUNT, Math.max(0, rounds(tag) - 1));
-        tag.putFloat(WEAR, Math.min(currentWear + ammo.wear(), DURABILITY));
+        tag.putInt(MAG_COUNT, Math.max(0, roundsValue(tag) - fired));
+        tag.putFloat(WEAR, currentWear);
         setState(tag, GunState.COOLDOWN);
-        tag.putInt(TIMER, FIRE_DELAY);
+        tag.putInt(TIMER, variant.fireDelay);
         playAnimation(tag, GunAnimation.CYCLE);
     }
 
-    private static void pressReload(Player player, ItemStack stack) {
+    private void pressReload(Player player, ItemStack stack) {
         CompoundTag tag = data(stack);
         if (state(tag) != GunState.IDLE) return;
         tag.putBoolean(AIMING, false);
         if (canReload(player.getInventory(), tag)) {
-            tag.putInt(MAG_PREV, rounds(tag));
+            tag.putInt(MAG_PREV, roundsValue(tag));
             setState(tag, GunState.RELOADING);
             tag.putInt(TIMER, RELOAD_TICKS);
             playAnimation(tag, GunAnimation.RELOAD);
@@ -205,27 +231,27 @@ public final class LaserPistolItem extends SednaGunItem {
         save(stack, tag);
     }
 
-    private static boolean canReload(Inventory inventory, CompoundTag gun) {
-        int count = rounds(gun);
-        if (count >= CAPACITY) return false;
+    private boolean canReload(Inventory inventory, CompoundTag gun) {
+        int count = roundsValue(gun);
+        if (count >= variant.capacity) return false;
         EnergyAmmoType required = count > 0
                 ? EnergyAmmoType.fromLegacyBulletConfig(gun.getInt(MAG_TYPE)) : null;
         return findFirstAmmo(inventory, required) != null;
     }
 
-    private static void reloadAction(Player player, CompoundTag gun) {
+    private void reloadAction(Player player, CompoundTag gun) {
         Inventory inventory = player.getInventory();
-        int loaded = rounds(gun);
+        int loaded = roundsValue(gun);
         EnergyAmmoType type = loaded > 0
                 ? EnergyAmmoType.fromLegacyBulletConfig(gun.getInt(MAG_TYPE))
                 : findFirstAmmo(inventory, null);
         if (type == null) return;
         if (loaded == 0) gun.putInt(MAG_TYPE, type.legacyBulletConfig());
-        for (int slot = 0; slot < inventory.getContainerSize() && loaded < CAPACITY; slot++) {
+        for (int slot = 0; slot < inventory.getContainerSize() && loaded < variant.capacity; slot++) {
             ItemStack candidate = inventory.getItem(slot);
             if (!candidate.is(ModItems.AMMO_STANDARD.get())
                     || StandardAmmoTypes.fromStack(candidate) != type) continue;
-            int consumed = Math.min(CAPACITY - loaded, candidate.getCount());
+            int consumed = Math.min(variant.capacity - loaded, candidate.getCount());
             candidate.shrink(consumed);
             loaded += consumed;
         }
@@ -283,8 +309,12 @@ public final class LaserPistolItem extends SednaGunItem {
         return percent < 0.5F ? 0.0F : (percent - 0.5F) * 2.0F * MAX_WEAR_SPREAD;
     }
 
-    public static int rounds(ItemStack stack) { return rounds(data(stack)); }
-    private static int rounds(CompoundTag tag) { return Mth.clamp(tag.getInt(MAG_COUNT), 0, CAPACITY); }
+    public static int rounds(ItemStack stack) {
+        return Mth.clamp(data(stack).getInt(MAG_COUNT), 0, variant(stack).capacity);
+    }
+    private int roundsValue(CompoundTag tag) {
+        return Mth.clamp(tag.getInt(MAG_COUNT), 0, variant.capacity);
+    }
     public static float wear(ItemStack stack) { return Mth.clamp(data(stack).getFloat(WEAR), 0.0F, DURABILITY); }
     public static boolean aiming(ItemStack stack) { return data(stack).getBoolean(AIMING); }
     public static GunState state(ItemStack stack) { return state(data(stack)); }
@@ -301,7 +331,7 @@ public final class LaserPistolItem extends SednaGunItem {
         CompoundTag tag = data(stack);
         setState(tag, state);
         tag.putInt(TIMER, timer);
-        tag.putInt(MAG_COUNT, Mth.clamp(rounds, 0, CAPACITY));
+        tag.putInt(MAG_COUNT, Mth.clamp(rounds, 0, variant(stack).capacity));
         tag.putInt(MAG_TYPE, ammo.legacyBulletConfig());
         tag.putFloat(WEAR, Mth.clamp(wear, 0.0F, DURABILITY));
         tag.putBoolean(EQUIPPED, true);
@@ -327,7 +357,7 @@ public final class LaserPistolItem extends SednaGunItem {
         CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         if (!tag.getBoolean(INITIALIZED)) {
             tag.putBoolean(INITIALIZED, true);
-            tag.putInt(MAG_TYPE, EnergyAmmoType.STANDARD.legacyBulletConfig());
+            tag.putInt(MAG_TYPE, variant(stack).defaultAmmo.legacyBulletConfig());
             tag.putInt(MAG_COUNT, 0);
         }
         return tag;
@@ -342,20 +372,62 @@ public final class LaserPistolItem extends SednaGunItem {
         EnergyAmmoType ammo = loadedAmmo(stack);
         tooltip.add(Component.translatable("gui.weapon.ammo").append(": ")
                 .append(Component.translatable("item.hbm.ammo_standard." + ammo.serializedName()))
-                .append(" " + rounds(stack) + " / " + CAPACITY).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gui.weapon.baseDamage").append(": " + trim(BASE_DAMAGE))
+                .append(" " + rounds(stack) + " / " + variant.capacity).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("gui.weapon.baseDamage").append(": " + trim(variant.baseDamage))
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.damageWithAmmo")
-                .append(": " + trim(BASE_DAMAGE * ammo.damageMultiplier())).withStyle(ChatFormatting.GRAY));
+                .append(": " + trim(variant.baseDamage * ammo.damageMultiplier())).withStyle(ChatFormatting.GRAY));
         int condition = Mth.clamp((int) ((DURABILITY - wear(stack)) * 100.0F / DURABILITY), 0, 100);
         tooltip.add(Component.translatable("gui.weapon.condition").append(": " + condition + "%")
                 .withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gui.weapon.quality.aside").withStyle(ChatFormatting.YELLOW));
+        tooltip.add(Component.translatable(variant.quality)
+                .withStyle(variant == Variant.PEW_PEW ? ChatFormatting.GOLD : ChatFormatting.YELLOW));
     }
 
     private static String trim(float value) {
         if (Math.abs(value - Math.round(value)) < 0.0001F) return Integer.toString(Math.round(value));
         return String.format(Locale.ROOT, "%.2f", value).replaceAll("0+$", "").replaceAll("\\.$", "");
+    }
+
+    private static Variant variant(ItemStack stack) {
+        return stack.getItem() instanceof LaserPistolItem gun ? gun.variant : Variant.STANDARD;
+    }
+
+    public enum Variant {
+        STANDARD(CAPACITY, FIRE_DELAY, 1, BASE_DAMAGE, INNATE_SPREAD, 1.0F,
+                EnergyAmmoType.STANDARD, "gui.weapon.quality.aside"),
+        PEW_PEW(PEW_PEW_CAPACITY, PEW_PEW_FIRE_DELAY, PEW_PEW_ROUNDS_PER_CYCLE,
+                PEW_PEW_BASE_DAMAGE, PEW_PEW_INNATE_SPREAD, PEW_PEW_FIRE_PITCH,
+                EnergyAmmoType.OVERCHARGE, "gui.weapon.quality.bside");
+
+        private final int capacity;
+        private final int fireDelay;
+        private final int roundsPerCycle;
+        private final float baseDamage;
+        private final float innateSpread;
+        private final float firePitch;
+        private final EnergyAmmoType defaultAmmo;
+        private final String quality;
+
+        Variant(int capacity, int fireDelay, int roundsPerCycle, float baseDamage,
+                float innateSpread, float firePitch, EnergyAmmoType defaultAmmo, String quality) {
+            this.capacity = capacity;
+            this.fireDelay = fireDelay;
+            this.roundsPerCycle = roundsPerCycle;
+            this.baseDamage = baseDamage;
+            this.innateSpread = innateSpread;
+            this.firePitch = firePitch;
+            this.defaultAmmo = defaultAmmo;
+            this.quality = quality;
+        }
+
+        public int capacity() { return capacity; }
+        public int fireDelay() { return fireDelay; }
+        public int roundsPerCycle() { return roundsPerCycle; }
+        public float baseDamage() { return baseDamage; }
+        public float innateSpread() { return innateSpread; }
+        public float firePitch() { return firePitch; }
+        public EnergyAmmoType defaultAmmo() { return defaultAmmo; }
     }
 
     public enum GunState { DRAWING, IDLE, COOLDOWN, RELOADING, JAMMED }

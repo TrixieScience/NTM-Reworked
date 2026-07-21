@@ -42,6 +42,24 @@ public final class LaserPistolGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void pewPewReceiverKeepsItsBsideContract(GameTestHelper helper) {
+        LaserPistolItem gun = ModItems.GUN_LASER_PISTOL_PEW_PEW.get();
+        ItemStack stack = new ItemStack(gun);
+        helper.assertTrue(gun.variant() == LaserPistolItem.Variant.PEW_PEW
+                        && gun.gunCapacity() == 10 && gun.roundsPerCycle() == 5
+                        && gun.baseDamage() == 30.0F
+                        && gun.variant().fireDelay() == 10
+                        && gun.variant().innateSpread() == 0.25F
+                        && gun.variant().firePitch() == 0.8F
+                        && !gun.gunAutomatic() && gun.gunCrosshair() == SednaCrosshair.CIRCLE,
+                "Pew Pew damage, volley, timing, spread, capacity, pitch, and reticle must match XFactoryEnergy");
+        helper.assertTrue(LaserPistolItem.rounds(stack) == 0
+                        && LaserPistolItem.loadedAmmo(stack) == EnergyAmmoType.OVERCHARGE,
+                "a fresh Pew Pew is empty but remembers the overcharge capacitor identity");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void laserProfilesKeepTheirOwnImpactRules(GameTestHelper helper) {
         helper.assertTrue(!EnergyAmmoType.STANDARD.laserPenetrates()
                         && EnergyAmmoType.OVERCHARGE.laserPenetrates()
@@ -98,6 +116,31 @@ public final class LaserPistolGameTests {
                         && LaserPistolItem.state(gun) == LaserPistolItem.GunState.COOLDOWN
                         && LaserPistolItem.timer(gun) == 5,
                 "one round is consumed and the semiauto action enters its five tick cooldown");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void pewPewTriggerConsumesFiveRoundsAndSpawnsFiveBeams(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        ItemStack gun = new ItemStack(ModItems.GUN_LASER_PISTOL_PEW_PEW.get());
+        LaserPistolItem.setTestState(gun, LaserPistolItem.GunState.IDLE, 0, 10,
+                EnergyAmmoType.OVERCHARGE, 0.0F);
+        player.setItemInHand(InteractionHand.MAIN_HAND, gun);
+        player.setPos(Vec3.atCenterOf(helper.absolutePos(new BlockPos(2, 3, 2))));
+        player.setYRot(0.0F);
+        player.setXRot(0.0F);
+
+        SednaGunItem.handleInput(player, GunInput.PRIMARY);
+        List<LaserPistolBeamEntity> beams = helper.getLevel().getEntitiesOfClass(
+                LaserPistolBeamEntity.class, new AABB(player.position(), player.position()).inflate(260.0D));
+        helper.assertTrue(beams.size() == 5
+                        && beams.stream().allMatch(beam -> beam.ammoType() == EnergyAmmoType.OVERCHARGE
+                        && beam.beamDamage() == 45.0F),
+                "Pew Pew must fire five independent 30 x 1.5 overcharge beams per trigger pull");
+        helper.assertTrue(LaserPistolItem.rounds(gun) == 5
+                        && LaserPistolItem.state(gun) == LaserPistolItem.GunState.COOLDOWN
+                        && LaserPistolItem.timer(gun) == 10,
+                "one Pew Pew volley must consume five rounds and enter its ten tick cooldown");
         helper.succeed();
     }
 

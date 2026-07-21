@@ -570,6 +570,8 @@ public final class ClientWeaponRegistration {
         event.registerItem(weaponExtension(new AmatItemRenderer()), ModItems.GUN_AMAT.get());
         event.registerItem(weaponExtension(new TeslaCannonItemRenderer()), ModItems.GUN_TESLA_CANNON.get());
         event.registerItem(weaponExtension(new LaserPistolItemRenderer()), ModItems.GUN_LASER_PISTOL.get());
+        event.registerItem(weaponExtension(new LaserPistolItemRenderer()),
+                ModItems.GUN_LASER_PISTOL_PEW_PEW.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(ResourceLocation.fromNamespaceAndPath(
                 "hbm", "textures/models/weapons/amat_subtlety.png"))), ModItems.GUN_AMAT_SUBTLETY.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(PenanceItem.PENANCE_TEXTURE, true)),

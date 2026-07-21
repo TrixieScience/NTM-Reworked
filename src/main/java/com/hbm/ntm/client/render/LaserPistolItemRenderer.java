@@ -27,6 +27,8 @@ import java.util.Set;
 public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRenderer {
     private static final ResourceLocation MODEL = id("models/weapons/laser_pistol.obj");
     private static final ResourceLocation TEXTURE = id("textures/models/weapons/laser_pistol.png");
+    private static final ResourceLocation PEW_PEW_TEXTURE = id(
+            "textures/models/weapons/laser_pistol_pew_pew.png");
     private static final ResourceLocation FLASH_TEXTURE = id("textures/models/weapons/laser_flash.png");
     private static final Set<String> GROUPS = Set.of("Gun", "Battery", "Latch", "Capacitors", "Tape");
     private static final RenderType FLASH_TYPE = RenderType.create(
@@ -50,7 +52,7 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
     @Override
     public void renderByItem(ItemStack stack, ItemDisplayContext context, PoseStack poses,
                              MultiBufferSource buffers, int light, int overlay) {
-        if (!(stack.getItem() instanceof LaserPistolItem)) return;
+        if (!(stack.getItem() instanceof LaserPistolItem pistol)) return;
         boolean first = context == ItemDisplayContext.FIRST_PERSON_LEFT_HAND
                 || context == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
         boolean held = first || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND
@@ -59,16 +61,16 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
 
         poses.pushPose();
         setupContext(context, poses);
-        if (first) renderFirstPerson(stack, poses, buffers, light, overlay);
-        else renderStatic(poses, buffers, light, overlay);
+        if (first) renderFirstPerson(stack, pistol, poses, buffers, light, overlay);
+        else renderStatic(pistol, poses, buffers, light, overlay);
         if (held && elapsed >= 0L && elapsed < 150L) {
             renderFlash(poses, buffers, elapsed / 150.0F);
         }
         poses.popPose();
     }
 
-    private void renderFirstPerson(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
-                                   int light, int overlay) {
+    private void renderFirstPerson(ItemStack stack, LaserPistolItem pistol, PoseStack poses,
+                                   MultiBufferSource buffers, int light, int overlay) {
         float partial = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
         float time = (LaserPistolItem.animationTimer(stack) + partial) * 50.0F;
         LaserPistolItem.GunAnimation animation = LaserPistolItem.animation(stack);
@@ -80,19 +82,28 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
         poses.translate(joltX(animation, time), 0.0D,
                 recoilZ(animation, time) + joltZ(animation, time));
 
-        renderGroup("Gun", poses, buffers, light, overlay);
+        renderGroup("Gun", pistol, poses, buffers, light, overlay);
+        if (pistol.variant() == LaserPistolItem.Variant.PEW_PEW) {
+            renderGroup("Capacitors", pistol, poses, buffers, light, overlay);
+            renderGroup("Tape", pistol, poses, buffers, light, overlay);
+        }
         poses.pushPose();
         pivotY(poses, 1.125D, 0.0D, -1.9125D, latchAngle(animation, time));
-        renderGroup("Latch", poses, buffers, light, overlay);
+        renderGroup("Latch", pistol, poses, buffers, light, overlay);
         Vec battery = batteryOffset(animation, time);
         poses.translate(battery.x, battery.y, battery.z);
-        renderGroup("Battery", poses, buffers, light, overlay);
+        renderGroup("Battery", pistol, poses, buffers, light, overlay);
         poses.popPose();
     }
 
-    private void renderStatic(PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
-        renderGroup("Gun", poses, buffers, light, overlay);
-        renderGroup("Latch", poses, buffers, light, overlay);
+    private void renderStatic(LaserPistolItem pistol, PoseStack poses, MultiBufferSource buffers,
+                              int light, int overlay) {
+        renderGroup("Gun", pistol, poses, buffers, light, overlay);
+        renderGroup("Latch", pistol, poses, buffers, light, overlay);
+        if (pistol.variant() == LaserPistolItem.Variant.PEW_PEW) {
+            renderGroup("Capacitors", pistol, poses, buffers, light, overlay);
+            renderGroup("Tape", pistol, poses, buffers, light, overlay);
+        }
     }
 
     private void renderFlash(PoseStack poses, MultiBufferSource buffers, float progress) {
@@ -124,9 +135,11 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
                 .setNormal(pose, 1.0F, 0.0F, 0.0F);
     }
 
-    private void renderGroup(String group, PoseStack poses, MultiBufferSource buffers,
-                             int light, int overlay) {
-        mesh().render(group, poses.last(), buffers.getBuffer(RenderType.entityCutout(TEXTURE)),
+    private void renderGroup(String group, LaserPistolItem pistol, PoseStack poses,
+                             MultiBufferSource buffers, int light, int overlay) {
+        ResourceLocation texture = pistol.variant() == LaserPistolItem.Variant.PEW_PEW
+                ? PEW_PEW_TEXTURE : TEXTURE;
+        mesh().render(group, poses.last(), buffers.getBuffer(RenderType.entityCutout(texture)),
                 1.0F, light, overlay, -1);
     }
 

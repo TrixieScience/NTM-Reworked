@@ -607,6 +607,8 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GUN_M2.get());
                         output.accept(ModItems.GUN_TESLA_CANNON.get());
                         output.accept(ModItems.GUN_LASER_PISTOL.get());
+                        // TODO Saturnite mechanisms; source upgrade recipe remains gated
+                        output.accept(ModItems.GUN_LASER_PISTOL_PEW_PEW.get());
                         output.accept(ModItems.GUN_B92.get());
                         output.accept(ModItems.GUN_B93.get());
                         output.accept(ModItems.GUN_B92_AMMO.get());
