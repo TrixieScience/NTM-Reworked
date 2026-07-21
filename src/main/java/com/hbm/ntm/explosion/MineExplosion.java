@@ -160,6 +160,18 @@ public final class MineExplosion {
     /** Same block vandalism, now carrying identification. */
     public static void blastBlocks(ServerLevel level, double cx, double cy, double cz,
                                    float size, int resolution, boolean skipLiquids, Entity owner) {
+        blastBlocks(level, cx, cy, cz, size, resolution, skipLiquids, owner, null);
+    }
+
+    public static void blastBlocksAndIgnite(ServerLevel level, double cx, double cy, double cz,
+                                            float size, int resolution, Entity owner,
+                                            BlockState fire) {
+        blastBlocks(level, cx, cy, cz, size, resolution, false, owner, fire);
+    }
+
+    private static void blastBlocks(ServerLevel level, double cx, double cy, double cz,
+                                    float size, int resolution, boolean skipLiquids, Entity owner,
+                                    BlockState fire) {
         Explosion explosion = new Explosion(level, owner, cx, cy, cz, size, false,
                 Explosion.BlockInteraction.DESTROY);
         Set<BlockPos> affected = allocate(level, cx, cy, cz, size, resolution, skipLiquids);
@@ -178,6 +190,14 @@ public final class MineExplosion {
             }
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             state.getBlock().wasExploded(level, pos, explosion);
+        }
+        if (fire == null) return;
+        for (BlockPos pos : affected) {
+            if (level.random.nextInt(3) == 0 && level.getBlockState(pos).isAir()
+                    && level.getBlockState(pos.below()).isFaceSturdy(level, pos.below(),
+                    net.minecraft.core.Direction.UP)) {
+                level.setBlock(pos, fire, Block.UPDATE_ALL);
+            }
         }
     }
 

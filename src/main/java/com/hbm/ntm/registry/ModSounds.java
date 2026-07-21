@@ -99,6 +99,10 @@ public final class ModSounds {
             register("weapon.coilgun_shoot");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_COIL_RELOAD =
             register("weapon.coilgun_reload");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_FATMAN_FIRE =
+            register("weapon.fire.fatman");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_FATMAN_RELOAD =
+            register("weapon.reload.fatman_full");
     public static final DeferredHolder<SoundEvent, SoundEvent> DISINTEGRATION =
             register("weapon.fire.disintegration");
     public static final DeferredHolder<SoundEvent, SoundEvent> TESLA_BLAST = register("entity.ufo_blast");

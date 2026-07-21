@@ -155,6 +155,11 @@ public final class ModNetwork {
                 MineBlastPayload.STREAM_CODEC,
                 MineBlastPayload::handle
         );
+        registrar.playToClient(
+                MiniNukeBlastPayload.TYPE,
+                MiniNukeBlastPayload.STREAM_CODEC,
+                MiniNukeBlastPayload::handle
+        );
         registrar.playToServer(
                 AnvilCraftPayload.TYPE,
                 AnvilCraftPayload.STREAM_CODEC,

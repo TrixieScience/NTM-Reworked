@@ -37,6 +37,7 @@ import com.hbm.ntm.weapon.RocketAmmoType;
 import com.hbm.ntm.weapon.EnergyAmmoType;
 import com.hbm.ntm.weapon.TauAmmoType;
 import com.hbm.ntm.weapon.CoilAmmoType;
+import com.hbm.ntm.weapon.MiniNukeAmmoType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -618,6 +619,7 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GUN_TAU.get());
                         output.accept(ModItems.GUN_COILGUN.get());
                         output.accept(ModItems.GUN_N_I_4_N_I.get());
+                        output.accept(ModItems.GUN_FATMAN.get());
                         output.accept(ModItems.GUN_B92.get());
                         output.accept(ModItems.GUN_B93.get());
                         output.accept(ModItems.GUN_B92_AMMO.get());
@@ -666,6 +668,9 @@ public final class ModCreativeTabs {
                             output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
                         }
                         for (CoilAmmoType type : CoilAmmoType.values()) {
+                            output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
+                        }
+                        for (MiniNukeAmmoType type : MiniNukeAmmoType.values()) {
                             output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
                         }
                     })

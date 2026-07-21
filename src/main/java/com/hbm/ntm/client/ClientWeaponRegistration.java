@@ -39,6 +39,8 @@ import com.hbm.ntm.client.render.NineMillimeterGunItemRenderer;
 import com.hbm.ntm.client.render.NI4NIBeamRenderer;
 import com.hbm.ntm.client.render.NI4NICoinRenderer;
 import com.hbm.ntm.client.render.NI4NIItemRenderer;
+import com.hbm.ntm.client.render.FatManItemRenderer;
+import com.hbm.ntm.client.render.MiniNukeProjectileRenderer;
 import com.hbm.ntm.client.render.PepperboxItemRenderer;
 import com.hbm.ntm.client.render.PanzerschreckItemRenderer;
 import com.hbm.ntm.client.render.QuadRocketLauncherItemRenderer;
@@ -160,6 +162,7 @@ public final class ClientWeaponRegistration {
         event.registerEntityRenderer(ModEntities.TAU_BEAM.get(), TauBeamRenderer::new);
         event.registerEntityRenderer(ModEntities.NI4NI_BEAM.get(), NI4NIBeamRenderer::new);
         event.registerEntityRenderer(ModEntities.NI4NI_COIN.get(), NI4NICoinRenderer::new);
+        event.registerEntityRenderer(ModEntities.MINI_NUKE_PROJECTILE.get(), MiniNukeProjectileRenderer::new);
     }
 
     private static void registerModels(ModelEvent.RegisterAdditional event) {
@@ -588,6 +591,7 @@ public final class ClientWeaponRegistration {
         event.registerItem(weaponExtension(new TauGunItemRenderer()), ModItems.GUN_TAU.get());
         event.registerItem(weaponExtension(new CoilgunItemRenderer()), ModItems.GUN_COILGUN.get());
         event.registerItem(weaponExtension(new NI4NIItemRenderer()), ModItems.GUN_N_I_4_N_I.get());
+        event.registerItem(weaponExtension(new FatManItemRenderer()), ModItems.GUN_FATMAN.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(ResourceLocation.fromNamespaceAndPath(
                 "hbm", "textures/models/weapons/amat_subtlety.png"))), ModItems.GUN_AMAT_SUBTLETY.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(PenanceItem.PENANCE_TEXTURE, true)),

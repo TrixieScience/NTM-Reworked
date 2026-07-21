@@ -71,8 +71,14 @@
     {"predicate": {"custom_model_data": 70}, "model": "hbm:item/ammo_standard_tau_uranium"},
     {"predicate": {"custom_model_data": 71}, "model": "hbm:item/ammo_standard_coil_tungsten"},
     {"predicate": {"custom_model_data": 72}, "model": "hbm:item/ammo_standard_coil_ferrouranium"},
+    {"predicate": {"custom_model_data": 73}, "model": "hbm:item/ammo_standard_nuke_standard"},
+    {"predicate": {"custom_model_data": 74}, "model": "hbm:item/ammo_standard_nuke_demo"},
+    {"predicate": {"custom_model_data": 75}, "model": "hbm:item/ammo_standard_nuke_high"},
+    {"predicate": {"custom_model_data": 76}, "model": "hbm:item/ammo_standard_nuke_tots"},
+    {"predicate": {"custom_model_data": 77}, "model": "hbm:item/ammo_standard_nuke_hive"},
     {"predicate": {"custom_model_data": 82}, "model": "hbm:item/ammo_standard_r762_he"},
     {"predicate": {"custom_model_data": 83}, "model": "hbm:item/ammo_standard_bmg50_he"},
+    {"predicate": {"custom_model_data": 93}, "model": "hbm:item/ammo_standard_nuke_balefire"},
     {"predicate": {"custom_model_data": 94}, "model": "hbm:item/ammo_standard_bmg50_sm"}
   ]
 }

@@ -63,6 +63,7 @@ import com.hbm.ntm.item.TeslaCannonItem;
 import com.hbm.ntm.item.TauGunItem;
 import com.hbm.ntm.item.CoilgunItem;
 import com.hbm.ntm.item.NI4NIItem;
+import com.hbm.ntm.item.FatManItem;
 import com.hbm.ntm.item.AmatItem;
 import com.hbm.ntm.item.SubtletyItem;
 import com.hbm.ntm.item.PenanceItem;
@@ -471,6 +472,7 @@ public final class ModItems {
     public static final DeferredItem<TauGunItem> GUN_TAU;
     public static final DeferredItem<CoilgunItem> GUN_COILGUN;
     public static final DeferredItem<NI4NIItem> GUN_N_I_4_N_I;
+    public static final DeferredItem<FatManItem> GUN_FATMAN;
     public static final DeferredItem<AmatItem> GUN_AMAT;
     public static final DeferredItem<SubtletyItem> GUN_AMAT_SUBTLETY;
     public static final DeferredItem<PenanceItem> GUN_AMAT_PENANCE;
@@ -1268,6 +1270,7 @@ public final class ModItems {
         GUN_TAU = ITEMS.register("gun_tau", TauGunItem::new);
         GUN_COILGUN = ITEMS.register("gun_coilgun", CoilgunItem::new);
         GUN_N_I_4_N_I = ITEMS.register("gun_n_i_4_n_i", NI4NIItem::new);
+        GUN_FATMAN = ITEMS.register("gun_fatman", FatManItem::new);
         WEAPONIZED_STARBLASTER_CELL = ITEMS.register(
                 "weaponized_starblaster_cell", WeaponizedStarblasterCellItem::new);
         MULTITOOL_DIG = ITEMS.register("multitool_dig",

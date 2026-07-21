@@ -115,6 +115,14 @@
     "category": "block",
     "sounds": [{"name": "hbm:weapon/muke_explosion", "stream": false}]
   },
+  "weapon.fire.fatman": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/fatman", "stream": false}]
+  },
+  "weapon.reload.fatman_full": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/reload/fatman_full", "stream": false}]
+  },
   "weapon.fire.blackpowder": {
     "category": "player",
     "sounds": [{"name": "hbm:weapon/fire/blackpowder", "stream": false}]

@@ -13,6 +13,7 @@ import com.hbm.ntm.entity.LingeringFireEntity;
 import com.hbm.ntm.entity.LaserPistolBeamEntity;
 import com.hbm.ntm.entity.NI4NIBeamEntity;
 import com.hbm.ntm.entity.NI4NICoinEntity;
+import com.hbm.ntm.entity.MiniNukeProjectileEntity;
 import com.hbm.ntm.entity.RocketProjectileEntity;
 import com.hbm.ntm.entity.CogEntity;
 import com.hbm.ntm.entity.ChlorineCloudEntity;
@@ -226,6 +227,13 @@ public final class ModEntities {
                                     RocketProjectileEntity::new, MobCategory.MISC)
                             .fireImmune().sized(0.5F, 0.5F).clientTrackingRange(16).updateInterval(1)
                             .build("hbm:entity_bullet_rocket"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<MiniNukeProjectileEntity>> MINI_NUKE_PROJECTILE =
+            ENTITY_TYPES.register("entity_bullet_mini_nuke",
+                    () -> EntityType.Builder.<MiniNukeProjectileEntity>of(
+                                    MiniNukeProjectileEntity::new, MobCategory.MISC)
+                            .fireImmune().sized(0.5F, 0.5F).clientTrackingRange(16).updateInterval(1)
+                            .build("hbm:entity_bullet_mini_nuke"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<LingeringFireEntity>> LINGERING_FIRE =
             ENTITY_TYPES.register("entity_fire_lingering",
