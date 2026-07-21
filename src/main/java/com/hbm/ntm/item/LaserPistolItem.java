@@ -31,7 +31,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.List;
 import java.util.Locale;
 
-/** Source {@code XFactoryEnergy} ordinary and B-side Laser Pistols. */
+/** Source {@code XFactoryEnergy} ordinary, B-side, and legendary Laser Pistols. */
 public final class LaserPistolItem extends SednaGunItem {
     public static final int DURABILITY = 500;
     public static final int CAPACITY = 30;
@@ -51,6 +51,16 @@ public final class LaserPistolItem extends SednaGunItem {
     public static final float PEW_PEW_BASE_DAMAGE = 30.0F;
     public static final float PEW_PEW_INNATE_SPREAD = 0.25F;
     public static final float PEW_PEW_FIRE_PITCH = 0.8F;
+    public static final int MORNING_GLORY_DURABILITY = 1500;
+    public static final int MORNING_GLORY_CAPACITY = 20;
+    public static final int MORNING_GLORY_FIRE_DELAY = 7;
+    public static final float MORNING_GLORY_BASE_DAMAGE = 20.0F;
+    public static final float MORNING_GLORY_INNATE_SPREAD = 0.0F;
+    public static final float MORNING_GLORY_HIP_SPREAD = 0.5F;
+    public static final float MORNING_GLORY_FIRE_PITCH = 1.1F;
+    public static final float MORNING_GLORY_ARMOR_PIERCING = 0.5F;
+    public static final float MORNING_GLORY_THRESHOLD_NEGATION = 10.0F;
+    public static final float MORNING_GLORY_OVERCHARGE_THRESHOLD_NEGATION = 15.0F;
 
     private static final String INITIALIZED = "hbm_initialized";
     private static final String STATE = "state_0";
@@ -79,6 +89,13 @@ public final class LaserPistolItem extends SednaGunItem {
     public Variant variant() { return variant; }
     public float baseDamage() { return variant.baseDamage; }
     public int roundsPerCycle() { return variant.roundsPerCycle; }
+    public float armorPiercing() { return variant.emeraldBeam ? MORNING_GLORY_ARMOR_PIERCING : 0.0F; }
+    public float armorThresholdNegation(EnergyAmmoType ammo) {
+        if (!variant.emeraldBeam) return 0.0F;
+        return ammo == EnergyAmmoType.OVERCHARGE
+                ? MORNING_GLORY_OVERCHARGE_THRESHOLD_NEGATION
+                : MORNING_GLORY_THRESHOLD_NEGATION;
+    }
 
     @Override
     protected void handleGunInput(Player player, ItemStack stack, GunInput input) {
@@ -95,7 +112,7 @@ public final class LaserPistolItem extends SednaGunItem {
     @Override public int gunRounds(ItemStack stack) { return rounds(stack); }
     @Override public int gunCapacity() { return variant.capacity; }
     @Override public float gunWear(ItemStack stack) { return wear(stack); }
-    @Override public float gunDurability() { return DURABILITY; }
+    @Override public float gunDurability() { return variant.durability; }
     @Override public ItemStack gunAmmoIcon(ItemStack stack) {
         return loadedAmmo(stack).createStack(ModItems.AMMO_STANDARD.get(), 1);
     }
@@ -146,7 +163,7 @@ public final class LaserPistolItem extends SednaGunItem {
         if (!tag.getBoolean(CANCEL_RELOAD)) reloadAction(player, tag);
         tag.putBoolean(CANCEL_RELOAD, false);
         tag.putInt(MAG_AFTER, roundsValue(tag));
-        if (jamChance(tag.getFloat(WEAR)) > living.getRandom().nextFloat()) {
+        if (jamChance(tag.getFloat(WEAR), variant.durability) > living.getRandom().nextFloat()) {
             setState(tag, GunState.JAMMED);
             tag.putInt(TIMER, JAM_TICKS);
             playAnimation(tag, GunAnimation.JAMMED);
@@ -179,22 +196,22 @@ public final class LaserPistolItem extends SednaGunItem {
     private void fire(Player player, CompoundTag tag) {
         if (!(player.level() instanceof ServerLevel level)) return;
         EnergyAmmoType ammo = EnergyAmmoType.fromLegacyBulletConfig(tag.getInt(MAG_TYPE));
-        float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, DURABILITY);
+        float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, variant.durability);
         boolean aiming = tag.getBoolean(AIMING);
         Vec3 origin = projectileOrigin(player);
         Vec3 heading = player.getLookAngle();
         int fired = Math.min(roundsValue(tag), variant.roundsPerCycle);
 
         for (int round = 0; round < fired; round++) {
-            float damage = variant.baseDamage * wearDamageMultiplier(currentWear)
+            float damage = variant.baseDamage * wearDamageMultiplier(currentWear, variant.durability)
                     * ammo.damageMultiplier();
-            float spread = variant.innateSpread + (aiming ? 0.0F : HIP_SPREAD)
-                    + wearSpread(currentWear);
+            float spread = variant.innateSpread + (aiming ? 0.0F : variant.hipSpread)
+                    + wearSpread(currentWear, variant.durability);
             LaserPistolBeamEntity beam = new LaserPistolBeamEntity(level, player, ammo, damage,
-                    spread, new Vec3(-0.1875D, -0.09375D, 0.75D));
+                    spread, new Vec3(-0.1875D, -0.09375D, 0.75D), variant.emeraldBeam);
             beam.performHitscan();
             level.addFreshEntity(beam);
-            currentWear = Math.min(currentWear + ammo.wear(), DURABILITY);
+            currentWear = Math.min(currentWear + ammo.wear(), variant.durability);
         }
         play(level, player, ModSounds.GUN_LASER_PISTOL_FIRE.get(), 1.0F, variant.firePitch);
         if (player instanceof ServerPlayer serverPlayer
@@ -295,17 +312,29 @@ public final class LaserPistolItem extends SednaGunItem {
     }
 
     public static float jamChance(float wear) {
-        float percent = wear / DURABILITY;
+        return jamChance(wear, DURABILITY);
+    }
+
+    public static float jamChance(float wear, float durability) {
+        float percent = wear / durability;
         return percent < 0.66F ? 0.0F : Math.min((percent - 0.66F) * 4.0F, 1.0F);
     }
 
     public static float wearDamageMultiplier(float wear) {
-        float percent = wear / DURABILITY;
+        return wearDamageMultiplier(wear, DURABILITY);
+    }
+
+    public static float wearDamageMultiplier(float wear, float durability) {
+        float percent = wear / durability;
         return percent < 0.75F ? 1.0F : 1.0F - (percent - 0.75F) * 2.0F;
     }
 
     public static float wearSpread(float wear) {
-        float percent = wear / DURABILITY;
+        return wearSpread(wear, DURABILITY);
+    }
+
+    public static float wearSpread(float wear, float durability) {
+        float percent = wear / durability;
         return percent < 0.5F ? 0.0F : (percent - 0.5F) * 2.0F * MAX_WEAR_SPREAD;
     }
 
@@ -315,7 +344,9 @@ public final class LaserPistolItem extends SednaGunItem {
     private int roundsValue(CompoundTag tag) {
         return Mth.clamp(tag.getInt(MAG_COUNT), 0, variant.capacity);
     }
-    public static float wear(ItemStack stack) { return Mth.clamp(data(stack).getFloat(WEAR), 0.0F, DURABILITY); }
+    public static float wear(ItemStack stack) {
+        return Mth.clamp(data(stack).getFloat(WEAR), 0.0F, variant(stack).durability);
+    }
     public static boolean aiming(ItemStack stack) { return data(stack).getBoolean(AIMING); }
     public static GunState state(ItemStack stack) { return state(data(stack)); }
     public static int timer(ItemStack stack) { return data(stack).getInt(TIMER); }
@@ -333,7 +364,7 @@ public final class LaserPistolItem extends SednaGunItem {
         tag.putInt(TIMER, timer);
         tag.putInt(MAG_COUNT, Mth.clamp(rounds, 0, variant(stack).capacity));
         tag.putInt(MAG_TYPE, ammo.legacyBulletConfig());
-        tag.putFloat(WEAR, Mth.clamp(wear, 0.0F, DURABILITY));
+        tag.putFloat(WEAR, Mth.clamp(wear, 0.0F, variant(stack).durability));
         tag.putBoolean(EQUIPPED, true);
         save(stack, tag);
     }
@@ -377,11 +408,11 @@ public final class LaserPistolItem extends SednaGunItem {
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.damageWithAmmo")
                 .append(": " + trim(variant.baseDamage * ammo.damageMultiplier())).withStyle(ChatFormatting.GRAY));
-        int condition = Mth.clamp((int) ((DURABILITY - wear(stack)) * 100.0F / DURABILITY), 0, 100);
+        int condition = Mth.clamp((int) ((variant.durability - wear(stack)) * 100.0F
+                / variant.durability), 0, 100);
         tooltip.add(Component.translatable("gui.weapon.condition").append(": " + condition + "%")
                 .withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable(variant.quality)
-                .withStyle(variant == Variant.PEW_PEW ? ChatFormatting.GOLD : ChatFormatting.YELLOW));
+        tooltip.add(Component.translatable(variant.quality).withStyle(variant.qualityColor));
     }
 
     private static String trim(float value) {
@@ -394,40 +425,57 @@ public final class LaserPistolItem extends SednaGunItem {
     }
 
     public enum Variant {
-        STANDARD(CAPACITY, FIRE_DELAY, 1, BASE_DAMAGE, INNATE_SPREAD, 1.0F,
-                EnergyAmmoType.STANDARD, "gui.weapon.quality.aside"),
-        PEW_PEW(PEW_PEW_CAPACITY, PEW_PEW_FIRE_DELAY, PEW_PEW_ROUNDS_PER_CYCLE,
-                PEW_PEW_BASE_DAMAGE, PEW_PEW_INNATE_SPREAD, PEW_PEW_FIRE_PITCH,
-                EnergyAmmoType.OVERCHARGE, "gui.weapon.quality.bside");
+        STANDARD(DURABILITY, CAPACITY, FIRE_DELAY, 1, BASE_DAMAGE, INNATE_SPREAD, HIP_SPREAD, 1.0F,
+                EnergyAmmoType.STANDARD, "gui.weapon.quality.aside", ChatFormatting.YELLOW, false),
+        PEW_PEW(DURABILITY, PEW_PEW_CAPACITY, PEW_PEW_FIRE_DELAY, PEW_PEW_ROUNDS_PER_CYCLE,
+                PEW_PEW_BASE_DAMAGE, PEW_PEW_INNATE_SPREAD, HIP_SPREAD, PEW_PEW_FIRE_PITCH,
+                EnergyAmmoType.OVERCHARGE, "gui.weapon.quality.bside", ChatFormatting.GOLD, false),
+        MORNING_GLORY(MORNING_GLORY_DURABILITY, MORNING_GLORY_CAPACITY,
+                MORNING_GLORY_FIRE_DELAY, 1, MORNING_GLORY_BASE_DAMAGE,
+                MORNING_GLORY_INNATE_SPREAD, MORNING_GLORY_HIP_SPREAD,
+                MORNING_GLORY_FIRE_PITCH, EnergyAmmoType.OVERCHARGE,
+                "gui.weapon.quality.legendary", ChatFormatting.RED, true);
 
+        private final int durability;
         private final int capacity;
         private final int fireDelay;
         private final int roundsPerCycle;
         private final float baseDamage;
         private final float innateSpread;
+        private final float hipSpread;
         private final float firePitch;
         private final EnergyAmmoType defaultAmmo;
         private final String quality;
+        private final ChatFormatting qualityColor;
+        private final boolean emeraldBeam;
 
-        Variant(int capacity, int fireDelay, int roundsPerCycle, float baseDamage,
-                float innateSpread, float firePitch, EnergyAmmoType defaultAmmo, String quality) {
+        Variant(int durability, int capacity, int fireDelay, int roundsPerCycle, float baseDamage,
+                float innateSpread, float hipSpread, float firePitch, EnergyAmmoType defaultAmmo,
+                String quality, ChatFormatting qualityColor, boolean emeraldBeam) {
+            this.durability = durability;
             this.capacity = capacity;
             this.fireDelay = fireDelay;
             this.roundsPerCycle = roundsPerCycle;
             this.baseDamage = baseDamage;
             this.innateSpread = innateSpread;
+            this.hipSpread = hipSpread;
             this.firePitch = firePitch;
             this.defaultAmmo = defaultAmmo;
             this.quality = quality;
+            this.qualityColor = qualityColor;
+            this.emeraldBeam = emeraldBeam;
         }
 
+        public int durability() { return durability; }
         public int capacity() { return capacity; }
         public int fireDelay() { return fireDelay; }
         public int roundsPerCycle() { return roundsPerCycle; }
         public float baseDamage() { return baseDamage; }
         public float innateSpread() { return innateSpread; }
+        public float hipSpread() { return hipSpread; }
         public float firePitch() { return firePitch; }
         public EnergyAmmoType defaultAmmo() { return defaultAmmo; }
+        public boolean emeraldBeam() { return emeraldBeam; }
     }
 
     public enum GunState { DRAWING, IDLE, COOLDOWN, RELOADING, JAMMED }

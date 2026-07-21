@@ -29,6 +29,8 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
     private static final ResourceLocation TEXTURE = id("textures/models/weapons/laser_pistol.png");
     private static final ResourceLocation PEW_PEW_TEXTURE = id(
             "textures/models/weapons/laser_pistol_pew_pew.png");
+    private static final ResourceLocation MORNING_GLORY_TEXTURE = id(
+            "textures/models/weapons/laser_pistol_morning_glory.png");
     private static final ResourceLocation FLASH_TEXTURE = id("textures/models/weapons/laser_flash.png");
     private static final Set<String> GROUPS = Set.of("Gun", "Battery", "Latch", "Capacitors", "Tape");
     private static final RenderType FLASH_TYPE = RenderType.create(
@@ -64,7 +66,8 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
         if (first) renderFirstPerson(stack, pistol, poses, buffers, light, overlay);
         else renderStatic(pistol, poses, buffers, light, overlay);
         if (held && elapsed >= 0L && elapsed < 150L) {
-            renderFlash(poses, buffers, elapsed / 150.0F);
+            renderFlash(poses, buffers, elapsed / 150.0F,
+                    pistol.variant() == LaserPistolItem.Variant.MORNING_GLORY);
         }
         poses.popPose();
     }
@@ -106,13 +109,16 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
         }
     }
 
-    private void renderFlash(PoseStack poses, MultiBufferSource buffers, float progress) {
+    private void renderFlash(PoseStack poses, MultiBufferSource buffers, float progress,
+                             boolean emerald) {
         poses.pushPose();
         poses.translate(0.0D, 2.0D, 4.75D);
         poses.mulPose(Axis.YP.rotationDegrees(90.0F));
-        flashQuad(poses, buffers, progress, 1.5F, 1.0F, 0.0F, 0.0F);
+        flashQuad(poses, buffers, progress, 1.5F,
+                emerald ? 0.0F : 1.0F, emerald ? 0.5F : 0.0F, 0.0F);
         poses.translate(0.0D, 0.0D, -0.25D);
-        flashQuad(poses, buffers, progress, 0.75F, 1.0F, 0.5F, 0.0F);
+        flashQuad(poses, buffers, progress, 0.75F,
+                emerald ? 0.5F : 1.0F, emerald ? 1.0F : 0.5F, 0.0F);
         poses.popPose();
     }
 
@@ -137,8 +143,11 @@ public final class LaserPistolItemRenderer extends BlockEntityWithoutLevelRender
 
     private void renderGroup(String group, LaserPistolItem pistol, PoseStack poses,
                              MultiBufferSource buffers, int light, int overlay) {
-        ResourceLocation texture = pistol.variant() == LaserPistolItem.Variant.PEW_PEW
-                ? PEW_PEW_TEXTURE : TEXTURE;
+        ResourceLocation texture = switch (pistol.variant()) {
+            case PEW_PEW -> PEW_PEW_TEXTURE;
+            case MORNING_GLORY -> MORNING_GLORY_TEXTURE;
+            default -> TEXTURE;
+        };
         mesh().render(group, poses.last(), buffers.getBuffer(RenderType.entityCutout(texture)),
                 1.0F, light, overlay, -1);
     }

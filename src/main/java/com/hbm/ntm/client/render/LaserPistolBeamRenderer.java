@@ -15,7 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
-/** Source four-layer, fullbright red {@code RENDER_LASER_RED} beam. */
+/** Source four-layer, fullbright red or emerald Laser Pistol beam. */
 public final class LaserPistolBeamRenderer extends EntityRenderer<LaserPistolBeamEntity> {
     private static final RenderType TYPE = RenderType.create(
             "hbm_laser_pistol_beam", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 2048,
@@ -43,10 +43,12 @@ public final class LaserPistolBeamRenderer extends EntityRenderer<LaserPistolBea
                 (float) direction.x, (float) direction.y, (float) direction.z));
         poses.scale(width, width, 1.0F);
         VertexConsumer consumer = buffers.getBuffer(TYPE);
+        float red = (beam.emerald() ? 21.0F : 128.0F) / 255.0F * age;
+        float green = (beam.emerald() ? 128.0F : 21.0F) / 255.0F * age;
+        float blue = 21.0F / 255.0F * age;
         for (int layer = 1; layer <= 4; layer++) {
             float radius = 0.025F * layer / 4.0F;
-            prism(consumer, poses.last(), radius, beam.beamLength(),
-                    128.0F / 255.0F * age, 21.0F / 255.0F * age, 21.0F / 255.0F * age);
+            prism(consumer, poses.last(), radius, beam.beamLength(), red, green, blue);
         }
         poses.popPose();
         super.render(beam, yaw, partialTick, poses, buffers, packedLight);

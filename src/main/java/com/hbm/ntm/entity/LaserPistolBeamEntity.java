@@ -12,9 +12,12 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.CombatRules;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -31,7 +34,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-/** Five-tick red beam shared by the Laser Pistol's three capacitor profiles. */
+/** Five-tick beam shared by the Laser Pistol family's capacitor profiles. */
 public final class LaserPistolBeamEntity extends Projectile {
     public static final double RANGE = 250.0D;
     public static final int LIFETIME = 5;
@@ -44,6 +47,8 @@ public final class LaserPistolBeamEntity extends Projectile {
             SynchedEntityData.defineId(LaserPistolBeamEntity.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Vector3f> DIRECTION =
             SynchedEntityData.defineId(LaserPistolBeamEntity.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Boolean> EMERALD =
+            SynchedEntityData.defineId(LaserPistolBeamEntity.class, EntityDataSerializers.BOOLEAN);
 
     public LaserPistolBeamEntity(EntityType<? extends LaserPistolBeamEntity> type, Level level) {
         super(type, level);
@@ -53,10 +58,16 @@ public final class LaserPistolBeamEntity extends Projectile {
 
     public LaserPistolBeamEntity(ServerLevel level, LivingEntity shooter, EnergyAmmoType ammo,
                                  float damage, float spreadDegrees, Vec3 localOffset) {
+        this(level, shooter, ammo, damage, spreadDegrees, localOffset, false);
+    }
+
+    public LaserPistolBeamEntity(ServerLevel level, LivingEntity shooter, EnergyAmmoType ammo,
+                                 float damage, float spreadDegrees, Vec3 localOffset, boolean emerald) {
         this(ModEntities.LASER_PISTOL_BEAM.get(), level);
         setOwner(shooter);
         entityData.set(AMMO, ammo.legacyMetadata());
         entityData.set(DAMAGE, damage);
+        entityData.set(EMERALD, emerald);
         float yaw = shooter.getYRot() + (float) random.nextGaussian() * spreadDegrees;
         float pitch = shooter.getXRot() + (float) random.nextGaussian() * spreadDegrees;
         point(yaw, pitch);
@@ -79,11 +90,18 @@ public final class LaserPistolBeamEntity extends Projectile {
         builder.define(DAMAGE, 0.0F);
         builder.define(BEAM_LENGTH, (float) RANGE);
         builder.define(DIRECTION, new Vector3f(0.0F, 0.0F, 1.0F));
+        builder.define(EMERALD, false);
     }
 
     public EnergyAmmoType ammoType() { return EnergyAmmoType.fromLegacyMetadata(entityData.get(AMMO)); }
     public float beamDamage() { return entityData.get(DAMAGE); }
     public float beamLength() { return entityData.get(BEAM_LENGTH); }
+    public boolean emerald() { return entityData.get(EMERALD); }
+    public float armorPiercing() { return emerald() ? 0.5F : 0.0F; }
+    public float armorThresholdNegation() {
+        if (!emerald()) return 0.0F;
+        return ammoType() == EnergyAmmoType.OVERCHARGE ? 15.0F : 10.0F;
+    }
 
     public void performHitscan() {
         if (!(level() instanceof ServerLevel server)) return;
@@ -133,7 +151,11 @@ public final class LaserPistolBeamEntity extends Projectile {
         var damageSource = ammoType().laserFire()
                 ? server.damageSources().source(ModDamageTypes.FLAMETHROWER, this, getOwner())
                 : server.damageSources().source(ModDamageTypes.LASER, this, getOwner());
-        target.hurt(damageSource, beamDamage());
+        float appliedDamage = target instanceof LivingEntity living
+                ? compensateForArmorPiercing(living, damageSource, beamDamage(),
+                        armorThresholdNegation(), armorPiercing())
+                : beamDamage();
+        target.hurt(damageSource, appliedDamage);
         if (ammoType().laserFire() && target instanceof LivingEntity living) {
             WeaponStatusEvents.applyFire(living, 100);
         }
@@ -159,6 +181,33 @@ public final class LaserPistolBeamEntity extends Projectile {
         Vector3f direction = entityData.get(DIRECTION);
         Vec3 beam = new Vec3(direction.x, direction.y, direction.z);
         return beam.lengthSqr() > 1.0E-8D ? beam.normalize() : new Vec3(0.0D, 0.0D, 1.0D);
+    }
+
+    private static float compensateForArmorPiercing(LivingEntity living, DamageSource source,
+                                                     float intendedDamage, float thresholdNegation,
+                                                     float armorPiercing) {
+        if ((armorPiercing == 0.0F && thresholdNegation == 0.0F) || living.getArmorValue() <= 0) {
+            return intendedDamage;
+        }
+        float armor = living.getArmorValue();
+        float toughness = (float) living.getAttributeValue(Attributes.ARMOR_TOUGHNESS);
+        float effectiveArmor = Math.max(0.0F, armor - thresholdNegation)
+                * Mth.clamp(1.0F - armorPiercing, 0.0F, 2.0F);
+        float targetAfterArmor = CombatRules.getDamageAfterAbsorb(
+                living, intendedDamage, source, effectiveArmor, toughness);
+        float low = 0.0F;
+        float high = Math.max(intendedDamage * 4.0F, intendedDamage + armor + 1.0F);
+        while (CombatRules.getDamageAfterAbsorb(living, high, source, armor, toughness) < targetAfterArmor
+                && high < 4096.0F) {
+            high *= 2.0F;
+        }
+        for (int i = 0; i < 24; i++) {
+            float mid = (low + high) * 0.5F;
+            float result = CombatRules.getDamageAfterAbsorb(living, mid, source, armor, toughness);
+            if (result < targetAfterArmor) low = mid;
+            else high = mid;
+        }
+        return (low + high) * 0.5F;
     }
 
     @Override

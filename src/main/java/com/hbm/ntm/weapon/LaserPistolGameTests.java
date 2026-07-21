@@ -60,6 +60,31 @@ public final class LaserPistolGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void morningGloryReceiverKeepsItsLegendaryContract(GameTestHelper helper) {
+        LaserPistolItem gun = ModItems.GUN_LASER_PISTOL_MORNING_GLORY.get();
+        ItemStack stack = new ItemStack(gun);
+        helper.assertTrue(gun.variant() == LaserPistolItem.Variant.MORNING_GLORY
+                        && gun.gunDurability() == 1500.0F && gun.gunCapacity() == 20
+                        && gun.roundsPerCycle() == 1 && gun.baseDamage() == 20.0F
+                        && gun.variant().fireDelay() == 7
+                        && gun.variant().innateSpread() == 0.0F
+                        && gun.variant().hipSpread() == 0.5F
+                        && gun.variant().firePitch() == 1.1F
+                        && gun.variant().emeraldBeam()
+                        && !gun.gunAutomatic() && gun.gunCrosshair() == SednaCrosshair.CIRCLE,
+                "Morning Glory durability, damage, timing, spread, capacity, pitch, and reticle must match XFactoryEnergy");
+        helper.assertTrue(LaserPistolItem.rounds(stack) == 0
+                        && LaserPistolItem.loadedAmmo(stack) == EnergyAmmoType.OVERCHARGE,
+                "a fresh Morning Glory is empty but remembers the overcharge capacitor identity");
+        helper.assertTrue(gun.armorPiercing() == 0.5F
+                        && gun.armorThresholdNegation(EnergyAmmoType.STANDARD) == 10.0F
+                        && gun.armorThresholdNegation(EnergyAmmoType.OVERCHARGE) == 15.0F
+                        && gun.armorThresholdNegation(EnergyAmmoType.LOW_WAVELENGTH) == 10.0F,
+                "Morning Glory's emerald profiles must preserve their armor piercing and threshold negation");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void laserProfilesKeepTheirOwnImpactRules(GameTestHelper helper) {
         helper.assertTrue(!EnergyAmmoType.STANDARD.laserPenetrates()
                         && EnergyAmmoType.OVERCHARGE.laserPenetrates()
@@ -141,6 +166,34 @@ public final class LaserPistolGameTests {
                         && LaserPistolItem.state(gun) == LaserPistolItem.GunState.COOLDOWN
                         && LaserPistolItem.timer(gun) == 10,
                 "one Pew Pew volley must consume five rounds and enter its ten tick cooldown");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void morningGloryFiresItsEmeraldOverchargeBeam(GameTestHelper helper) {
+        Player player = helper.makeMockPlayer(GameType.SURVIVAL);
+        ItemStack gun = new ItemStack(ModItems.GUN_LASER_PISTOL_MORNING_GLORY.get());
+        LaserPistolItem.setTestState(gun, LaserPistolItem.GunState.IDLE, 0, 2,
+                EnergyAmmoType.OVERCHARGE, 0.0F);
+        player.setItemInHand(InteractionHand.MAIN_HAND, gun);
+        player.setPos(Vec3.atCenterOf(helper.absolutePos(new BlockPos(2, 3, 2))));
+        player.setYRot(0.0F);
+        player.setXRot(0.0F);
+
+        SednaGunItem.handleInput(player, GunInput.PRIMARY);
+        List<LaserPistolBeamEntity> beams = helper.getLevel().getEntitiesOfClass(
+                LaserPistolBeamEntity.class, new AABB(player.position(), player.position()).inflate(2.0D));
+        helper.assertTrue(beams.size() == 1
+                        && beams.getFirst().ammoType() == EnergyAmmoType.OVERCHARGE
+                        && beams.getFirst().beamDamage() == 30.0F
+                        && beams.getFirst().emerald()
+                        && beams.getFirst().armorPiercing() == 0.5F
+                        && beams.getFirst().armorThresholdNegation() == 15.0F,
+                "Morning Glory must fire one emerald 20 x 1.5 beam with its overcharge armor modifiers");
+        helper.assertTrue(LaserPistolItem.rounds(gun) == 1
+                        && LaserPistolItem.state(gun) == LaserPistolItem.GunState.COOLDOWN
+                        && LaserPistolItem.timer(gun) == 7,
+                "one Morning Glory shot consumes one round and enters its seven tick cooldown");
         helper.succeed();
     }
 
