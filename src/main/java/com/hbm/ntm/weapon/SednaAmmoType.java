@@ -30,6 +30,9 @@ public interface SednaAmmoType {
     default float impactExplosionRadius() { return 0.0F; }
     default int phosphorusTicks() { return 0; }
     default boolean spectral() { return false; }
+    default double projectileSpeed() { return 10.0D; }
+    default int projectileLifetime() { return 30; }
+    default float blockBreakHardness() { return -1.0F; }
     default boolean spawnsBuildingOnImpact() { return false; }
     default int tracerDarkColor() { return 0xFFFFBF00; }
     default int tracerLightColor() { return 0xFFFFFFFF; }

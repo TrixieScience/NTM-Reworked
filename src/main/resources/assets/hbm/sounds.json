@@ -622,6 +622,14 @@
       {"name": "hbm:weapon/fire/tauRelease3", "stream": false}
     ]
   },
+  "weapon.coilgun_shoot": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/coilgunShoot", "stream": false}]
+  },
+  "weapon.coilgun_reload": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/coilgunReload", "stream": false}]
+  },
   "weapon.fire.disintegration": {
     "category": "player",
     "sounds": [{"name": "hbm:weapon/fire/disintegration", "stream": false}]

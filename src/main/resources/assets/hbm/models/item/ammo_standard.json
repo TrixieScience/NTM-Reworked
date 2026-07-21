@@ -69,6 +69,8 @@
     {"predicate": {"custom_model_data": 68}, "model": "hbm:item/ammo_standard_capacitor_overcharge"},
     {"predicate": {"custom_model_data": 69}, "model": "hbm:item/ammo_standard_capacitor_ir"},
     {"predicate": {"custom_model_data": 70}, "model": "hbm:item/ammo_standard_tau_uranium"},
+    {"predicate": {"custom_model_data": 71}, "model": "hbm:item/ammo_standard_coil_tungsten"},
+    {"predicate": {"custom_model_data": 72}, "model": "hbm:item/ammo_standard_coil_ferrouranium"},
     {"predicate": {"custom_model_data": 82}, "model": "hbm:item/ammo_standard_r762_he"},
     {"predicate": {"custom_model_data": 83}, "model": "hbm:item/ammo_standard_bmg50_he"},
     {"predicate": {"custom_model_data": 94}, "model": "hbm:item/ammo_standard_bmg50_sm"}

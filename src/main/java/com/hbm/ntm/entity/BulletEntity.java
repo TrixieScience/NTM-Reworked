@@ -1,6 +1,5 @@
 package com.hbm.ntm.entity;
 
-import com.hbm.ntm.item.PepperboxItem;
 import com.hbm.ntm.network.ChargeBlastPayload;
 import com.hbm.ntm.radiation.ModDamageTypes;
 import com.hbm.ntm.registry.ModEntities;
@@ -16,6 +15,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.CombatRules;
@@ -83,7 +83,7 @@ public final class BulletEntity extends Projectile {
                 heading.x + random.nextGaussian() * inaccuracy,
                 heading.y + random.nextGaussian() * inaccuracy,
                 heading.z + random.nextGaussian() * inaccuracy
-        ).scale(PepperboxItem.PROJECTILE_SPEED);
+        ).scale(ammo.projectileSpeed());
         setDeltaMovement(movement);
         setYRot((float) (Mth.atan2(movement.x, movement.z) * Mth.RAD_TO_DEG));
         setXRot((float) (Mth.atan2(movement.y, Math.sqrt(movement.x * movement.x + movement.z * movement.z))
@@ -167,7 +167,7 @@ public final class BulletEntity extends Projectile {
             updateRotation(displacement);
             return;
         }
-        if (tickCount > 30) {
+        if (tickCount > ammoType().projectileLifetime()) {
             discardWithFinalTeleport();
             return;
         }
@@ -175,6 +175,7 @@ public final class BulletEntity extends Projectile {
         Vec3 start = position();
         Vec3 movement = getDeltaMovement();
         Vec3 end = start.add(movement);
+        breakSoftBlocks(start, end);
 
         BlockHitResult blockHit = ammoType().spectral()
                 ? BlockHitResult.miss(end, Direction.UP, BlockPos.containing(end))
@@ -235,6 +236,26 @@ public final class BulletEntity extends Projectile {
             setPos(end);
         }
         updateRotation(getDeltaMovement());
+    }
+
+    private void breakSoftBlocks(Vec3 start, Vec3 end) {
+        float threshold = ammoType().blockBreakHardness();
+        if (threshold <= 0.0F || !(level() instanceof ServerLevel server)) return;
+        Vec3 travel = end.subtract(start);
+        double length = travel.length();
+        if (length < 1.0E-6D) return;
+        Vec3 direction = travel.scale(1.0D / length);
+        for (double distance = 0.0D; distance < length; distance += 0.5D) {
+            Vec3 sample = start.add(direction.scale(distance));
+            BlockPos position = BlockPos.containing(sample);
+            BlockState state = server.getBlockState(position);
+            float hardness = state.getDestroySpeed(server, position);
+            if (!state.isAir() && hardness >= 0.0F && hardness < threshold) {
+                server.destroyBlock(position, false, getOwner());
+            }
+            server.sendParticles(ParticleTypes.FIREWORK, sample.x, sample.y, sample.z,
+                    1, 0.0D, 0.0D, 0.0D, 0.0D);
+        }
     }
 
     private void interpolateClientPosition() {

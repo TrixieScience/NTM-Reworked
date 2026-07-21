@@ -60,6 +60,7 @@ import com.hbm.ntm.client.render.TeslaImpactRenderer;
 import com.hbm.ntm.client.render.TeslaCannonItemRenderer;
 import com.hbm.ntm.client.render.TauBeamRenderer;
 import com.hbm.ntm.client.render.TauGunItemRenderer;
+import com.hbm.ntm.client.render.CoilgunItemRenderer;
 import com.hbm.ntm.network.DetonatorInfoPayload;
 import com.hbm.ntm.item.PenanceItem;
 import com.hbm.ntm.registry.ModEntities;
@@ -580,6 +581,7 @@ public final class ClientWeaponRegistration {
                 ModItems.GUN_LASER_PISTOL_MORNING_GLORY.get());
         event.registerItem(weaponExtension(new LasrifleItemRenderer()), ModItems.GUN_LASRIFLE.get());
         event.registerItem(weaponExtension(new TauGunItemRenderer()), ModItems.GUN_TAU.get());
+        event.registerItem(weaponExtension(new CoilgunItemRenderer()), ModItems.GUN_COILGUN.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(ResourceLocation.fromNamespaceAndPath(
                 "hbm", "textures/models/weapons/amat_subtlety.png"))), ModItems.GUN_AMAT_SUBTLETY.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(PenanceItem.PENANCE_TEXTURE, true)),

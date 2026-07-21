@@ -61,6 +61,7 @@ import com.hbm.ntm.item.Stg77Item;
 import com.hbm.ntm.item.M2Item;
 import com.hbm.ntm.item.TeslaCannonItem;
 import com.hbm.ntm.item.TauGunItem;
+import com.hbm.ntm.item.CoilgunItem;
 import com.hbm.ntm.item.AmatItem;
 import com.hbm.ntm.item.SubtletyItem;
 import com.hbm.ntm.item.PenanceItem;
@@ -467,6 +468,7 @@ public final class ModItems {
     public static final DeferredItem<LaserPistolItem> GUN_LASER_PISTOL_MORNING_GLORY;
     public static final DeferredItem<LasrifleItem> GUN_LASRIFLE;
     public static final DeferredItem<TauGunItem> GUN_TAU;
+    public static final DeferredItem<CoilgunItem> GUN_COILGUN;
     public static final DeferredItem<AmatItem> GUN_AMAT;
     public static final DeferredItem<SubtletyItem> GUN_AMAT_SUBTLETY;
     public static final DeferredItem<PenanceItem> GUN_AMAT_PENANCE;
@@ -1262,6 +1264,7 @@ public final class ModItems {
                 () -> new LaserPistolItem(LaserPistolItem.Variant.MORNING_GLORY));
         GUN_LASRIFLE = ITEMS.register("gun_lasrifle", LasrifleItem::new);
         GUN_TAU = ITEMS.register("gun_tau", TauGunItem::new);
+        GUN_COILGUN = ITEMS.register("gun_coilgun", CoilgunItem::new);
         WEAPONIZED_STARBLASTER_CELL = ITEMS.register(
                 "weaponized_starblaster_cell", WeaponizedStarblasterCellItem::new);
         MULTITOOL_DIG = ITEMS.register("multitool_dig",

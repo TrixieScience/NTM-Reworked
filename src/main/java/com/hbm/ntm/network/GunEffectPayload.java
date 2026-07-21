@@ -7,6 +7,7 @@ import com.hbm.ntm.item.FlamerGunItem;
 import com.hbm.ntm.item.LaserPistolItem;
 import com.hbm.ntm.item.RocketLauncherItem;
 import com.hbm.ntm.item.StingerLauncherItem;
+import com.hbm.ntm.item.CoilgunItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -70,7 +71,8 @@ public record GunEffectPayload(int shooterId, int receiverIndex, double x, doubl
                     && (living.getMainHandItem().getItem() instanceof FlamerGunItem
                     || living.getMainHandItem().getItem() instanceof LaserPistolItem
                     || living.getMainHandItem().getItem() instanceof RocketLauncherItem
-                    || living.getMainHandItem().getItem() instanceof StingerLauncherItem);
+                    || living.getMainHandItem().getItem() instanceof StingerLauncherItem
+                    || living.getMainHandItem().getItem() instanceof CoilgunItem);
             int smokeCount = customMuzzle ? 0 : payload.blackPowder ? 10 : 3;
             for (int i = 0; i < smokeCount; i++) {
                 double speed = (payload.blackPowder ? 0.5D : 0.2D) * (0.85D + viewer.getRandom().nextDouble() * 0.3D);

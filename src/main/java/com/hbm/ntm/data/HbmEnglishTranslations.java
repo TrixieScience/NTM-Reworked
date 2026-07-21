@@ -886,10 +886,13 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.gun_laser_pistol_morning_glory", "Morning Glory");
         language.addProperty("item.hbm.gun_lasrifle", "Laser Rifle");
         language.addProperty("item.hbm.gun_tau", "Tau Cannon");
+        language.addProperty("item.hbm.gun_coilgun", "Coilgun");
         language.addProperty("item.hbm.ammo_standard.capacitor", "Capacitor (Standard)");
         language.addProperty("item.hbm.ammo_standard.capacitor_overcharge", "Capacitor (Overcharge)");
         language.addProperty("item.hbm.ammo_standard.capacitor_ir", "Capacitor (Low Wavelength)");
         language.addProperty("item.hbm.ammo_standard.tau_uranium", "Depleted Uranium-235 Box");
+        language.addProperty("item.hbm.ammo_standard.coil_tungsten", "Coilgun Tungsten Ball");
+        language.addProperty("item.hbm.ammo_standard.coil_ferrouranium", "Coilgun Ferrouranium Ball");
         language.addProperty("entity.hbm.entity_tesla_beam", "Tesla Beam");
         language.addProperty("entity.hbm.entity_tesla_impact", "Tesla Impact");
         language.addProperty("entity.hbm.entity_laser_pistol_beam", "Laser Pistol Beam");
