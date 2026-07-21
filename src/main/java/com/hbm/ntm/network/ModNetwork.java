@@ -106,6 +106,11 @@ public final class ModNetwork {
                 GibletPayload::handle
         );
         registrar.playToClient(
+                DisintegrationPayload.TYPE,
+                DisintegrationPayload.STREAM_CODEC,
+                DisintegrationPayload::handle
+        );
+        registrar.playToClient(
                 StirlingStatePayload.TYPE,
                 StirlingStatePayload.STREAM_CODEC,
                 StirlingStatePayload::handle

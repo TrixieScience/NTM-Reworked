@@ -86,6 +86,8 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_TESLA_FIRE = register("weapon.fire.tesla");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_LASER_PISTOL_FIRE =
             register("weapon.fire.laserpistol");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DISINTEGRATION =
+            register("weapon.fire.disintegration");
     public static final DeferredHolder<SoundEvent, SoundEvent> TESLA_BLAST = register("entity.ufo_blast");
     public static final DeferredHolder<SoundEvent, SoundEvent> TESLA_YOMI = register("weapon.tesla_yomi");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_UNDERBARREL_FIRE = register("weapon.hk_shoot");

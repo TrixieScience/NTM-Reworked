@@ -18,6 +18,8 @@ public final class ModParticles {
             PARTICLES.register("blood_vomit", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> GIBLET =
             PARTICLES.register("giblet", () -> new SimpleParticleType(false));
+    public static final DeferredHolder<ParticleType<?>, SimpleParticleType> ASHES =
+            PARTICLES.register("ashes", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> BLACK_POWDER_SMOKE =
             PARTICLES.register("black_powder_smoke", () -> new SimpleParticleType(false));
     public static final DeferredHolder<ParticleType<?>, SimpleParticleType> BLACK_POWDER_SPARK =

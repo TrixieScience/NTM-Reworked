@@ -44,9 +44,10 @@ import com.hbm.ntm.registry.ModRecipeSerializers;
 import com.hbm.ntm.registry.ModSounds;
 import com.hbm.ntm.registry.ModStats;
 import com.hbm.ntm.thermal.FuelEvents;
+import com.hbm.ntm.weapon.WeaponDeathEffects;
+import com.hbm.ntm.weapon.WeaponStatusEvents;
 import com.hbm.ntm.world.MoonDestructionEvents;
 import com.hbm.ntm.world.SunDestructionEvents;
-import com.hbm.ntm.weapon.WeaponStatusEvents;
 import com.mojang.logging.LogUtils;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -123,6 +124,7 @@ public final class HbmNtm {
         SunDestructionEvents.register();
         AssemblyRecipes.register();
         WeaponStatusEvents.register();
+        WeaponDeathEffects.register();
 
         LOGGER.info("Loaded HBM's Nuclear Tech Mod");
     }

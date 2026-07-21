@@ -1,6 +1,7 @@
 package com.hbm.ntm.client;
 
 import com.hbm.ntm.block.ChlorineGasBlock;
+import com.hbm.ntm.client.particle.AshParticle;
 import com.hbm.ntm.client.particle.BlackPowderSmokeParticle;
 import com.hbm.ntm.client.particle.BlackPowderSparkParticle;
 import com.hbm.ntm.client.particle.ChlorineCloudParticle;
@@ -27,6 +28,7 @@ public final class ClientParticleRegistration {
 
     public static void register(IEventBus modEventBus) {
         modEventBus.addListener(ClientParticleRegistration::registerParticleProviders);
+        ClientDisintegrationEffects.register();
         VomitPayload.installClientParticleLimiter(count -> {
             // ClientProxy divided by particleSetting + 1: all/decreased/minimal = 25/12/8.
             int divisor = Minecraft.getInstance().options.particles().get().getId() + 1;
@@ -61,6 +63,7 @@ public final class ClientParticleRegistration {
                         Blocks.REDSTONE_BLOCK.defaultBlockState()
                 ));
         event.registerSpriteSet(ModParticles.GIBLET.get(), GibletParticle.Provider::new);
+        event.registerSpriteSet(ModParticles.ASHES.get(), AshParticle.Provider::new);
         event.registerSpriteSet(ModParticles.BLACK_POWDER_SMOKE.get(), BlackPowderSmokeParticle.Provider::new);
         event.registerSpriteSet(ModParticles.BLACK_POWDER_SPARK.get(), BlackPowderSparkParticle.Provider::new);
         event.registerSpriteSet(ModParticles.TAU_SPARK.get(), TauSparkParticle.Provider::new);

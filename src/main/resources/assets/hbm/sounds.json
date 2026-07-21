@@ -602,6 +602,10 @@
     "category": "player",
     "sounds": [{"name": "hbm:weapon/fire/laserpistol", "stream": false}]
   },
+  "weapon.fire.disintegration": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/disintegration", "stream": false}]
+  },
   "entity.ufo_blast": {
     "category": "hostile",
     "sounds": [{"name": "hbm:entity/ufo_blast", "stream": false}]
