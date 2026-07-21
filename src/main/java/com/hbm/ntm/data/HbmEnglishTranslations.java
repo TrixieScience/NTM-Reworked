@@ -1092,6 +1092,7 @@ final class HbmEnglishTranslations {
         language.addProperty("jei.hbm.press", "Burner Press");
         language.addProperty("jei.hbm.chemplant", "Chemical Plant");
         language.addProperty("jei.hbm.centrifuge", "Centrifuge");
+        language.addProperty("jei.hbm.shredder", "Shredder");
         language.addProperty("jei.hbm.anvil.tier", "Anvil tier: %s");
         language.addProperty("jei.hbm.anvil.tier_range", "Anvil tiers: %s-%s");
         language.addProperty("jei.hbm.chance", "Chance: %s%%");

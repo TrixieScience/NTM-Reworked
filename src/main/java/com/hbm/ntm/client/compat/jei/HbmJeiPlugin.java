@@ -6,6 +6,7 @@ import com.hbm.ntm.client.screen.AssemblyMachineScreen;
 import com.hbm.ntm.client.screen.CentrifugeScreen;
 import com.hbm.ntm.client.screen.ChemicalPlantScreen;
 import com.hbm.ntm.client.screen.MachinePressScreen;
+import com.hbm.ntm.client.screen.MachineShredderScreen;
 import com.hbm.ntm.recipe.AssemblyClientRecipes;
 import com.hbm.ntm.recipe.AssemblyRecipe;
 import com.hbm.ntm.recipe.CentrifugeRecipes;
@@ -13,6 +14,8 @@ import com.hbm.ntm.recipe.CentrifugeRecipes.CentrifugeRecipe;
 import com.hbm.ntm.recipe.ChemicalPlantRecipes;
 import com.hbm.ntm.recipe.ChemicalPlantRecipes.ChemicalRecipe;
 import com.hbm.ntm.recipe.PressRecipes;
+import com.hbm.ntm.recipe.ShredderRecipes;
+import com.hbm.ntm.recipe.ShredderRecipes.ShredderRecipe;
 import com.hbm.ntm.registry.ModItems;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -38,6 +41,8 @@ public final class HbmJeiPlugin implements IModPlugin {
             RecipeType.create(HbmNtm.MOD_ID, "chemical_plant", ChemicalRecipe.class);
     public static final RecipeType<CentrifugeRecipe> CENTRIFUGE =
             RecipeType.create(HbmNtm.MOD_ID, "centrifuge", CentrifugeRecipe.class);
+    public static final RecipeType<ShredderRecipe> SHREDDER =
+            RecipeType.create(HbmNtm.MOD_ID, "shredder", ShredderRecipe.class);
 
     private static final ResourceLocation UID =
             ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "jei");
@@ -58,7 +63,8 @@ public final class HbmJeiPlugin implements IModPlugin {
                 new AssemblyRecipeCategory(gui),
                 new PressRecipeCategory(gui),
                 new ChemicalPlantRecipeCategory(gui),
-                new CentrifugeRecipeCategory(gui));
+                new CentrifugeRecipeCategory(gui),
+                new ShredderRecipeCategory(gui));
     }
 
     @Override
@@ -67,6 +73,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipes(PRESS, PressRecipes.all());
         registration.addRecipes(CHEMICAL_PLANT, ChemicalPlantRecipes.all());
         registration.addRecipes(CENTRIFUGE, CentrifugeRecipes.all());
+        registration.addRecipes(SHREDDER, ShredderRecipes.all());
         registeredAssemblyRecipes = AssemblyClientRecipes.all();
         registration.addRecipes(ASSEMBLY, registeredAssemblyRecipes);
     }
@@ -84,6 +91,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipeCatalysts(PRESS, ModItems.MACHINE_PRESS_ITEM.get());
         registration.addRecipeCatalysts(CHEMICAL_PLANT, ModItems.MACHINE_CHEMICAL_PLANT_ITEM.get());
         registration.addRecipeCatalysts(CENTRIFUGE, ModItems.MACHINE_CENTRIFUGE_ITEM.get());
+        registration.addRecipeCatalysts(SHREDDER, ModItems.MACHINE_SHREDDER_ITEM.get());
     }
 
     @Override
@@ -93,6 +101,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipeClickArea(MachinePressScreen.class, 79, 35, 18, 16, PRESS);
         registration.addRecipeClickArea(ChemicalPlantScreen.class, 62, 126, 70, 16, CHEMICAL_PLANT);
         registration.addRecipeClickArea(CentrifugeScreen.class, 44, 18, 90, 20, CENTRIFUGE);
+        registration.addRecipeClickArea(MachineShredderScreen.class, 63, 89, 34, 18, SHREDDER);
     }
 
     @Override

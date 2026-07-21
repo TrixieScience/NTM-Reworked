@@ -11,6 +11,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
 
@@ -44,6 +45,10 @@ public final class ShredderRecipes {
         return RECIPES.size();
     }
 
+    public static List<ShredderRecipe> all() {
+        return RECIPES;
+    }
+
     private static List<ShredderRecipe> buildRecipes() {
         List<ShredderRecipe> recipes = new ArrayList<>();
 
@@ -65,12 +70,16 @@ public final class ShredderRecipes {
         recipes.add(new ShredderRecipe(
                 stack -> stack.is(ModItems.STONE_RESOURCE_ITEM.get())
                         && StoneResourceBlockItem.type(stack) == StoneResourceBlock.Type.LIMESTONE,
-                item("powder_limestone", 4)
+                item("powder_limestone", 4),
+                () -> List.of(StoneResourceBlockItem.create(ModItems.STONE_RESOURCE_ITEM.get(),
+                        StoneResourceBlock.Type.LIMESTONE, 1))
         ));
         recipes.add(new ShredderRecipe(
                 stack -> stack.is(ModItems.CHUNK_ORE.get())
                         && OreChunkItem.type(stack) == OreChunkItem.ChunkType.RARE,
-                item("powder_desh_mix")
+                item("powder_desh_mix"),
+                () -> List.of(OreChunkItem.create(ModItems.CHUNK_ORE.get(),
+                        OreChunkItem.ChunkType.RARE, 1))
         ));
         exact(recipes, () -> ModBlocks.ORE_COLTAN.get(), item("powder_coltan_ore", 2));
         exact(recipes, () -> Blocks.OBSIDIAN, block(ModBlocks.GRAVEL_OBSIDIAN, 1));
@@ -223,11 +232,13 @@ public final class ShredderRecipes {
             Supplier<? extends ItemLike> input,
             Supplier<ItemStack> output
     ) {
-        recipes.add(new ShredderRecipe(stack -> stack.is(input.get().asItem()), output));
+        recipes.add(new ShredderRecipe(stack -> stack.is(input.get().asItem()), output,
+                () -> List.of(new ItemStack(input.get().asItem()))));
     }
 
     private static void tag(List<ShredderRecipe> recipes, TagKey<Item> input, Supplier<ItemStack> output) {
-        recipes.add(new ShredderRecipe(stack -> stack.is(input), output));
+        recipes.add(new ShredderRecipe(stack -> stack.is(input), output,
+                () -> List.of(Ingredient.of(input).getItems())));
     }
 
     private static Supplier<ItemStack> item(String id) {
@@ -246,6 +257,7 @@ public final class ShredderRecipes {
         return () -> new ItemStack(item, count);
     }
 
-    public record ShredderRecipe(Predicate<ItemStack> input, Supplier<ItemStack> output) {
+    public record ShredderRecipe(Predicate<ItemStack> input, Supplier<ItemStack> output,
+                                 Supplier<List<ItemStack>> display) {
     }
 }
