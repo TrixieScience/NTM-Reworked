@@ -35,6 +35,8 @@ import com.hbm.ntm.weapon.TwentyTwoAmmoType;
 import com.hbm.ntm.weapon.FlamerFuelType;
 import com.hbm.ntm.weapon.RocketAmmoType;
 import com.hbm.ntm.weapon.EnergyAmmoType;
+import com.hbm.ntm.weapon.TauAmmoType;
+import com.hbm.ntm.weapon.CoilAmmoType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -608,6 +610,15 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GUN_AMAT_PENANCE.get());
                         output.accept(ModItems.GUN_M2.get());
                         output.accept(ModItems.GUN_TESLA_CANNON.get());
+                        output.accept(ModItems.GUN_LASER_PISTOL.get());
+                        // TODO Saturnite mechanisms; source upgrade recipe remains gated
+                        output.accept(ModItems.GUN_LASER_PISTOL_PEW_PEW.get());
+                        // TODO Pedestal, Morning Glory flower, and Selenium Steel secret materials
+                        output.accept(ModItems.GUN_LASER_PISTOL_MORNING_GLORY.get());
+                        // TODO weapon-mod scope plus the unported Bismoid Bronze weapon parts
+                        output.accept(ModItems.GUN_LASRIFLE.get());
+                        output.accept(ModItems.GUN_TAU.get());
+                        output.accept(ModItems.GUN_COILGUN.get());
                         output.accept(ModItems.GUN_B92.get());
                         output.accept(ModItems.GUN_B93.get());
                         output.accept(ModItems.GUN_B92_AMMO.get());
@@ -650,6 +661,12 @@ public final class ModCreativeTabs {
                             output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
                         }
                         for (EnergyAmmoType type : EnergyAmmoType.values()) {
+                            output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
+                        }
+                        for (TauAmmoType type : TauAmmoType.values()) {
+                            output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
+                        }
+                        for (CoilAmmoType type : CoilAmmoType.values()) {
                             output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
                         }
                     })

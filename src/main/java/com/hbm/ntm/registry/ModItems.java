@@ -60,6 +60,8 @@ import com.hbm.ntm.item.G3Item;
 import com.hbm.ntm.item.Stg77Item;
 import com.hbm.ntm.item.M2Item;
 import com.hbm.ntm.item.TeslaCannonItem;
+import com.hbm.ntm.item.TauGunItem;
+import com.hbm.ntm.item.CoilgunItem;
 import com.hbm.ntm.item.AmatItem;
 import com.hbm.ntm.item.SubtletyItem;
 import com.hbm.ntm.item.PenanceItem;
@@ -92,6 +94,8 @@ import com.hbm.ntm.item.InfiniteBatteryItem;
 import com.hbm.ntm.item.InfiniteFluidBarrelItem;
 import com.hbm.ntm.item.LagPistolItem;
 import com.hbm.ntm.item.LaserDetonatorItem;
+import com.hbm.ntm.item.LaserPistolItem;
+import com.hbm.ntm.item.LasrifleItem;
 import com.hbm.ntm.item.AutoShotgunItem;
 import com.hbm.ntm.item.LiberatorItem;
 import com.hbm.ntm.item.MaresLegItem;
@@ -459,6 +463,12 @@ public final class ModItems {
     public static final DeferredItem<Stg77Item> GUN_STG77;
     public static final DeferredItem<M2Item> GUN_M2;
     public static final DeferredItem<TeslaCannonItem> GUN_TESLA_CANNON;
+    public static final DeferredItem<LaserPistolItem> GUN_LASER_PISTOL;
+    public static final DeferredItem<LaserPistolItem> GUN_LASER_PISTOL_PEW_PEW;
+    public static final DeferredItem<LaserPistolItem> GUN_LASER_PISTOL_MORNING_GLORY;
+    public static final DeferredItem<LasrifleItem> GUN_LASRIFLE;
+    public static final DeferredItem<TauGunItem> GUN_TAU;
+    public static final DeferredItem<CoilgunItem> GUN_COILGUN;
     public static final DeferredItem<AmatItem> GUN_AMAT;
     public static final DeferredItem<SubtletyItem> GUN_AMAT_SUBTLETY;
     public static final DeferredItem<PenanceItem> GUN_AMAT_PENANCE;
@@ -1249,6 +1259,14 @@ public final class ModItems {
         GUN_AMAT_PENANCE = ITEMS.register("gun_amat_penance", PenanceItem::new);
         GUN_M2 = ITEMS.register("gun_m2", M2Item::new);
         GUN_TESLA_CANNON = ITEMS.register("gun_tesla_cannon", TeslaCannonItem::new);
+        GUN_LASER_PISTOL = ITEMS.register("gun_laser_pistol", () -> new LaserPistolItem());
+        GUN_LASER_PISTOL_PEW_PEW = ITEMS.register("gun_laser_pistol_pew_pew",
+                () -> new LaserPistolItem(LaserPistolItem.Variant.PEW_PEW));
+        GUN_LASER_PISTOL_MORNING_GLORY = ITEMS.register("gun_laser_pistol_morning_glory",
+                () -> new LaserPistolItem(LaserPistolItem.Variant.MORNING_GLORY));
+        GUN_LASRIFLE = ITEMS.register("gun_lasrifle", LasrifleItem::new);
+        GUN_TAU = ITEMS.register("gun_tau", TauGunItem::new);
+        GUN_COILGUN = ITEMS.register("gun_coilgun", CoilgunItem::new);
         WEAPONIZED_STARBLASTER_CELL = ITEMS.register(
                 "weaponized_starblaster_cell", WeaponizedStarblasterCellItem::new);
         MULTITOOL_DIG = ITEMS.register("multitool_dig",

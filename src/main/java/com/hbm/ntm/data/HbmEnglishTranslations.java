@@ -883,11 +883,22 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.gun_amat_penance", "Penance");
         language.addProperty("item.hbm.gun_m2", "Ma Deuce");
         language.addProperty("item.hbm.gun_tesla_cannon", "Tesla Cannon");
+        language.addProperty("item.hbm.gun_laser_pistol", "Laser Pistol");
+        language.addProperty("item.hbm.gun_laser_pistol_pew_pew", "Pew Pew");
+        language.addProperty("item.hbm.gun_laser_pistol_morning_glory", "Morning Glory");
+        language.addProperty("item.hbm.gun_lasrifle", "Laser Rifle");
+        language.addProperty("item.hbm.gun_tau", "Tau Cannon");
+        language.addProperty("item.hbm.gun_coilgun", "Coilgun");
         language.addProperty("item.hbm.ammo_standard.capacitor", "Capacitor (Standard)");
         language.addProperty("item.hbm.ammo_standard.capacitor_overcharge", "Capacitor (Overcharge)");
         language.addProperty("item.hbm.ammo_standard.capacitor_ir", "Capacitor (Low Wavelength)");
+        language.addProperty("item.hbm.ammo_standard.tau_uranium", "Depleted Uranium-235 Box");
+        language.addProperty("item.hbm.ammo_standard.coil_tungsten", "Coilgun Tungsten Ball");
+        language.addProperty("item.hbm.ammo_standard.coil_ferrouranium", "Coilgun Ferrouranium Ball");
         language.addProperty("entity.hbm.entity_tesla_beam", "Tesla Beam");
         language.addProperty("entity.hbm.entity_tesla_impact", "Tesla Impact");
+        language.addProperty("entity.hbm.entity_laser_pistol_beam", "Laser Pistol Beam");
+        language.addProperty("entity.hbm.entity_tau_beam", "Tau Beam");
         language.addProperty("item.hbm.ammo_standard.flame_diesel", "Flamer Fuel, Diesel");
         language.addProperty("item.hbm.ammo_standard.flame_gas", "Flamer Fuel, Gas");
         language.addProperty("item.hbm.ammo_standard.flame_napalm", "Flamer Fuel, Napalm");
@@ -1327,6 +1338,11 @@ final class HbmEnglishTranslations {
         language.addProperty("death.attack.plasma", "%1$s was immolated by %2$s.");
         language.addProperty("death.attack.plasma.player", "%1$s was immolated by %2$s.");
         language.addProperty("death.attack.plasma.item", "%1$s was immolated by %2$s using %3$s.");
+        language.addProperty("death.attack.subatomic", "%1$s was atomized by %2$s.");
+        language.addProperty("death.attack.subatomic.player", "%1$s was atomized by %2$s.");
+        language.addProperty("death.attack.subatomic.item", "%1$s was atomized by %2$s using %3$s.");
+        language.addProperty("death.attack.tauBlast",
+                "%1$s charged the XVL1456 for too long and was blown into pieces.");
         language.addProperty("death.attack.mku", "%1$s died from unknown causes.");
         language.addProperty("armorMod.applicableTo", "Applicable to:");
         language.addProperty("armorMod.all", "All armor");

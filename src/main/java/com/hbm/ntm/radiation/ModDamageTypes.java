@@ -28,6 +28,8 @@ public final class ModDamageTypes {
     public static final ResourceKey<DamageType> HARD_LANDING = key("hard_landing");
     public static final ResourceKey<DamageType> FLAMETHROWER = key("flamethrower");
     public static final ResourceKey<DamageType> BUILDING = key("building");
+    public static final ResourceKey<DamageType> SUBATOMIC = key("subatomic");
+    public static final ResourceKey<DamageType> TAU_BLAST = key("tau_blast");
 
     private ModDamageTypes() {
     }

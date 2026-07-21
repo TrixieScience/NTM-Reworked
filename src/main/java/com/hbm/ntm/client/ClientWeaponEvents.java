@@ -7,8 +7,10 @@ import com.hbm.ntm.item.LaserDetonatorItem;
 import com.hbm.ntm.item.FlamerGunItem;
 import com.hbm.ntm.item.SednaGunItem;
 import com.hbm.ntm.item.StingerLauncherItem;
+import com.hbm.ntm.item.TauGunItem;
 import com.hbm.ntm.client.sound.FlamerSoundInstance;
 import com.hbm.ntm.client.sound.StingerLockSoundInstance;
+import com.hbm.ntm.client.sound.TauChargeSoundInstance;
 import com.hbm.ntm.network.GunInputPayload;
 import com.hbm.ntm.weapon.GunInput;
 import com.hbm.ntm.weapon.SednaCrosshair;
@@ -111,6 +113,11 @@ public final class ClientWeaponEvents {
                 && StingerLauncherItem.lockProgress(held) > 0
                 && !StingerLauncherItem.lockedOn(held)) {
             StingerLockSoundInstance.keepAlive(minecraft.player);
+        }
+        if (held.getItem() instanceof TauGunItem
+                && TauGunItem.animation(held) == TauGunItem.GunAnimation.SPINUP
+                && TauGunItem.animationTimer(held) < 300) {
+            TauChargeSoundInstance.keepAlive(minecraft.player, TauGunItem.animationTimer(held));
         }
 
         boolean automatic = gun != null && gun.gunAutomatic() && HbmConfig.ENABLE_GUNS.get();

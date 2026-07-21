@@ -84,6 +84,23 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_SHREDDER_FIRE = register("weapon.fire.shotgunauto");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_SHREDDER_CYCLE = register("weapon.fire.shreddercycle");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_TESLA_FIRE = register("weapon.fire.tesla");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_LASER_PISTOL_FIRE =
+            register("weapon.fire.laserpistol");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_LASER_RIFLE_FIRE =
+            register("weapon.fire.laser");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_TAU_FIRE =
+            register("weapon.fire.tau");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_TAU_RELEASE =
+            register("weapon.fire.tau_release");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_TAU_LOOP = SOUNDS.register(
+            "weapon.fire.tau_loop", () -> SoundEvent.createFixedRangeEvent(
+                    ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "weapon.fire.tau_loop"), 15.0F));
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_COIL_FIRE =
+            register("weapon.coilgun_shoot");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_COIL_RELOAD =
+            register("weapon.coilgun_reload");
+    public static final DeferredHolder<SoundEvent, SoundEvent> DISINTEGRATION =
+            register("weapon.fire.disintegration");
     public static final DeferredHolder<SoundEvent, SoundEvent> TESLA_BLAST = register("entity.ufo_blast");
     public static final DeferredHolder<SoundEvent, SoundEvent> TESLA_YOMI = register("weapon.tesla_yomi");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_UNDERBARREL_FIRE = register("weapon.hk_shoot");

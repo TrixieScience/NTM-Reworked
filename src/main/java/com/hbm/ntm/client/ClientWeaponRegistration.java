@@ -27,6 +27,9 @@ import com.hbm.ntm.client.render.HenryItemRenderer;
 import com.hbm.ntm.client.render.HangmanItemRenderer;
 import com.hbm.ntm.client.render.HeavyRevolverItemRenderer;
 import com.hbm.ntm.client.render.LaserDetonatorItemRenderer;
+import com.hbm.ntm.client.render.LaserPistolBeamRenderer;
+import com.hbm.ntm.client.render.LaserPistolItemRenderer;
+import com.hbm.ntm.client.render.LasrifleItemRenderer;
 import com.hbm.ntm.client.render.FlattenedMobRenderer;
 import com.hbm.ntm.client.render.LagPistolItemRenderer;
 import com.hbm.ntm.client.render.LiberatorItemRenderer;
@@ -55,6 +58,9 @@ import com.hbm.ntm.client.render.AmatItemRenderer;
 import com.hbm.ntm.client.render.TeslaBeamRenderer;
 import com.hbm.ntm.client.render.TeslaImpactRenderer;
 import com.hbm.ntm.client.render.TeslaCannonItemRenderer;
+import com.hbm.ntm.client.render.TauBeamRenderer;
+import com.hbm.ntm.client.render.TauGunItemRenderer;
+import com.hbm.ntm.client.render.CoilgunItemRenderer;
 import com.hbm.ntm.network.DetonatorInfoPayload;
 import com.hbm.ntm.item.PenanceItem;
 import com.hbm.ntm.registry.ModEntities;
@@ -147,6 +153,8 @@ public final class ClientWeaponRegistration {
         event.registerEntityRenderer(ModEntities.SHREDDER_SUBMUNITION.get(), ShredderSubmunitionRenderer::new);
         event.registerEntityRenderer(ModEntities.TESLA_BEAM.get(), TeslaBeamRenderer::new);
         event.registerEntityRenderer(ModEntities.TESLA_IMPACT.get(), TeslaImpactRenderer::new);
+        event.registerEntityRenderer(ModEntities.LASER_PISTOL_BEAM.get(), LaserPistolBeamRenderer::new);
+        event.registerEntityRenderer(ModEntities.TAU_BEAM.get(), TauBeamRenderer::new);
     }
 
     private static void registerModels(ModelEvent.RegisterAdditional event) {
@@ -566,6 +574,14 @@ public final class ClientWeaponRegistration {
 
         event.registerItem(weaponExtension(new AmatItemRenderer()), ModItems.GUN_AMAT.get());
         event.registerItem(weaponExtension(new TeslaCannonItemRenderer()), ModItems.GUN_TESLA_CANNON.get());
+        event.registerItem(weaponExtension(new LaserPistolItemRenderer()), ModItems.GUN_LASER_PISTOL.get());
+        event.registerItem(weaponExtension(new LaserPistolItemRenderer()),
+                ModItems.GUN_LASER_PISTOL_PEW_PEW.get());
+        event.registerItem(weaponExtension(new LaserPistolItemRenderer()),
+                ModItems.GUN_LASER_PISTOL_MORNING_GLORY.get());
+        event.registerItem(weaponExtension(new LasrifleItemRenderer()), ModItems.GUN_LASRIFLE.get());
+        event.registerItem(weaponExtension(new TauGunItemRenderer()), ModItems.GUN_TAU.get());
+        event.registerItem(weaponExtension(new CoilgunItemRenderer()), ModItems.GUN_COILGUN.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(ResourceLocation.fromNamespaceAndPath(
                 "hbm", "textures/models/weapons/amat_subtlety.png"))), ModItems.GUN_AMAT_SUBTLETY.get());
         event.registerItem(weaponExtension(new AmatItemRenderer(PenanceItem.PENANCE_TEXTURE, true)),

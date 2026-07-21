@@ -10,6 +10,7 @@ import com.hbm.ntm.entity.FlattenedMobEntity;
 import com.hbm.ntm.entity.FortyMillimeterProjectileEntity;
 import com.hbm.ntm.entity.FlameProjectileEntity;
 import com.hbm.ntm.entity.LingeringFireEntity;
+import com.hbm.ntm.entity.LaserPistolBeamEntity;
 import com.hbm.ntm.entity.RocketProjectileEntity;
 import com.hbm.ntm.entity.CogEntity;
 import com.hbm.ntm.entity.ChlorineCloudEntity;
@@ -21,6 +22,7 @@ import com.hbm.ntm.entity.ShredderBeamEntity;
 import com.hbm.ntm.entity.ShredderSubmunitionEntity;
 import com.hbm.ntm.entity.TeslaBeamEntity;
 import com.hbm.ntm.entity.TeslaImpactEntity;
+import com.hbm.ntm.entity.TauBeamEntity;
 import com.hbm.ntm.entity.PrimedExplosiveEntity;
 import com.hbm.ntm.entity.RagingVortexEntity;
 import com.hbm.ntm.entity.SawbladeEntity;
@@ -253,6 +255,18 @@ public final class ModEntities {
                     () -> EntityType.Builder.<TeslaImpactEntity>of(TeslaImpactEntity::new, MobCategory.MISC)
                             .sized(0.1F, 0.1F).clientTrackingRange(63).updateInterval(1).noSave()
                             .build("hbm:entity_tesla_impact"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<LaserPistolBeamEntity>> LASER_PISTOL_BEAM =
+            ENTITY_TYPES.register("entity_laser_pistol_beam",
+                    () -> EntityType.Builder.<LaserPistolBeamEntity>of(LaserPistolBeamEntity::new, MobCategory.MISC)
+                            .sized(0.5F, 0.5F).clientTrackingRange(63).updateInterval(1).noSave()
+                            .build("hbm:entity_laser_pistol_beam"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<TauBeamEntity>> TAU_BEAM =
+            ENTITY_TYPES.register("entity_tau_beam",
+                    () -> EntityType.Builder.<TauBeamEntity>of(TauBeamEntity::new, MobCategory.MISC)
+                            .sized(0.5F, 0.5F).clientTrackingRange(63).updateInterval(1).noSave()
+                            .build("hbm:entity_tau_beam"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<CogEntity>> COG = ENTITY_TYPES.register(
             "cog",

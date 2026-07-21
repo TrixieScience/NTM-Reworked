@@ -1615,6 +1615,8 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, absoluteDamageType("amsCore"), damageTypes, hbm("ams_core")));
         writes.add(save(output, damageType("hard_landing"), damageTypes, hbm("hard_landing")));
         writes.add(save(output, damageType("flamethrower"), damageTypes, hbm("flamethrower")));
+        writes.add(save(output, damageType("subatomic"), damageTypes, hbm("subatomic")));
+        writes.add(save(output, damageType("tauBlast"), damageTypes, hbm("tau_blast")));
         JsonArray armorBypassingDamage = new JsonArray();
         armorBypassingDamage.add("hbm:radiation");
         armorBypassingDamage.add("hbm:blender");
@@ -1626,6 +1628,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         armorBypassingDamage.add("hbm:ams");
         armorBypassingDamage.add("hbm:ams_core");
         armorBypassingDamage.add("hbm:hard_landing");
+        armorBypassingDamage.add("hbm:tau_blast");
         writes.add(save(output, tag(armorBypassingDamage), damageTypeTags, minecraft("bypasses_armor")));
         JsonArray effectBypassingDamage = new JsonArray();
         effectBypassingDamage.add("hbm:monoxide");
@@ -1638,7 +1641,10 @@ public final class MaterialResourcesProvider implements DataProvider {
         projectileDamage.add("hbm:flamethrower");
         writes.add(save(output, tag(projectileDamage), damageTypeTags, minecraft("is_projectile")));
         writes.add(save(output, tag("hbm:flamethrower", false), damageTypeTags, minecraft("is_fire")));
-        writes.add(save(output, tag("hbm:nuclear_blast", false), damageTypeTags, minecraft("is_explosion")));
+        JsonArray explosionDamage = new JsonArray();
+        explosionDamage.add("hbm:nuclear_blast");
+        explosionDamage.add("hbm:tau_blast");
+        writes.add(save(output, tag(explosionDamage), damageTypeTags, minecraft("is_explosion")));
         writes.add(save(output, pepperboxRecipe(), recipes, hbm("gun_pepperbox")));
         writes.add(save(output, blackPowderAmmoRecipe("stone", tagIngredient("c:cobblestones/normal")), recipes,
                 hbm("ammo_standard_stone")));

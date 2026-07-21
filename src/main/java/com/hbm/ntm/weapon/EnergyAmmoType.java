@@ -1,6 +1,6 @@
 package com.hbm.ntm.weapon;
 
-/** The three capacitor loads accepted by the source Tesla Cannon belt. */
+/** The three capacitor loads shared by the source Tesla Cannon and laser weapons. */
 public enum EnergyAmmoType implements SednaAmmoType {
     STANDARD("capacitor", 67, 67, 1.0F, true, false),
     OVERCHARGE("capacitor_overcharge", 68, 68, 1.5F, true, false),
@@ -39,6 +39,8 @@ public enum EnergyAmmoType implements SednaAmmoType {
     @Override public float wear() { return 1.0F; }
 
     public boolean chainLightning() { return chainLightning; }
+    public boolean laserPenetrates() { return this == OVERCHARGE; }
+    public boolean laserFire() { return this == LOW_WAVELENGTH; }
 
     public static EnergyAmmoType fromLegacyMetadata(int metadata) {
         for (EnergyAmmoType type : values()) if (type.legacyMetadata == metadata) return type;

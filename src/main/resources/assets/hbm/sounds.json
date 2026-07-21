@@ -598,6 +598,42 @@
     "category": "player",
     "sounds": [{"name": "hbm:weapon/fire/tesla", "stream": false}]
   },
+  "weapon.fire.laserpistol": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/laserpistol", "stream": false}]
+  },
+  "weapon.fire.laser": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/laser", "stream": false}]
+  },
+  "weapon.fire.tau": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/tau", "stream": false}]
+  },
+  "weapon.fire.tau_loop": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/tauLoop", "stream": false}]
+  },
+  "weapon.fire.tau_release": {
+    "category": "player",
+    "sounds": [
+      {"name": "hbm:weapon/fire/tauRelease1", "stream": false},
+      {"name": "hbm:weapon/fire/tauRelease2", "stream": false},
+      {"name": "hbm:weapon/fire/tauRelease3", "stream": false}
+    ]
+  },
+  "weapon.coilgun_shoot": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/coilgunShoot", "stream": false}]
+  },
+  "weapon.coilgun_reload": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/coilgunReload", "stream": false}]
+  },
+  "weapon.fire.disintegration": {
+    "category": "player",
+    "sounds": [{"name": "hbm:weapon/fire/disintegration", "stream": false}]
+  },
   "entity.ufo_blast": {
     "category": "hostile",
     "sounds": [{"name": "hbm:entity/ufo_blast", "stream": false}]
