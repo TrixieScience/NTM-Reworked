@@ -82,6 +82,8 @@ import com.hbm.ntm.item.GuideBookItem;
 import com.hbm.ntm.item.HenryRifleItem;
 import com.hbm.ntm.item.HangmanItem;
 import com.hbm.ntm.item.HeavyRevolverItem;
+import com.hbm.ntm.item.LegendaryHeavyRevolverItem;
+import com.hbm.ntm.item.DaniItem;
 import com.hbm.ntm.item.FoundryMoldItem;
 import com.hbm.ntm.item.FoundryPartItem;
 import com.hbm.ntm.item.FoundryIngotItem;
@@ -437,9 +439,12 @@ public final class ModItems {
     public static final DeferredItem<PepperboxItem> GUN_PEPPERBOX;
     public static final DeferredItem<BreakActionRevolverItem> GUN_LIGHT_REVOLVER;
     public static final DeferredItem<BreakActionRevolverItem> GUN_LIGHT_REVOLVER_ATLAS;
+    public static final DeferredItem<DaniItem> GUN_LIGHT_REVOLVER_DANI;
     public static final DeferredItem<HenryRifleItem> GUN_HENRY;
     public static final DeferredItem<HenryRifleItem> GUN_HENRY_LINCOLN;
     public static final DeferredItem<HeavyRevolverItem> GUN_HEAVY_REVOLVER;
+    public static final DeferredItem<LegendaryHeavyRevolverItem> GUN_HEAVY_REVOLVER_LILMAC;
+    public static final DeferredItem<LegendaryHeavyRevolverItem> GUN_HEAVY_REVOLVER_PROTEGE;
     public static final DeferredItem<HangmanItem> GUN_HANGMAN;
     public static final DeferredItem<LagPistolItem> GUN_LAG;
     public static final DeferredItem<NineMillimeterGunItem> GUN_GREASEGUN;
@@ -1228,9 +1233,14 @@ public final class ModItems {
         GUN_PEPPERBOX = ITEMS.register("gun_pepperbox", PepperboxItem::new);
         GUN_LIGHT_REVOLVER = ITEMS.register("gun_light_revolver", () -> new BreakActionRevolverItem(false));
         GUN_LIGHT_REVOLVER_ATLAS = ITEMS.register("gun_light_revolver_atlas", () -> new BreakActionRevolverItem(true));
+        GUN_LIGHT_REVOLVER_DANI = ITEMS.register("gun_light_revolver_dani", DaniItem::new);
         GUN_HENRY = ITEMS.register("gun_henry", () -> new HenryRifleItem(false));
         GUN_HENRY_LINCOLN = ITEMS.register("gun_henry_lincoln", () -> new HenryRifleItem(true));
         GUN_HEAVY_REVOLVER = ITEMS.register("gun_heavy_revolver", HeavyRevolverItem::new);
+        GUN_HEAVY_REVOLVER_LILMAC = ITEMS.register("gun_heavy_revolver_lilmac",
+                () -> new LegendaryHeavyRevolverItem(LegendaryHeavyRevolverItem.Variant.LITTLE_MACINTOSH));
+        GUN_HEAVY_REVOLVER_PROTEGE = ITEMS.register("gun_heavy_revolver_protege",
+                () -> new LegendaryHeavyRevolverItem(LegendaryHeavyRevolverItem.Variant.PROTEGE));
         GUN_HANGMAN = ITEMS.register("gun_hangman", HangmanItem::new);
         AMMO_SECRET = ITEMS.register("ammo_secret", AmmoSecretItem::new);
         GUN_GREASEGUN = ITEMS.register("gun_greasegun",

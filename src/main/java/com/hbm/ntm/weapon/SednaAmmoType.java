@@ -38,6 +38,7 @@ public interface SednaAmmoType {
     default int projectileLifetime() { return 30; }
     default float blockBreakHardness() { return -1.0F; }
     default boolean spawnsBuildingOnImpact() { return false; }
+    default int fallingPayload() { return 0; }
     default int tracerDarkColor() { return 0xFFFFBF00; }
     default int tracerLightColor() { return 0xFFFFFFFF; }
     default boolean tracerFullbright() { return false; }

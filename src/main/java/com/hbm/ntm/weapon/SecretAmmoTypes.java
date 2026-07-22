@@ -13,6 +13,9 @@ public final class SecretAmmoTypes {
         CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
         if (tag.contains(SednaAmmoType.TYPE_KEY)) {
             String name = tag.getString(SednaAmmoType.TYPE_KEY);
+            if (Equestrian44AmmoType.BOXCAR.serializedName().equals(name)) {
+                return Equestrian44AmmoType.BOXCAR;
+            }
             for (FollyAmmoType type : FollyAmmoType.values()) {
                 if (type.serializedName().equals(name)) return type;
             }
@@ -26,6 +29,7 @@ public final class SecretAmmoTypes {
         CustomModelData modelData = stack.get(DataComponents.CUSTOM_MODEL_DATA);
         int metadata = modelData == null ? 0 : modelData.value();
         if (metadata == 0 || metadata == 1) return FollyAmmoType.fromLegacyMetadata(metadata);
+        if (metadata == 2) return Equestrian44AmmoType.BOXCAR;
         if (metadata == 5 || metadata == 7) return AberratorAmmoType.fromLegacyMetadata(metadata);
         return FiftyCalAmmoType.fromLegacyMetadata(metadata);
     }

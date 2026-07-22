@@ -179,6 +179,8 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> DEBRIS = register("block.debris");
     public static final DeferredHolder<SoundEvent, SoundEvent> BUILDING_EXPLOSION =
             register("entity.old_explosion");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TRAIN_HORN = register("alarm.train_horn");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TRAIN_IMPACT = register("weapon.train_impact");
     public static final DeferredHolder<SoundEvent, SoundEvent> ENGINE = SOUNDS.register(
             "block.engine", () -> SoundEvent.createFixedRangeEvent(
                     ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block.engine"), 10F));

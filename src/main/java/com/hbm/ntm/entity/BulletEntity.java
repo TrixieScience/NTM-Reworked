@@ -72,7 +72,8 @@ public final class BulletEntity extends Projectile {
         setOwner(owner);
         // Secret .50 ammo overlaps ordinary metadata, so sync its config ID instead.
         int projectileAmmo = ammo instanceof com.hbm.ntm.weapon.FiftyCalAmmoType fifty && fifty.secret()
-                ? fifty.legacyBulletConfig() : ammo.legacyMetadata();
+                || ammo instanceof com.hbm.ntm.weapon.Equestrian44AmmoType
+                ? ammo.legacyBulletConfig() : ammo.legacyMetadata();
         entityData.set(AMMO, projectileAmmo);
         entityData.set(DAMAGE, damage);
         entityData.set(INCENDIARY, incendiary);
@@ -103,6 +104,9 @@ public final class BulletEntity extends Projectile {
         int config = entityData.get(AMMO);
         if (config == 104 || config == 106) {
             return com.hbm.ntm.weapon.FiftyCalAmmoType.fromLegacyBulletConfig(config);
+        }
+        if (config == 102 || config == 103) {
+            return com.hbm.ntm.weapon.Equestrian44AmmoType.fromLegacyBulletConfig(config);
         }
         return StandardAmmoTypes.fromLegacyMetadata(config);
     }
@@ -201,6 +205,7 @@ public final class BulletEntity extends Projectile {
                 if (nearest == null || intersection.distanceSqr() < nearest.distanceSqr()) nearest = intersection;
             }
             if (nearest != null) {
+                if (spawnFallingPayload(nearest.location())) return;
                 if (ammoType().spawnsBuildingOnImpact()) {
                     com.hbm.ntm.entity.BuildingEntity.spawn((ServerLevel) level(), nearest.location());
                     setPos(nearest.location());
@@ -229,6 +234,7 @@ public final class BulletEntity extends Projectile {
         }
 
         if (blockHit.getType() != net.minecraft.world.phys.HitResult.Type.MISS) {
+            if (spawnFallingPayload(blockHit.getLocation())) return;
             if (ammoType().spawnsBuildingOnImpact()) {
                 com.hbm.ntm.entity.BuildingEntity.spawn((ServerLevel) level(), blockHit.getLocation());
                 setPos(blockHit.getLocation());
@@ -244,6 +250,16 @@ public final class BulletEntity extends Projectile {
             setPos(end);
         }
         updateRotation(getDeltaMovement());
+    }
+
+    private boolean spawnFallingPayload(Vec3 impact) {
+        if (!(level() instanceof ServerLevel server)) return false;
+        if (ammoType().fallingPayload() == 1) BoxcarEntity.spawn(server, impact);
+        else if (ammoType().fallingPayload() == 2) TorpedoEntity.spawn(server, impact);
+        else return false;
+        setPos(impact);
+        discardWithFinalTeleport();
+        return true;
     }
 
     private void breakSoftBlocks(Vec3 start, Vec3 end) {

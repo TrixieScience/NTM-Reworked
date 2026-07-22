@@ -847,9 +847,13 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.ammo_standard.stone_shot", "Shot and Powder");
         language.addProperty("item.hbm.gun_light_revolver", "Break-Action Revolver");
         language.addProperty("item.hbm.gun_light_revolver_atlas", "Atlas");
+        language.addProperty("item.hbm.gun_light_revolver_dani", "Day And Night");
         language.addProperty("item.hbm.gun_henry", "Lever Action Rifle");
         language.addProperty("item.hbm.gun_henry_lincoln", "Lincoln's Repeater");
         language.addProperty("item.hbm.gun_heavy_revolver", "Heavy Revolver");
+        language.addProperty("item.hbm.gun_heavy_revolver_lilmac", "Little Macintosh");
+        language.addProperty("item.hbm.gun_heavy_revolver_protege", "Protège");
+        language.addProperty("item.hbm.ammo_secret.m44_equestrian", ".44 Magnum Head-Exploder");
         language.addProperty("item.hbm.gun_hangman", "Hangman");
         language.addProperty("item.hbm.gun_greasegun", "Grease Gun");
         language.addProperty("item.hbm.gun_lag", "Comically Long Pistol");

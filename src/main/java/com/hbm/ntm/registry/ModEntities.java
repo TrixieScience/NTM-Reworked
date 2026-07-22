@@ -7,6 +7,8 @@ import com.hbm.ntm.entity.B93BeamEntity;
 import com.hbm.ntm.entity.BlackHoleEntity;
 import com.hbm.ntm.entity.BulletEntity;
 import com.hbm.ntm.entity.BuildingEntity;
+import com.hbm.ntm.entity.BoxcarEntity;
+import com.hbm.ntm.entity.TorpedoEntity;
 import com.hbm.ntm.entity.FlattenedMobEntity;
 import com.hbm.ntm.entity.FortyMillimeterProjectileEntity;
 import com.hbm.ntm.entity.FollyBeamEntity;
@@ -211,6 +213,18 @@ public final class ModEntities {
                     () -> EntityType.Builder.<BuildingEntity>of(BuildingEntity::new, MobCategory.MISC)
                             .fireImmune().sized(0.25F, 0.25F).clientTrackingRange(63).updateInterval(1)
                             .build("hbm:entity_falling_building"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<BoxcarEntity>> BOXCAR =
+            ENTITY_TYPES.register("entity_boxcar",
+                    () -> EntityType.Builder.<BoxcarEntity>of(BoxcarEntity::new, MobCategory.MISC)
+                            .fireImmune().sized(2.0F, 3.0F).clientTrackingRange(63).updateInterval(1)
+                            .build("hbm:entity_boxcar"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<TorpedoEntity>> TORPEDO =
+            ENTITY_TYPES.register("entity_torpedo",
+                    () -> EntityType.Builder.<TorpedoEntity>of(TorpedoEntity::new, MobCategory.MISC)
+                            .fireImmune().sized(0.5F, 2.0F).clientTrackingRange(63).updateInterval(1)
+                            .build("hbm:entity_torpedo"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<FortyMillimeterProjectileEntity>> FORTY_MILLIMETER_PROJECTILE =
             ENTITY_TYPES.register("entity_bullet_40mm",

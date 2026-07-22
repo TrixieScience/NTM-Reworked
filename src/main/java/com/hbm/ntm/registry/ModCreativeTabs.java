@@ -25,6 +25,7 @@ import com.hbm.ntm.item.CircuitItem;
 import com.hbm.ntm.weapon.Magnum357AmmoType;
 import com.hbm.ntm.weapon.Bolt75AmmoType;
 import com.hbm.ntm.weapon.Magnum44AmmoType;
+import com.hbm.ntm.weapon.Equestrian44AmmoType;
 import com.hbm.ntm.weapon.NineMillimeterAmmoType;
 import com.hbm.ntm.weapon.FortyMillimeterAmmoType;
 import com.hbm.ntm.weapon.FiveFiveSixAmmoType;
@@ -572,9 +573,12 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GUN_PEPPERBOX.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER_ATLAS.get());
+                        output.accept(ModItems.GUN_LIGHT_REVOLVER_DANI.get());
                         output.accept(ModItems.GUN_HENRY.get());
                         output.accept(ModItems.GUN_HENRY_LINCOLN.get());
                         output.accept(ModItems.GUN_HEAVY_REVOLVER.get());
+                        output.accept(ModItems.GUN_HEAVY_REVOLVER_LILMAC.get());
+                        output.accept(ModItems.GUN_HEAVY_REVOLVER_PROTEGE.get());
                         output.accept(ModItems.GUN_HANGMAN.get());
                         output.accept(ModItems.GUN_GREASEGUN.get());
                         output.accept(ModItems.GUN_LAG.get());
@@ -655,6 +659,7 @@ public final class ModCreativeTabs {
                         for (Magnum44AmmoType type : Magnum44AmmoType.values()) {
                             output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
                         }
+                        output.accept(Equestrian44AmmoType.BOXCAR.createStack(ModItems.AMMO_SECRET.get(), 1));
                         for (NineMillimeterAmmoType type : NineMillimeterAmmoType.values()) {
                             output.accept(type.createStack(ModItems.AMMO_STANDARD.get(), 1));
                         }

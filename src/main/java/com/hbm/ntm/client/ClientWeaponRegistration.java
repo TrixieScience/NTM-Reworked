@@ -19,6 +19,8 @@ import com.hbm.ntm.client.render.BreakActionRevolverItemRenderer;
 import com.hbm.ntm.client.render.BrokenMaresLegItemRenderer;
 import com.hbm.ntm.client.render.BulletRenderer;
 import com.hbm.ntm.client.render.BuildingRenderer;
+import com.hbm.ntm.client.render.BoxcarRenderer;
+import com.hbm.ntm.client.render.TorpedoRenderer;
 import com.hbm.ntm.client.render.DualUziAkimboLayer;
 import com.hbm.ntm.client.render.DualMaresLegItemRenderer;
 import com.hbm.ntm.client.render.DualUziItemRenderer;
@@ -34,6 +36,8 @@ import com.hbm.ntm.client.render.G3ItemRenderer;
 import com.hbm.ntm.client.render.HenryItemRenderer;
 import com.hbm.ntm.client.render.HangmanItemRenderer;
 import com.hbm.ntm.client.render.HeavyRevolverItemRenderer;
+import com.hbm.ntm.client.render.LegendaryHeavyRevolverItemRenderer;
+import com.hbm.ntm.client.render.DaniItemRenderer;
 import com.hbm.ntm.client.render.LaserDetonatorItemRenderer;
 import com.hbm.ntm.client.render.LaserPistolBeamRenderer;
 import com.hbm.ntm.client.render.LaserPistolItemRenderer;
@@ -145,6 +149,8 @@ public final class ClientWeaponRegistration {
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(ModEntities.BULLET.get(), BulletRenderer::new);
         event.registerEntityRenderer(ModEntities.BUILDING.get(), BuildingRenderer::new);
+        event.registerEntityRenderer(ModEntities.BOXCAR.get(), BoxcarRenderer::new);
+        event.registerEntityRenderer(ModEntities.TORPEDO.get(), TorpedoRenderer::new);
         event.registerEntityRenderer(ModEntities.FORTY_MILLIMETER_PROJECTILE.get(),
                 FortyMillimeterProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.FLAME_PROJECTILE.get(),
@@ -201,6 +207,16 @@ public final class ClientWeaponRegistration {
         event.register(BreakActionRevolverItemRenderer.HAMMER_ATLAS);
         event.register(BreakActionRevolverItemRenderer.DRUM_ATLAS);
         event.register(BreakActionRevolverItemRenderer.GRIP_ATLAS);
+        event.register(DaniItemRenderer.BARREL_CELESTIAL);
+        event.register(DaniItemRenderer.LATCH_CELESTIAL);
+        event.register(DaniItemRenderer.HAMMER_CELESTIAL);
+        event.register(DaniItemRenderer.DRUM_CELESTIAL);
+        event.register(DaniItemRenderer.GRIP_CELESTIAL);
+        event.register(DaniItemRenderer.BARREL_LUNAR);
+        event.register(DaniItemRenderer.LATCH_LUNAR);
+        event.register(DaniItemRenderer.HAMMER_LUNAR);
+        event.register(DaniItemRenderer.DRUM_LUNAR);
+        event.register(DaniItemRenderer.GRIP_LUNAR);
         event.register(HenryItemRenderer.GUN);
         event.register(HenryItemRenderer.SIGHT);
         event.register(HenryItemRenderer.HAMMER);
@@ -404,6 +420,17 @@ public final class ClientWeaponRegistration {
         }, ModItems.GUN_LIGHT_REVOLVER.get(), ModItems.GUN_LIGHT_REVOLVER_ATLAS.get());
 
         event.registerItem(new IClientItemExtensions() {
+            private final DaniItemRenderer renderer = new DaniItemRenderer();
+            @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
+            @Override public HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            }
+            @Override public boolean applyForgeHandTransform(PoseStack poses, LocalPlayer player, HumanoidArm arm,
+                                                              ItemStack stack, float partialTick,
+                                                              float equipProgress, float swingProgress) { return true; }
+        }, ModItems.GUN_LIGHT_REVOLVER_DANI.get());
+
+        event.registerItem(new IClientItemExtensions() {
             private final HeavyRevolverItemRenderer renderer = new HeavyRevolverItemRenderer();
 
             @Override
@@ -423,6 +450,17 @@ public final class ClientWeaponRegistration {
                 return true;
             }
         }, ModItems.GUN_HEAVY_REVOLVER.get());
+
+        event.registerItem(new IClientItemExtensions() {
+            private final LegendaryHeavyRevolverItemRenderer renderer = new LegendaryHeavyRevolverItemRenderer();
+            @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
+            @Override public HumanoidModel.ArmPose getArmPose(LivingEntity entity, InteractionHand hand, ItemStack stack) {
+                return HumanoidModel.ArmPose.BOW_AND_ARROW;
+            }
+            @Override public boolean applyForgeHandTransform(PoseStack poses, LocalPlayer player, HumanoidArm arm,
+                                                              ItemStack stack, float partialTick,
+                                                              float equipProgress, float swingProgress) { return true; }
+        }, ModItems.GUN_HEAVY_REVOLVER_LILMAC.get(), ModItems.GUN_HEAVY_REVOLVER_PROTEGE.get());
 
         event.registerItem(new IClientItemExtensions() {
             private final HangmanItemRenderer renderer = new HangmanItemRenderer();
