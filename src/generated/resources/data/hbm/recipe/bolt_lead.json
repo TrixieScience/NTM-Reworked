@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "tag": "c:ingots/lead"
+    }
+  },
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "result": {
+    "components": {
+      "minecraft:custom_data": {
+        "material": "lead"
+      },
+      "minecraft:custom_model_data": 8200
+    },
+    "count": 16,
+    "id": "hbm:bolt"
+  }
+}

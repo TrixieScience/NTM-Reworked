@@ -48,6 +48,7 @@ public final class BoltItem extends Item {
 
     public enum BoltMaterial {
         STEEL("steel", 30),
+        LEAD("lead", 8200),
         TUNGSTEN("tungsten", 7400);
 
         private final String id;

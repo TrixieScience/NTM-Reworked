@@ -76,6 +76,7 @@
     "hbm:machine_battery_socket",
     "hbm:machine_battery_redd",
     "hbm:machine_press",
+    "hbm:machine_ammo_press",
     "hbm:press_preheater",
     "hbm:machine_shredder",
     "hbm:machine_assembly_machine",

@@ -2,6 +2,7 @@ package com.hbm.ntm.client.compat.jei;
 
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.client.screen.AnvilScreen;
+import com.hbm.ntm.client.screen.AmmoPressScreen;
 import com.hbm.ntm.client.screen.AssemblyMachineScreen;
 import com.hbm.ntm.client.screen.CentrifugeScreen;
 import com.hbm.ntm.client.screen.ChemicalPlantScreen;
@@ -9,6 +10,7 @@ import com.hbm.ntm.client.screen.CrucibleScreen;
 import com.hbm.ntm.client.screen.MachinePressScreen;
 import com.hbm.ntm.client.screen.MachineShredderScreen;
 import com.hbm.ntm.recipe.AssemblyClientRecipes;
+import com.hbm.ntm.recipe.AmmoPressRecipes;
 import com.hbm.ntm.recipe.AssemblyRecipe;
 import com.hbm.ntm.recipe.CentrifugeRecipes;
 import com.hbm.ntm.recipe.CentrifugeRecipes.CentrifugeRecipe;
@@ -43,6 +45,8 @@ public final class HbmJeiPlugin implements IModPlugin {
             RecipeType.create(HbmNtm.MOD_ID, "assembly", AssemblyRecipe.class);
     public static final RecipeType<PressRecipes.PressRecipe> PRESS =
             RecipeType.create(HbmNtm.MOD_ID, "press", PressRecipes.PressRecipe.class);
+    public static final RecipeType<AmmoPressRecipes.Recipe> AMMO_PRESS =
+            RecipeType.create(HbmNtm.MOD_ID, "ammo_press", AmmoPressRecipes.Recipe.class);
     public static final RecipeType<ChemicalRecipe> CHEMICAL_PLANT =
             RecipeType.create(HbmNtm.MOD_ID, "chemical_plant", ChemicalRecipe.class);
     public static final RecipeType<CentrifugeRecipe> CENTRIFUGE =
@@ -76,6 +80,7 @@ public final class HbmJeiPlugin implements IModPlugin {
                 new AnvilRecipeCategory(gui),
                 new AssemblyRecipeCategory(gui),
                 new PressRecipeCategory(gui),
+                new AmmoPressRecipeCategory(gui),
                 new ChemicalPlantRecipeCategory(gui),
                 new CentrifugeRecipeCategory(gui),
                 new ShredderRecipeCategory(gui),
@@ -89,6 +94,7 @@ public final class HbmJeiPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(ANVIL, AnvilJeiRecipe.all());
         registration.addRecipes(PRESS, PressRecipes.all());
+        registration.addRecipes(AMMO_PRESS, AmmoPressRecipes.all());
         registration.addRecipes(CHEMICAL_PLANT, ChemicalPlantRecipes.all());
         registration.addRecipes(CENTRIFUGE, CentrifugeRecipes.all());
         registration.addRecipes(SHREDDER, ShredderRecipes.all());
@@ -111,6 +117,7 @@ public final class HbmJeiPlugin implements IModPlugin {
                 ModItems.ANVIL_OSMIRIDIUM_ITEM.get(), ModItems.ANVIL_MURKY_ITEM.get());
         registration.addRecipeCatalysts(ASSEMBLY, ModItems.MACHINE_ASSEMBLY_MACHINE_ITEM.get());
         registration.addRecipeCatalysts(PRESS, ModItems.MACHINE_PRESS_ITEM.get());
+        registration.addRecipeCatalysts(AMMO_PRESS, ModItems.AMMO_PRESS_ITEM.get());
         registration.addRecipeCatalysts(CHEMICAL_PLANT, ModItems.MACHINE_CHEMICAL_PLANT_ITEM.get());
         registration.addRecipeCatalysts(CENTRIFUGE, ModItems.MACHINE_CENTRIFUGE_ITEM.get());
         registration.addRecipeCatalysts(SHREDDER, ModItems.MACHINE_SHREDDER_ITEM.get());
@@ -125,6 +132,7 @@ public final class HbmJeiPlugin implements IModPlugin {
         registration.addRecipeClickArea(AnvilScreen.class, 52, 53, 18, 18, ANVIL);
         registration.addRecipeClickArea(AssemblyMachineScreen.class, 7, 125, 18, 18, ASSEMBLY);
         registration.addRecipeClickArea(MachinePressScreen.class, 79, 35, 18, 16, PRESS);
+        registration.addRecipeClickArea(AmmoPressScreen.class, 107, 9, 68, 82, AMMO_PRESS);
         registration.addRecipeClickArea(ChemicalPlantScreen.class, 62, 126, 70, 16, CHEMICAL_PLANT);
         registration.addRecipeClickArea(CentrifugeScreen.class, 44, 18, 90, 20, CENTRIFUGE);
         registration.addRecipeClickArea(MachineShredderScreen.class, 63, 89, 34, 18, SHREDDER);

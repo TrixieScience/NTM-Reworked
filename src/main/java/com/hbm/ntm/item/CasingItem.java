@@ -40,7 +40,10 @@ public final class CasingItem extends Item {
         SMALL("small", 0, FoundryMaterial.GUNMETAL, 18),
         LARGE("large", 1, FoundryMaterial.GUNMETAL, 36),
         SMALL_STEEL("small_steel", 2, FoundryMaterial.WEAPON_STEEL, 18),
-        LARGE_STEEL("large_steel", 3, FoundryMaterial.WEAPON_STEEL, 36);
+        LARGE_STEEL("large_steel", 3, FoundryMaterial.WEAPON_STEEL, 36),
+        SHOTSHELL("shotshell", 4, FoundryMaterial.GUNMETAL, 18),
+        BUCKSHOT("buckshot", 5, FoundryMaterial.GUNMETAL, 18),
+        BUCKSHOT_ADVANCED("buckshot_advanced", 6, FoundryMaterial.WEAPON_STEEL, 18);
 
         private final String id;
         private final int legacyMetadata;

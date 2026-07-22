@@ -241,6 +241,7 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> RADIO_TORCH_CONTROLLER_ITEM;
     public static final DeferredItem<BlockItem> RED_CABLE_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_PRESS_ITEM;
+    public static final DeferredItem<BlockItem> AMMO_PRESS_ITEM;
     public static final DeferredItem<BlockItem> PRESS_PREHEATER_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_SHREDDER_ITEM;
     public static final DeferredItem<? extends BlockItem> GRAVEL_OBSIDIAN_ITEM;
@@ -895,6 +896,7 @@ public final class ModItems {
                 DfcCoreItem.Kind.THINGY, 5_000_000_000L, 250, 5, 2_500));
         RED_CABLE_ITEM = ITEMS.registerSimpleBlockItem("red_cable", ModBlocks.RED_CABLE);
         MACHINE_PRESS_ITEM = ITEMS.registerSimpleBlockItem("machine_press", ModBlocks.MACHINE_PRESS);
+        AMMO_PRESS_ITEM = ITEMS.registerSimpleBlockItem("machine_ammo_press", ModBlocks.AMMO_PRESS);
         PRESS_PREHEATER_ITEM = ITEMS.registerSimpleBlockItem("press_preheater", ModBlocks.PRESS_PREHEATER);
         MACHINE_SHREDDER_ITEM = ITEMS.registerSimpleBlockItem("machine_shredder", ModBlocks.MACHINE_SHREDDER);
         GRAVEL_OBSIDIAN_ITEM = ITEMS.register("gravel_obsidian",

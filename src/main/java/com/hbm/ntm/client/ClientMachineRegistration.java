@@ -1,6 +1,7 @@
 package com.hbm.ntm.client;
 
 import com.hbm.ntm.client.render.AshpitRenderer;
+import com.hbm.ntm.client.render.AmmoPressRenderer;
 import com.hbm.ntm.client.render.AirIntakeItemRenderer;
 import com.hbm.ntm.client.render.AirIntakeRenderer;
 import com.hbm.ntm.client.render.ArcWelderRenderer;
@@ -88,6 +89,7 @@ import com.hbm.ntm.client.render.ZirnoxRenderer;
 import com.hbm.ntm.client.render.ZirnoxItemRenderer;
 import com.hbm.ntm.client.render.ZirnoxDestroyedRenderer;
 import com.hbm.ntm.client.screen.ArmorTableScreen;
+import com.hbm.ntm.client.screen.AmmoPressScreen;
 import com.hbm.ntm.client.screen.AnvilScreen;
 import com.hbm.ntm.client.screen.ArcWelderScreen;
 import com.hbm.ntm.client.screen.ArcFurnaceScreen;
@@ -196,6 +198,7 @@ public final class ClientMachineRegistration {
         event.register(ModMenus.BATTERY_SOCKET.get(), BatterySocketScreen::new);
         event.register(ModMenus.FENSU.get(), FensuScreen::new);
         event.register(ModMenus.MACHINE_PRESS.get(), MachinePressScreen::new);
+        event.register(ModMenus.AMMO_PRESS.get(), AmmoPressScreen::new);
         event.register(ModMenus.MACHINE_SHREDDER.get(), MachineShredderScreen::new);
         event.register(ModMenus.HEATER_FIREBOX.get(), FireboxScreen::new);
         event.register(ModMenus.HEATER_OILBURNER.get(), FluidBurnerScreen::new);
@@ -259,6 +262,7 @@ public final class ClientMachineRegistration {
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_BATTERY_REDD.get(), FensuRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.CHARGE.get(), ChargeRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_PRESS.get(), MachinePressRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.AMMO_PRESS.get(), AmmoPressRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.HEATER_FIREBOX.get(), FireboxRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.HEATER_OVEN.get(), HeatingOvenRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.MACHINE_ASHPIT.get(), AshpitRenderer::new);
@@ -343,6 +347,7 @@ public final class ClientMachineRegistration {
         event.register(LargeNukeRenderer.GADGET_WIRES);
         event.register(MachinePressRenderer.BODY_MODEL);
         event.register(MachinePressRenderer.HEAD_MODEL);
+        AmmoPressRenderer.MODELS.values().forEach(event::register);
         event.register(StirlingRenderer.BASE);
         event.register(StirlingRenderer.COG);
         event.register(StirlingRenderer.COG_SMALL);

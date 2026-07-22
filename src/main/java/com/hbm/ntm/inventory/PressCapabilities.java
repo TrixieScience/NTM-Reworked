@@ -27,6 +27,10 @@ public final class PressCapabilities {
                 ModBlockEntities.MACHINE_PRESS.get(),
                 (press, side) -> new SidedInvWrapper(press, side == null ? Direction.DOWN : side)
         );
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.AMMO_PRESS.get(),
+                (press, side) -> new SidedInvWrapper(press, side == null ? Direction.DOWN : side));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.AMMO_PRESS_PROXY.get(),
+                (proxy, side) -> new SidedInvWrapper(proxy, side == null ? Direction.DOWN : side));
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ModBlockEntities.MACHINE_SHREDDER.get(),

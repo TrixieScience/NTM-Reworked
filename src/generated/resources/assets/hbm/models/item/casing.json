@@ -24,6 +24,24 @@
       "predicate": {
         "custom_model_data": 3
       }
+    },
+    {
+      "model": "hbm:item/casing_shotshell",
+      "predicate": {
+        "custom_model_data": 4
+      }
+    },
+    {
+      "model": "hbm:item/casing_buckshot",
+      "predicate": {
+        "custom_model_data": 5
+      }
+    },
+    {
+      "model": "hbm:item/casing_buckshot_advanced",
+      "predicate": {
+        "custom_model_data": 6
+      }
     }
   ],
   "textures": {

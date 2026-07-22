@@ -2,6 +2,7 @@ package com.hbm.ntm.registry;
 
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.block.ArmorTableBlock;
+import com.hbm.ntm.block.AmmoPressBlock;
 import com.hbm.ntm.block.AirIntakeBlock;
 import com.hbm.ntm.block.ArcWelderBlock;
 import com.hbm.ntm.block.ArcFurnaceBlock;
@@ -200,6 +201,7 @@ public final class ModBlocks {
     public static final DeferredBlock<BatterySocketBlock> MACHINE_BATTERY_SOCKET;
     public static final DeferredBlock<FensuBlock> MACHINE_BATTERY_REDD;
     public static final DeferredBlock<MachinePressBlock> MACHINE_PRESS;
+    public static final DeferredBlock<AmmoPressBlock> AMMO_PRESS;
     public static final DeferredBlock<Block> PRESS_PREHEATER;
     public static final DeferredBlock<MachineShredderBlock> MACHINE_SHREDDER;
     public static final DeferredBlock<ColoredFallingBlock> GRAVEL_OBSIDIAN;
@@ -577,6 +579,15 @@ public final class ModBlocks {
                         .mapColor(MapColor.METAL)
                         .strength(5.0F, 6.0F)
                         .sound(SoundType.STONE)
+                        .requiresCorrectToolForDrops()
+                        .noOcclusion())
+        );
+        AMMO_PRESS = BLOCKS.register(
+                "machine_ammo_press",
+                () -> new AmmoPressBlock(BlockBehaviour.Properties.of()
+                        .mapColor(MapColor.METAL)
+                        .strength(5.0F, 10.0F)
+                        .sound(SoundType.METAL)
                         .requiresCorrectToolForDrops()
                         .noOcclusion())
         );

@@ -25,6 +25,9 @@ final class HbmEnglishTranslations {
         GuideBookContent.english().forEach(language::addProperty);
         language.addProperty("block.hbm.red_cable", "Red Copper Cable");
         language.addProperty("block.hbm.machine_press", "Burner Press");
+        language.addProperty("block.hbm.machine_ammo_press", "Ammo Press");
+        language.addProperty("container.ammo_press", "Ammo Press");
+        language.addProperty("jei.hbm.ammo_press", "Ammo Press");
         language.addProperty("block.hbm.press_preheater", "Burner Press Preheater");
         language.addProperty("block.hbm.machine_shredder", "Shredder");
         language.addProperty("block.hbm.machine_assembly_machine", "Assembly Machine");
@@ -456,6 +459,9 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.casing.large", "Large Gunmetal Casing");
         language.addProperty("item.hbm.casing.small_steel", "Small Weapon Steel Casing");
         language.addProperty("item.hbm.casing.large_steel", "Large Weapon Steel Casing");
+        language.addProperty("item.hbm.casing.shotshell", "Empty Paper Shotgun Shell");
+        language.addProperty("item.hbm.casing.buckshot", "Empty Plastic Shotgun Shell");
+        language.addProperty("item.hbm.casing.buckshot_advanced", "Empty Advanced Shotgun Shell");
         Map<String, String> foundryMaterialNames = Map.ofEntries(
                 Map.entry("wood", "Wood"), Map.entry("ivory", "Ivory"),
                 Map.entry("gold", "Gold"), Map.entry("titanium", "Titanium"),
@@ -1313,6 +1319,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.wire_fine.tungsten", "Tungsten Wire");
         language.addProperty("item.hbm.wire_fine.gold", "Gold Wire");
         language.addProperty("item.hbm.bolt.steel", "Steel Bolt");
+        language.addProperty("item.hbm.bolt.lead", "Lead Flechette");
         language.addProperty("item.hbm.bolt.tungsten", "Tungsten Bolt");
         language.addProperty("item.hbm.plate_cast.iron", "Cast Iron Plate");
         language.addProperty("item.hbm.plate_cast.titanium", "Cast Titanium Plate");

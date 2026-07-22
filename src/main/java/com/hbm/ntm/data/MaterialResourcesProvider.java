@@ -893,6 +893,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:machine_battery_socket");
         mineableBlocks.add("hbm:machine_battery_redd");
         mineableBlocks.add("hbm:machine_press");
+        mineableBlocks.add("hbm:machine_ammo_press");
         mineableBlocks.add("hbm:press_preheater");
         mineableBlocks.add("hbm:machine_shredder");
         mineableBlocks.add("hbm:machine_assembly_machine");
@@ -1013,6 +1014,10 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, simpleBlockState("press_preheater"), blockStates, hbm("press_preheater")));
         writes.add(save(output, selfDropLoot("press_preheater"), lootTables, hbm("press_preheater")));
         writes.add(save(output, machinePressRecipe(), recipes, hbm("machine_press")));
+        writes.add(save(output, emptyModel("ammo_press"), blockModels, hbm("machine_ammo_press")));
+        writes.add(save(output, unconditionalMultipartState("machine_ammo_press"), blockStates, hbm("machine_ammo_press")));
+        writes.add(save(output, selfDropLoot("machine_ammo_press"), lootTables, hbm("machine_ammo_press")));
+        writes.add(save(output, ammoPressRecipe(), recipes, hbm("machine_ammo_press")));
         writes.add(save(output, pressPreheaterRecipe(), recipes, hbm("press_preheater")));
         addFlatStampRecipes(writes, output);
 
@@ -1419,8 +1424,10 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, wireFineModel(), itemModels, hbm("wire_fine")));
         writes.add(save(output, boltModel(), itemModels, hbm("bolt")));
         writes.add(save(output, generatedItemModel("bolt_steel"), itemModels, hbm("bolt_steel")));
+        writes.add(save(output, generatedItemModel("bolt_lead"), itemModels, hbm("bolt_lead")));
         writes.add(save(output, generatedItemModel("bolt_tungsten"), itemModels, hbm("bolt_tungsten")));
         writes.add(save(output, boltRecipe("steel", 30), recipes, hbm("bolt_steel")));
+        writes.add(save(output, boltRecipe("lead", 8200), recipes, hbm("bolt_lead")));
         writes.add(save(output, boltRecipe("tungsten", 7400), recipes, hbm("bolt_tungsten")));
         writes.add(save(output, castPlateModel(), itemModels, hbm("plate_cast")));
         writes.add(save(output, generatedItemModel("plate_cast_iron"), itemModels, hbm("plate_cast_iron")));
@@ -1463,8 +1470,12 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, generatedItemModel("blade_tungsten"), itemModels, hbm("blade_tungsten")));
         writes.add(save(output, generatedItemModel("wire_dense"), itemModels, hbm("wire_dense")));
         writes.add(save(output, casingItemModel(), itemModels, hbm("casing")));
-        for (String casing : List.of("small", "large", "small_steel", "large_steel")) {
-            writes.add(save(output, generatedItemModel("casing." + casing), itemModels,
+        for (String casing : List.of("small", "large", "small_steel", "large_steel", "shotshell", "buckshot", "buckshot_advanced")) {
+            String texture = switch (casing) {
+                case "shotshell", "buckshot", "buckshot_advanced" -> "casing_" + casing;
+                default -> "casing." + casing;
+            };
+            writes.add(save(output, generatedItemModel(texture), itemModels,
                     hbm("casing_" + casing)));
         }
         for (String part : List.of("part_barrel_light", "part_barrel_heavy", "part_receiver_light",
@@ -3865,7 +3876,7 @@ public final class MaterialResourcesProvider implements DataProvider {
     private JsonObject casingItemModel() {
         JsonObject root = generatedItemModel("casing.small");
         JsonArray overrides = new JsonArray();
-        String[] variants = {"small", "large", "small_steel", "large_steel"};
+        String[] variants = {"small", "large", "small_steel", "large_steel", "shotshell", "buckshot", "buckshot_advanced"};
         for (int metadata = 0; metadata < variants.length; metadata++) {
             JsonObject predicate = new JsonObject();
             predicate.addProperty("custom_model_data", metadata);
@@ -4369,6 +4380,25 @@ public final class MaterialResourcesProvider implements DataProvider {
         result.addProperty("count", 1);
         result.addProperty("id", "hbm:machine_press");
         root.add("result", result);
+        return root;
+    }
+
+    private JsonObject ammoPressRecipe() {
+        JsonObject root = new JsonObject();
+        root.addProperty("type", "minecraft:crafting_shaped");
+        root.addProperty("category", "misc");
+        JsonArray pattern = new JsonArray();
+        pattern.add("IPI");
+        pattern.add("C C");
+        pattern.add("SSS");
+        root.add("pattern", pattern);
+        JsonObject key = new JsonObject();
+        key.add("I", tagIngredient("c:ingots/iron"));
+        key.add("P", itemIngredient("minecraft:piston"));
+        key.add("C", tagIngredient("c:ingots/copper"));
+        key.add("S", itemIngredient("minecraft:stone"));
+        root.add("key", key);
+        root.add("result", recipeResult("hbm:machine_ammo_press", 1));
         return root;
     }
 
@@ -5132,12 +5162,6 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "G", foundryPart("part_grip", "polymer", 20_001),
                 "E", customComponentIngredient("hbm:circuit", "type", "advanced", 9)),
                 "gun_tesla_cannon"), recipes, hbm("gun_tesla_cannon")));
-        writes.add(save(output, capacitorRecipe("capacitor", 67, 4, false),
-                recipes, hbm("ammo_capacitor")));
-        writes.add(save(output, capacitorRecipe("capacitor_overcharge", 68, 6, false),
-                recipes, hbm("ammo_capacitor_overcharge")));
-        writes.add(save(output, capacitorRecipe("capacitor_ir", 69, 0, true),
-                recipes, hbm("ammo_capacitor_low")));
         writes.add(save(output, weaponRecipe(List.of(" C ", "BRS", " MG"), Map.of(
                 "C", customComponentIngredient("hbm:circuit", "type", "advanced", 9),
                 "B", foundryPart("part_barrel_heavy", "ferrouranium", 37),
@@ -5300,11 +5324,11 @@ public final class MaterialResourcesProvider implements DataProvider {
     private JsonObject boltModel() {
         JsonObject root = generatedItemModel("bolt_steel");
         JsonArray overrides = new JsonArray();
-        for (int metadata : List.of(30, 7400)) {
+        for (int metadata : List.of(30, 8200, 7400)) {
             JsonObject override = new JsonObject();
             JsonObject predicate = new JsonObject(); predicate.addProperty("custom_model_data", metadata);
             override.add("predicate", predicate);
-            override.addProperty("model", "hbm:item/bolt_" + (metadata == 30 ? "steel" : "tungsten"));
+            override.addProperty("model", "hbm:item/bolt_" + (metadata == 30 ? "steel" : metadata == 8200 ? "lead" : "tungsten"));
             overrides.add(override);
         }
         root.add("overrides", overrides);

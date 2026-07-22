@@ -3,6 +3,8 @@ package com.hbm.ntm.registry;
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.block.ConverterFEtoHEBlock;
 import com.hbm.ntm.blockentity.AshpitBlockEntity;
+import com.hbm.ntm.blockentity.AmmoPressBlockEntity;
+import com.hbm.ntm.blockentity.AmmoPressProxyBlockEntity;
 import com.hbm.ntm.blockentity.AirIntakeBlockEntity;
 import com.hbm.ntm.blockentity.AirIntakeProxyBlockEntity;
 import com.hbm.ntm.blockentity.ArcWelderBlockEntity;
@@ -240,6 +242,12 @@ public final class ModBlockEntities {
                     "machine_press",
                     () -> BlockEntityType.Builder.of(MachinePressBlockEntity::new, ModBlocks.MACHINE_PRESS.get()).build(null)
             );
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AmmoPressBlockEntity>> AMMO_PRESS =
+            BLOCK_ENTITY_TYPES.register("machine_ammo_press",
+                    () -> BlockEntityType.Builder.of(AmmoPressBlockEntity::new, ModBlocks.AMMO_PRESS.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<AmmoPressProxyBlockEntity>> AMMO_PRESS_PROXY =
+            BLOCK_ENTITY_TYPES.register("ammo_press_proxy",
+                    () -> BlockEntityType.Builder.of(AmmoPressProxyBlockEntity::new, ModBlocks.AMMO_PRESS.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MachineShredderBlockEntity>> MACHINE_SHREDDER =
             BLOCK_ENTITY_TYPES.register(

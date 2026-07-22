@@ -390,6 +390,7 @@ public final class ModCreativeTabs {
                     .icon(() -> ModItems.MACHINE_PRESS_ITEM.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.MACHINE_PRESS_ITEM.get());
+                        output.accept(ModItems.AMMO_PRESS_ITEM.get());
                         output.accept(ModItems.PRESS_PREHEATER_ITEM.get());
                         output.accept(ModItems.MACHINE_SHREDDER_ITEM.get());
                         output.accept(ModItems.MACHINE_ASSEMBLY_MACHINE_ITEM.get());

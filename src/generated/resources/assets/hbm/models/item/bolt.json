@@ -8,6 +8,12 @@
       }
     },
     {
+      "model": "hbm:item/bolt_lead",
+      "predicate": {
+        "custom_model_data": 8200
+      }
+    },
+    {
       "model": "hbm:item/bolt_tungsten",
       "predicate": {
         "custom_model_data": 7400

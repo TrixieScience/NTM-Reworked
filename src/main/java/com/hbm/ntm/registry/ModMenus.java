@@ -2,6 +2,7 @@ package com.hbm.ntm.registry;
 
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.inventory.ArmorTableMenu;
+import com.hbm.ntm.inventory.AmmoPressMenu;
 import com.hbm.ntm.inventory.ArcWelderMenu;
 import com.hbm.ntm.inventory.ArcFurnaceMenu;
 import com.hbm.ntm.inventory.AnvilMenu;
@@ -113,6 +114,8 @@ public final class ModMenus {
             "machine_press",
             () -> IMenuTypeExtension.create(MachinePressMenu::new)
     );
+    public static final DeferredHolder<MenuType<?>, MenuType<AmmoPressMenu>> AMMO_PRESS = MENUS.register(
+            "ammo_press", () -> IMenuTypeExtension.create(AmmoPressMenu::new));
 
     public static final DeferredHolder<MenuType<?>, MenuType<MachineShredderMenu>> MACHINE_SHREDDER = MENUS.register(
             "machine_shredder",

@@ -284,6 +284,9 @@ public enum FoundryMaterial {
         if (stack.is(ModItems.BOLT.get()) && BoltItem.material(stack) == BoltItem.BoltMaterial.STEEL) {
             return new MaterialAmount(STEEL, 9);
         }
+        if (stack.is(ModItems.BOLT.get()) && BoltItem.material(stack) == BoltItem.BoltMaterial.LEAD) {
+            return new MaterialAmount(LEAD, 9);
+        }
         if (stack.is(ModItems.PLATE_CAST.get())
                 && CastPlateItem.material(stack) == CastPlateItem.CastPlateMaterial.STEEL) {
             return new MaterialAmount(STEEL, CAST_PLATE);
