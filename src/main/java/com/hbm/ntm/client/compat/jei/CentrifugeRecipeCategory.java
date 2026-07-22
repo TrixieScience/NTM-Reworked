@@ -1,5 +1,6 @@
 package com.hbm.ntm.client.compat.jei;
 
+import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.recipe.CentrifugeRecipes.CentrifugeRecipe;
 import com.hbm.ntm.registry.ModItems;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -7,25 +8,29 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 public final class CentrifugeRecipeCategory implements IRecipeCategory<CentrifugeRecipe> {
-    private static final int[] OUTPUT_X = {70, 88, 70, 88};
-    private static final int[] OUTPUT_Y = {9, 9, 27, 27};
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            HbmNtm.MOD_ID, "textures/gui/nei/gui_nei.png");
+    private static final int[][] OUTPUTS = {{102, 15}, {120, 15}, {102, 33}, {120, 33}};
 
+    private final IDrawable background;
     private final IDrawable icon;
-    private final IDrawable arrow;
+    private final IDrawable slot;
+    private final IDrawable machineFrame;
 
     public CentrifugeRecipeCategory(IGuiHelper gui) {
+        background = gui.createDrawable(TEXTURE, 5, 11, 166, 65);
         icon = gui.createDrawableItemLike(ModItems.MACHINE_CENTRIFUGE_ITEM.get());
-        arrow = gui.getRecipeArrow();
+        slot = gui.createDrawable(TEXTURE, 5, 87, 18, 18);
+        machineFrame = gui.createDrawable(TEXTURE, 59, 87, 18, 36);
     }
 
     @Override
@@ -40,12 +45,12 @@ public final class CentrifugeRecipeCategory implements IRecipeCategory<Centrifug
 
     @Override
     public int getWidth() {
-        return 116;
+        return 166;
     }
 
     @Override
     public int getHeight() {
-        return 54;
+        return 65;
     }
 
     @Override
@@ -55,18 +60,25 @@ public final class CentrifugeRecipeCategory implements IRecipeCategory<Centrifug
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CentrifugeRecipe recipe, IFocusGroup focuses) {
-        builder.addInputSlot(8, 19).setStandardSlotBackground().addIngredients(recipe.input());
-        List<Supplier<ItemStack>> outputs = recipe.outputs();
-        for (int i = 0; i < outputs.size() && i < OUTPUT_X.length; i++) {
-            builder.addOutputSlot(OUTPUT_X[i], OUTPUT_Y[i])
-                    .setOutputSlotBackground()
-                    .addItemStack(outputs.get(i).get().copy());
+        builder.addInputSlot(48, 24).setBackground(slot, -1, -1).addIngredients(recipe.input());
+        for (int index = 0; index < recipe.outputs().size(); index++) {
+            builder.addOutputSlot(OUTPUTS[index][0], OUTPUTS[index][1])
+                    .setBackground(slot, -1, -1)
+                    .addItemStack(recipe.outputs().get(index).get().copy());
         }
+        builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 75, 31)
+                .addItemStack(new ItemStack(ModItems.MACHINE_CENTRIFUGE_ITEM.get()));
     }
 
     @Override
     public void draw(CentrifugeRecipe recipe, IRecipeSlotsView slots, GuiGraphics graphics,
                      double mouseX, double mouseY) {
-        arrow.draw(graphics, 34, 19);
+        background.draw(graphics, 0, 0);
+        machineFrame.draw(graphics, 74, 14);
+    }
+
+    @Override
+    public boolean needsRecipeBorder() {
+        return false;
     }
 }

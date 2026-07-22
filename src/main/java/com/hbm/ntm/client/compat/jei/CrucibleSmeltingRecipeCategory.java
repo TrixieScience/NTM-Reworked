@@ -1,9 +1,7 @@
 package com.hbm.ntm.client.compat.jei;
 
 import com.hbm.ntm.HbmNtm;
-import com.hbm.ntm.foundry.FoundryMaterial;
-import com.hbm.ntm.item.FoundryScrapsItem;
-import com.hbm.ntm.recipe.CrucibleRecipes.Recipe;
+import com.hbm.ntm.client.compat.jei.FoundryJeiRecipes.SmeltingRecipe;
 import com.hbm.ntm.registry.ModItems;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -18,26 +16,26 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public final class CrucibleRecipeCategory implements IRecipeCategory<Recipe> {
+public final class CrucibleSmeltingRecipeCategory implements IRecipeCategory<SmeltingRecipe> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
-            HbmNtm.MOD_ID, "textures/gui/nei/gui_nei_crucible.png");
+            HbmNtm.MOD_ID, "textures/gui/nei/gui_nei_crucible_smelting.png");
 
     private final IDrawable background;
     private final IDrawable icon;
 
-    public CrucibleRecipeCategory(IGuiHelper gui) {
+    public CrucibleSmeltingRecipeCategory(IGuiHelper gui) {
         background = gui.createDrawable(TEXTURE, 5, 11, 166, 65);
         icon = gui.createDrawableItemLike(ModItems.MACHINE_CRUCIBLE_ITEM.get());
     }
 
     @Override
-    public RecipeType<Recipe> getRecipeType() {
-        return HbmJeiPlugin.CRUCIBLE;
+    public RecipeType<SmeltingRecipe> getRecipeType() {
+        return HbmJeiPlugin.CRUCIBLE_SMELTING;
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable("jei.hbm.crucible_alloying");
+        return Component.translatable("jei.hbm.crucible_smelting");
     }
 
     @Override
@@ -56,25 +54,15 @@ public final class CrucibleRecipeCategory implements IRecipeCategory<Recipe> {
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, Recipe recipe, IFocusGroup focuses) {
-        for (int index = 0; index < recipe.inputs().size(); index++) {
-            FoundryMaterial.MaterialAmount amount = recipe.inputs().get(index);
-            builder.addInputSlot(12 + index % 3 * 18, 6 + index / 3 * 18)
-                    .addItemStack(FoundryScrapsItem.create(ModItems.SCRAPS.get(),
-                            amount.material(), amount.amount()));
-        }
-        for (int index = 0; index < recipe.outputs().size(); index++) {
-            FoundryMaterial.MaterialAmount amount = recipe.outputs().get(index);
-            builder.addOutputSlot(102 + index % 3 * 18, 6 + index / 3 * 18)
-                    .addItemStack(FoundryScrapsItem.create(ModItems.SCRAPS.get(),
-                            amount.material(), amount.amount()));
-        }
+    public void setRecipe(IRecipeLayoutBuilder builder, SmeltingRecipe recipe, IFocusGroup focuses) {
+        builder.addInputSlot(48, 24).addItemStacks(recipe.inputs());
+        builder.addOutputSlot(102, 6).addItemStack(recipe.output());
         builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 75, 42)
                 .addItemStack(new ItemStack(ModItems.MACHINE_CRUCIBLE_ITEM.get()));
     }
 
     @Override
-    public void draw(Recipe recipe, IRecipeSlotsView slots, GuiGraphics graphics,
+    public void draw(SmeltingRecipe recipe, IRecipeSlotsView slots, GuiGraphics graphics,
                      double mouseX, double mouseY) {
         background.draw(graphics, 0, 0);
     }
@@ -85,8 +73,7 @@ public final class CrucibleRecipeCategory implements IRecipeCategory<Recipe> {
     }
 
     @Override
-    public ResourceLocation getRegistryName(Recipe recipe) {
-        return ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID,
-                recipe.translationKey().replace('.', '/'));
+    public ResourceLocation getRegistryName(SmeltingRecipe recipe) {
+        return recipe.id();
     }
 }
