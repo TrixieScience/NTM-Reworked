@@ -143,6 +143,51 @@ public final class WeaponModifierGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void hacksawUsesTheReceiverSpecificSourceIds(GameTestHelper helper) {
+        ItemStack saw = new ItemStack(ModItems.WEAPON_MOD_SAW.get());
+        List<ItemStack> receivers = List.of(
+                new ItemStack(ModItems.GUN_MARESLEG.get()),
+                new ItemStack(ModItems.GUN_DOUBLE_BARREL.get()),
+                new ItemStack(ModItems.GUN_PANZERSCHRECK.get()),
+                new ItemStack(ModItems.GUN_G3.get()),
+                new ItemStack(ModItems.GUN_G3_ZEBRA.get()));
+        for (ItemStack receiver : receivers) {
+            helper.assertTrue(WeaponModManager.isApplicable(receiver, saw, 0),
+                    "Hacksaw must fit every receiver in the source definition");
+            WeaponModManager.install(receiver, 0, List.of(saw));
+            helper.assertTrue(WeaponModManager.installedMods(receiver, 0).getFirst()
+                            .is(ModItems.WEAPON_MOD_SAW.get()),
+                    "Every saw ID must rebuild the same Hacksaw item");
+        }
+        helper.assertTrue(WeaponModManager.hasMod(receivers.get(0), 0, WeaponModManager.SAWED_OFF)
+                        && WeaponModManager.hasMod(receivers.get(1), 0, WeaponModManager.SAWED_OFF),
+                "Mare's Leg and Double Barrel must store source ID 203");
+        helper.assertTrue(WeaponModManager.hasMod(receivers.get(2), 0, WeaponModManager.NO_SHIELD),
+                "Panzerschreck must store source ID 204");
+        helper.assertTrue(WeaponModManager.hasMod(receivers.get(3), 0, WeaponModManager.NO_STOCK)
+                        && WeaponModManager.hasMod(receivers.get(4), 0, WeaponModManager.NO_STOCK),
+                "Both G3 receivers must store source ID 205");
+        helper.assertTrue(com.hbm.ntm.item.MaresLegItem.drawTicks(receivers.get(0)) == 5
+                        && com.hbm.ntm.item.MaresLegItem.baseDamage(receivers.get(0)) == 21.6F
+                        && com.hbm.ntm.item.MaresLegItem.ammoSpreadMultiplier(receivers.get(0)) == 1.5F,
+                "Sawed Mare's Leg must use the source draw, damage, and ammo spread changes");
+        helper.assertTrue(com.hbm.ntm.item.DoubleBarrelItem.baseDamage(receivers.get(1)) == 40.5F
+                        && com.hbm.ntm.item.DoubleBarrelItem.innateSpread(receivers.get(1)) == 0.025F,
+                "Sawed Double Barrel must use the source damage and innate spread changes");
+        helper.assertTrue(com.hbm.ntm.item.G3Item.drawTicks(receivers.get(3)) == 5
+                        && !com.hbm.ntm.item.G3Item.hasStock(receivers.get(4)),
+                "Both stockless G3s must use the source short draw");
+        helper.assertTrue(!WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_MARESLEG_AKIMBO.get()), saw, 0)
+                        && !WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_MARESLEG_BROKEN.get()), saw, 0)
+                        && !WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_DOUBLE_BARREL_SACRED_DRAGON.get()), saw, 0),
+                "Built-in and unrelated variants must stay outside the loose Hacksaw definition");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void dualReceiverStorageStaysIndependent(GameTestHelper helper) {
         ItemStack dual = new ItemStack(ModItems.GUN_UZI_AKIMBO.get());
         ItemStack silencer = new ItemStack(ModItems.WEAPON_MOD_SILENCER.get());

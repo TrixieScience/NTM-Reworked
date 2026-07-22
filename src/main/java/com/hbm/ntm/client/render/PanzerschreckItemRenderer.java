@@ -4,6 +4,7 @@ import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.client.ClientWeaponEvents;
 import com.hbm.ntm.client.model.EnvsuitMesh;
 import com.hbm.ntm.item.RocketLauncherItem;
+import com.hbm.ntm.weapon.WeaponModManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -43,7 +44,7 @@ public final class PanzerschreckItemRenderer extends BlockEntityWithoutLevelRend
         poses.pushPose();
         setupContext(context, poses);
         if (firstPerson) renderFirstPerson(stack, poses, buffers, light, overlay);
-        else renderStatic(poses, buffers, light, overlay);
+        else renderStatic(stack, poses, buffers, light, overlay);
         if (flash) renderFlash(poses, buffers, elapsed / 150.0F,
                 ClientWeaponEvents.shotRandom(stack));
         poses.popPose();
@@ -55,7 +56,7 @@ public final class PanzerschreckItemRenderer extends BlockEntityWithoutLevelRend
         pivotX(poses, 0.0D, -1.0D, -1.0D, equipAngle(stack));
         pivotX(poses, 0.0D, -4.0D, -3.0D, reloadAngle(stack));
         render("Tube", poses, buffers, light, overlay);
-        render("Shield", poses, buffers, light, overlay);
+        if (hasShield(stack)) render("Shield", poses, buffers, light, overlay);
 
         Vec rocket = rocketPosition(stack);
         poses.pushPose();
@@ -64,10 +65,15 @@ public final class PanzerschreckItemRenderer extends BlockEntityWithoutLevelRend
         poses.popPose();
     }
 
-    private void renderStatic(PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
+    private void renderStatic(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
+                              int light, int overlay) {
         // ItemRenderPanzerschreck.renderOther deliberately omitted the loaded Rocket group.
         render("Tube", poses, buffers, light, overlay);
-        render("Shield", poses, buffers, light, overlay);
+        if (hasShield(stack)) render("Shield", poses, buffers, light, overlay);
+    }
+
+    private static boolean hasShield(ItemStack stack) {
+        return !WeaponModManager.hasMod(stack, 0, WeaponModManager.NO_SHIELD);
     }
 
     private void render(String group, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
@@ -142,7 +148,8 @@ public final class PanzerschreckItemRenderer extends BlockEntityWithoutLevelRend
 
     private static double equipAngle(ItemStack stack) {
         if (RocketLauncherItem.animation(stack) != RocketLauncherItem.GunAnimation.EQUIP) return 0.0D;
-        double progress = Mth.clamp(animationTime(stack) / 500.0D, 0.0D, 1.0D);
+        double duration = hasShield(stack) ? 500.0D : 250.0D;
+        double progress = Mth.clamp(animationTime(stack) / duration, 0.0D, 1.0D);
         return 60.0D + (0.0D - 60.0D) * Math.sin(progress * Math.PI * 0.5D);
     }
 

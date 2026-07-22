@@ -45,13 +45,15 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
         boolean zebra = ((G3Item) stack.getItem()).variant() == G3Item.Variant.ZEBRA;
         boolean silenced = zebra || WeaponModManager.hasMod(stack, 0, WeaponModManager.SILENCER);
         boolean scoped = zebra || WeaponModManager.hasMod(stack, 0, WeaponModManager.SCOPE);
+        boolean stocked = G3Item.hasStock(stack);
         long elapsed = System.currentTimeMillis() - ClientWeaponEvents.lastShot(stack);
 
         poses.pushPose();
-        setupContext(context, poses, scoped, silenced);
+        setupContext(context, poses, scoped, silenced, stocked);
         if (!(firstPerson && scoped && ClientWeaponEvents.fullyAimed())) {
-            if (firstPerson) renderFirstPerson(stack, poses, buffers, light, overlay, zebra, silenced, scoped);
-            else renderStatic(stack, poses, buffers, light, overlay, zebra, silenced, scoped);
+            if (firstPerson) renderFirstPerson(stack, poses, buffers, light, overlay,
+                    zebra, silenced, scoped, stocked);
+            else renderStatic(stack, poses, buffers, light, overlay, zebra, silenced, scoped, stocked);
         }
         if (!silenced && held && !(firstPerson && scoped && ClientWeaponEvents.fullyAimed())
                 && elapsed >= 0L && elapsed < 75L) {
@@ -61,7 +63,8 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     private void renderFirstPerson(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
-                                   int light, int overlay, boolean zebra, boolean silenced, boolean scoped) {
+                                   int light, int overlay, boolean zebra, boolean silenced,
+                                   boolean scoped, boolean stocked) {
         G3Animation animation = animation(stack, animationTime(stack));
         poses.scale(0.375F, 0.375F, 0.375F);
         pivotX(poses, 0.0D, -2.0D, -6.0D, animation.equip.x);
@@ -69,7 +72,7 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
         poses.translate(0.0D, 0.0D, animation.recoil.z);
 
         renderBody("Rifle", zebra, poses, buffers, light, overlay);
-        renderBody("Stock", zebra, poses, buffers, light, overlay);
+        if (stocked) renderBody("Stock", zebra, poses, buffers, light, overlay);
         if (!silenced) renderBody("Flash_Hider", false, poses, buffers, light, overlay);
         renderBody("Trigger", zebra, poses, buffers, light, overlay);
 
@@ -119,9 +122,10 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     private void renderStatic(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
-                              int light, int overlay, boolean zebra, boolean silenced, boolean scoped) {
+                              int light, int overlay, boolean zebra, boolean silenced,
+                              boolean scoped, boolean stocked) {
         renderBody("Rifle", zebra, poses, buffers, light, overlay);
-        renderBody("Stock", zebra, poses, buffers, light, overlay);
+        if (stocked) renderBody("Stock", zebra, poses, buffers, light, overlay);
         renderBody("Magazine", zebra, poses, buffers, light, overlay);
         if (!silenced) renderBody("Flash_Hider", false, poses, buffers, light, overlay);
         renderBody("Guide_And_Bolt", zebra, poses, buffers, light, overlay);
@@ -164,7 +168,7 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     private static void setupContext(ItemDisplayContext context, PoseStack poses, boolean scoped,
-                                     boolean silenced) {
+                                     boolean silenced, boolean stocked) {
         poses.translate(0.5D, 0.5D, 0.5D);
         switch (context) {
             case GUI -> {
@@ -172,10 +176,11 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
                 poses.scale(1.0F, 1.0F, -1.0F);
                 poses.mulPose(Axis.ZP.rotationDegrees(225.0F));
                 poses.mulPose(Axis.YP.rotationDegrees(90.0F));
-                poses.scale(0.875F / 16.0F, 0.875F / 16.0F, 0.875F / 16.0F);
+                float scale = stocked ? 0.875F : 1.125F;
+                poses.scale(scale / 16.0F, scale / 16.0F, scale / 16.0F);
                 poses.mulPose(Axis.XP.rotationDegrees(25.0F));
-                poses.mulPose(Axis.YP.rotationDegrees(silenced ? 50.0F : 45.0F));
-                poses.translate(silenced ? 0.75D : -0.5D, 0.5D, 0.0D);
+                poses.mulPose(Axis.YP.rotationDegrees(silenced ? (stocked ? 50.0F : 55.0F) : 45.0F));
+                poses.translate(stocked ? (silenced ? 0.75D : -0.5D) : 2.5D, 0.5D, 0.0D);
             }
             case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> {
                 poses.mulPose(Axis.YP.rotationDegrees(180.0F));
@@ -238,12 +243,14 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
 
     private static G3Animation animation(ItemStack stack, double time) {
         boolean empty = G3Item.rounds(stack) <= 0;
+        boolean stocked = G3Item.hasStock(stack);
         return switch (G3Item.animation(stack)) {
             case EQUIP -> new G3Animation(
-                    seq(time, f(45,0,0,0), f(0,0,0,500,Curve.SIN_FULL)),
+                    seq(time, f(45,0,0,0), f(0,0,0,stocked ? 500 : 250,Curve.SIN_FULL)),
                     ZERO, ZERO, ZERO, ZERO, ZERO, ZERO, ZERO, ZERO);
             case CYCLE -> new G3Animation(ZERO, ZERO,
-                    seq(time, f(0,0,-0.25,25,Curve.SIN_DOWN), f(0,0,0,75,Curve.SIN_FULL)),
+                    seq(time, f(0,0,!stocked && !G3Item.aiming(stack) ? -0.75 : -0.25,
+                                    25,Curve.SIN_DOWN), f(0,0,0,75,Curve.SIN_FULL)),
                     ZERO, ZERO,
                     seq(time, f(0,0,0,20), f(0,0,-4.5,40), f(0,0,0,40)),
                     ZERO, ZERO, ZERO);

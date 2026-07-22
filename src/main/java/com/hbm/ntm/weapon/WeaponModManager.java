@@ -5,6 +5,8 @@ import com.hbm.ntm.item.DualStarFItem;
 import com.hbm.ntm.item.DualUziItem;
 import com.hbm.ntm.item.G3Item;
 import com.hbm.ntm.item.HeavyRevolverItem;
+import com.hbm.ntm.item.DoubleBarrelItem;
+import com.hbm.ntm.item.MaresLegItem;
 import com.hbm.ntm.item.NineMillimeterGunItem;
 import com.hbm.ntm.item.SevenSixTwoGunItem;
 import com.hbm.ntm.item.TwentyTwoGunItem;
@@ -24,6 +26,9 @@ public final class WeaponModManager {
     public static final int SPEEDLOADER = 200;
     public static final int SILENCER = 201;
     public static final int SCOPE = 202;
+    public static final int SAWED_OFF = 203;
+    public static final int NO_SHIELD = 204;
+    public static final int NO_STOCK = 205;
     private static final String MOD_LIST = "KEY_MOD_LIST_";
 
     private WeaponModManager() {}
@@ -31,7 +36,8 @@ public final class WeaponModManager {
     public static boolean isMod(ItemStack stack) {
         return stack.is(ModItems.WEAPON_MOD_SILENCER.get())
                 || stack.is(ModItems.WEAPON_MOD_SPEEDLOADER.get())
-                || stack.is(ModItems.WEAPON_MOD_SCOPE.get());
+                || stack.is(ModItems.WEAPON_MOD_SCOPE.get())
+                || stack.is(ModItems.WEAPON_MOD_SAW.get());
     }
 
     public static boolean isApplicable(ItemStack gun, ItemStack mod, int config) {
@@ -47,6 +53,12 @@ public final class WeaponModManager {
                         || item.variant() == SevenSixTwoGunItem.Variant.MAS36;
             }
             return gun.getItem() instanceof ChargeThrowerItem;
+        }
+        if (mod.is(ModItems.WEAPON_MOD_SAW.get())) {
+            return gun.getItem() instanceof MaresLegItem
+                    || gun.getItem() instanceof DoubleBarrelItem
+                    || gun.is(ModItems.GUN_PANZERSCHRECK.get())
+                    || gun.getItem() instanceof G3Item;
         }
         if (!mod.is(ModItems.WEAPON_MOD_SILENCER.get())) return false;
         if (gun.getItem() instanceof TwentyTwoGunItem item) {
@@ -69,7 +81,7 @@ public final class WeaponModManager {
                 || item.variant() == TwentyTwoGunItem.Variant.STAR_F)) return 1;
         if (gun.getItem() instanceof NineMillimeterGunItem item
                 && item.variant() == NineMillimeterGunItem.Variant.UZI) return 1;
-        if (gun.getItem() instanceof G3Item item && item.variant() == G3Item.Variant.STANDARD) return 1;
+        if (gun.getItem() instanceof G3Item) return 1;
         if (gun.is(ModItems.GUN_AMAT.get())) return 1;
         if (gun.is(ModItems.GUN_LIBERATOR.get())) return 1;
         if (gun.getItem() instanceof HeavyRevolverItem) return 1;
@@ -77,6 +89,8 @@ public final class WeaponModManager {
                 && (item.variant() == SevenSixTwoGunItem.Variant.CARBINE
                 || item.variant() == SevenSixTwoGunItem.Variant.MAS36)) return 1;
         if (gun.getItem() instanceof ChargeThrowerItem) return 1;
+        if (gun.getItem() instanceof MaresLegItem || gun.getItem() instanceof DoubleBarrelItem
+                || gun.is(ModItems.GUN_PANZERSCHRECK.get())) return 1;
         return 0;
     }
 
@@ -96,6 +110,9 @@ public final class WeaponModManager {
             if (id == SPEEDLOADER) result.add(new ItemStack(ModItems.WEAPON_MOD_SPEEDLOADER.get()));
             if (id == SILENCER) result.add(new ItemStack(ModItems.WEAPON_MOD_SILENCER.get()));
             if (id == SCOPE) result.add(new ItemStack(ModItems.WEAPON_MOD_SCOPE.get()));
+            if (id == SAWED_OFF || id == NO_SHIELD || id == NO_STOCK) {
+                result.add(new ItemStack(ModItems.WEAPON_MOD_SAW.get()));
+            }
         }
         return result;
     }
@@ -105,7 +122,7 @@ public final class WeaponModManager {
         int[] ids = candidates.stream()
                 .filter(stack -> isApplicable(gun, stack, config))
                 .sorted(Comparator.comparingInt(WeaponModManager::priority).reversed())
-                .mapToInt(WeaponModManager::id)
+                .mapToInt(stack -> id(gun, stack))
                 .distinct()
                 .toArray();
         CompoundTag tag = gun.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
@@ -121,10 +138,14 @@ public final class WeaponModManager {
         gun.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
     }
 
-    private static int id(ItemStack stack) {
+    private static int id(ItemStack gun, ItemStack stack) {
         if (stack.is(ModItems.WEAPON_MOD_SPEEDLOADER.get())) return SPEEDLOADER;
         if (stack.is(ModItems.WEAPON_MOD_SILENCER.get())) return SILENCER;
-        return stack.is(ModItems.WEAPON_MOD_SCOPE.get()) ? SCOPE : -1;
+        if (stack.is(ModItems.WEAPON_MOD_SCOPE.get())) return SCOPE;
+        if (!stack.is(ModItems.WEAPON_MOD_SAW.get())) return -1;
+        if (gun.is(ModItems.GUN_PANZERSCHRECK.get())) return NO_SHIELD;
+        if (gun.getItem() instanceof G3Item) return NO_STOCK;
+        return SAWED_OFF;
     }
 
     private static int priority(ItemStack stack) {

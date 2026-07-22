@@ -7,6 +7,7 @@ import com.hbm.ntm.registry.ModSounds;
 import com.hbm.ntm.weapon.GunInput;
 import com.hbm.ntm.weapon.RocketAmmoType;
 import com.hbm.ntm.weapon.SednaCrosshair;
+import com.hbm.ntm.weapon.WeaponModManager;
 import com.hbm.ntm.weapon.StandardAmmoTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -57,6 +58,11 @@ public class RocketLauncherItem extends SednaGunItem {
 
     protected int receiverDurability() { return DURABILITY; }
     protected int receiverDrawTicks() { return DRAW_TICKS; }
+    protected int receiverDrawTicks(ItemStack stack) {
+        return stack.is(ModItems.GUN_PANZERSCHRECK.get())
+                && WeaponModManager.hasMod(stack, 0, WeaponModManager.NO_SHIELD)
+                ? 5 : receiverDrawTicks();
+    }
     protected int receiverFireDelay() { return FIRE_DELAY; }
     protected int receiverReloadTicks() { return RELOAD_TICKS; }
     protected int receiverJamTicks() { return JAM_TICKS; }
@@ -100,7 +106,7 @@ public class RocketLauncherItem extends SednaGunItem {
         if (!held) {
             if (previous != GunState.JAMMED) {
                 setState(tag, GunState.DRAWING);
-                tag.putInt(TIMER, receiverDrawTicks());
+                tag.putInt(TIMER, receiverDrawTicks(stack));
             }
             tag.putInt(LAST_ANIM, GunAnimation.CYCLE.ordinal());
             tag.putBoolean(AIMING, false);
@@ -164,7 +170,7 @@ public class RocketLauncherItem extends SednaGunItem {
             save(stack, tag);
             return;
         }
-        fire(player, tag);
+        fire(player, stack, tag);
         save(stack, tag);
     }
 
@@ -174,7 +180,7 @@ public class RocketLauncherItem extends SednaGunItem {
         save(stack, tag);
     }
 
-    private void fire(Player player, CompoundTag tag) {
+    private void fire(Player player, ItemStack stack, CompoundTag tag) {
         int loaded = rounds(tag);
         if (loaded <= 0 || !(player.level() instanceof ServerLevel level)) return;
 
@@ -203,6 +209,11 @@ public class RocketLauncherItem extends SednaGunItem {
         setState(tag, GunState.COOLDOWN);
         tag.putInt(TIMER, receiverFireDelay());
         playAnimation(tag, GunAnimation.CYCLE);
+        if (stack.is(ModItems.GUN_PANZERSCHRECK.get())
+                && WeaponModManager.hasMod(stack, 0, WeaponModManager.NO_SHIELD)) {
+            player.setRemainingFireTicks(player.getRemainingFireTicks() + 100);
+            player.hurt(level.damageSources().onFire(), 4.0F);
+        }
     }
 
     private void pressReload(Player player, ItemStack stack) {
@@ -376,6 +387,9 @@ public class RocketLauncherItem extends SednaGunItem {
         tooltip.add(Component.translatable("gui.weapon.condition").append(": " + condition + "%")
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.quality.aside").withStyle(ChatFormatting.YELLOW));
+        for (ItemStack mod : WeaponModManager.installedMods(stack, 0)) {
+            tooltip.add(mod.getHoverName().copy().withStyle(ChatFormatting.YELLOW));
+        }
     }
 
     public enum GunState { DRAWING, IDLE, COOLDOWN, RELOADING, JAMMED }

@@ -1295,6 +1295,8 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.weapon_mod_silencer", "Silencer");
         language.addProperty("item.hbm.weapon_mod_speedloader", "Speedloader");
         language.addProperty("item.hbm.weapon_mod_scope", "Scope");
+        language.addProperty("item.hbm.weapon_mod_saw", "Hacksaw");
+        language.addProperty("item.hbm.gun_maresleg_short", "Mare's Leg");
         language.addProperty("block.hbm.anvil_iron", "Iron Anvil");
         language.addProperty("block.hbm.anvil_lead", "Lead Anvil");
         language.addProperty("block.hbm.anvil_steel", "Steel Anvil");

@@ -126,7 +126,7 @@ public final class G3Item extends SednaGunItem {
         if (!held) {
             if (previous != GunState.JAMMED) {
                 tag.putByte(STATE, (byte) GunState.DRAWING.ordinal());
-                tag.putInt(TIMER, DRAW_TICKS);
+                tag.putInt(TIMER, drawTicks(stack));
             }
             tag.putInt(LAST_ANIM, GunAnimation.CYCLE.ordinal());
             tag.putBoolean(AIMING, false);
@@ -364,6 +364,12 @@ public final class G3Item extends SednaGunItem {
     public static float wearSpread(float wear) {
         return wearSpread(wear, DURABILITY);
     }
+
+    public static boolean hasStock(ItemStack stack) {
+        return !WeaponModManager.hasMod(stack, 0, WeaponModManager.NO_STOCK);
+    }
+
+    public static int drawTicks(ItemStack stack) { return hasStock(stack) ? DRAW_TICKS : 5; }
 
     private static float wearSpread(float wear, float durability) {
         float percent = wear / durability;

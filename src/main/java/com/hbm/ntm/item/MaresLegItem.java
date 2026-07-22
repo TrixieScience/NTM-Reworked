@@ -8,6 +8,7 @@ import com.hbm.ntm.weapon.GunInput;
 import com.hbm.ntm.weapon.Shotgun12GaugeAmmoType;
 import com.hbm.ntm.weapon.SednaCrosshair;
 import com.hbm.ntm.weapon.StandardAmmoTypes;
+import com.hbm.ntm.weapon.WeaponModManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -95,7 +96,7 @@ public final class MaresLegItem extends SednaGunItem {
         if (!held) {
             if (previous != GunState.JAMMED) {
                 tag.putByte(STATE, (byte) GunState.DRAWING.ordinal());
-                tag.putInt(TIMER, DRAW_TICKS);
+                tag.putInt(TIMER, drawTicks(stack));
             }
             tag.putInt(LAST_ANIM, GunAnimation.CYCLE.ordinal());
             tag.putBoolean(AIMING, false);
@@ -166,8 +167,9 @@ public final class MaresLegItem extends SednaGunItem {
 
         Shotgun12GaugeAmmoType ammo = Shotgun12GaugeAmmoType.fromLegacyBulletConfig(tag.getInt(MAG_TYPE));
         float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, DURABILITY);
-        float damage = BASE_DAMAGE * wearDamageMultiplier(currentWear) * ammo.damageMultiplier();
-        float spread = ammo.spread() + (tag.getBoolean(AIMING) ? 0.0F : DEFAULT_HIP_SPREAD)
+        float damage = baseDamage(stack) * wearDamageMultiplier(currentWear) * ammo.damageMultiplier();
+        float spread = innateSpread(stack) + ammo.spread() * ammoSpreadMultiplier(stack)
+                + (tag.getBoolean(AIMING) ? 0.0F : DEFAULT_HIP_SPREAD)
                 + wearSpread(currentWear);
         Vec3 origin = projectileOrigin(player, tag.getBoolean(AIMING));
         Vec3 heading = player.getLookAngle();
@@ -304,6 +306,20 @@ public final class MaresLegItem extends SednaGunItem {
         return percent < 0.5F ? 0.0F : (percent - 0.5F) * 2.0F * MAX_WEAR_SPREAD;
     }
 
+    public static boolean isSawedOff(ItemStack stack) {
+        return WeaponModManager.hasMod(stack, 0, WeaponModManager.SAWED_OFF);
+    }
+
+    public static int drawTicks(ItemStack stack) { return isSawedOff(stack) ? 5 : DRAW_TICKS; }
+    public static float baseDamage(ItemStack stack) { return isSawedOff(stack) ? BASE_DAMAGE * 1.35F : BASE_DAMAGE; }
+    public static float innateSpread(ItemStack stack) { return isSawedOff(stack) ? 0.025F : 0.0F; }
+    public static float ammoSpreadMultiplier(ItemStack stack) { return isSawedOff(stack) ? 1.5F : 1.0F; }
+
+    @Override
+    public String getDescriptionId(ItemStack stack) {
+        return isSawedOff(stack) ? "item.hbm.gun_maresleg_short" : super.getDescriptionId(stack);
+    }
+
     public static int rounds(ItemStack stack) { return Mth.clamp(data(stack).getInt(MAG_COUNT), 0, CAPACITY); }
     public static float wear(ItemStack stack) { return Mth.clamp(data(stack).getFloat(WEAR), 0.0F, DURABILITY); }
     public static boolean aiming(ItemStack stack) { return data(stack).getBoolean(AIMING); }
@@ -356,12 +372,13 @@ public final class MaresLegItem extends SednaGunItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         Shotgun12GaugeAmmoType ammo = loadedAmmo(stack);
-        float pelletDamage = BASE_DAMAGE * ammo.damageMultiplier();
+        float gunDamage = baseDamage(stack);
+        float pelletDamage = gunDamage * ammo.damageMultiplier();
         float totalDamage = pelletDamage * ammo.projectiles();
         tooltip.add(Component.translatable("gui.weapon.ammo").append(": ")
                 .append(Component.translatable("item.hbm.ammo_standard." + ammo.serializedName()))
                 .append(" " + rounds(stack) + " / " + CAPACITY).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gui.weapon.baseDamage").append(": " + trimDamage(BASE_DAMAGE))
+        tooltip.add(Component.translatable("gui.weapon.baseDamage").append(": " + trimDamage(gunDamage))
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.damageWithAmmo").append(": " + trimDamage(totalDamage)
                         + " (" + ammo.projectiles() + " x " + trimDamage(pelletDamage) + ")")
@@ -370,6 +387,9 @@ public final class MaresLegItem extends SednaGunItem {
         tooltip.add(Component.translatable("gui.weapon.condition").append(": " + condition + "%")
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.quality.aside").withStyle(ChatFormatting.YELLOW));
+        for (ItemStack mod : WeaponModManager.installedMods(stack, 0)) {
+            tooltip.add(mod.getHoverName().copy().withStyle(ChatFormatting.YELLOW));
+        }
     }
 
     private static String trimDamage(float damage) {

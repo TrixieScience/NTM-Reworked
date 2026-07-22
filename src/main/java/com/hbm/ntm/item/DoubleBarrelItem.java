@@ -10,6 +10,7 @@ import com.hbm.ntm.weapon.Shotgun10GaugeAmmoType;
 import com.hbm.ntm.weapon.StandardAmmoTypes;
 import com.hbm.ntm.weapon.SpentCasingEffects;
 import com.hbm.ntm.weapon.SpentCasingPreset;
+import com.hbm.ntm.weapon.WeaponModManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -160,17 +161,18 @@ public final class DoubleBarrelItem extends SednaGunItem {
             save(stack, tag);
             return;
         }
-        fire(player, tag);
+        fire(player, stack, tag);
         save(stack, tag);
     }
 
-    private static void fire(Player player, CompoundTag tag) {
+    private static void fire(Player player, ItemStack stack, CompoundTag tag) {
         if (rounds(tag) <= 0 || !(player.level() instanceof ServerLevel level)) return;
         Shotgun10GaugeAmmoType ammo = Shotgun10GaugeAmmoType.fromLegacyMetadata(tag.getInt(MAG_TYPE));
         float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, DURABILITY);
-        float damage = BASE_DAMAGE * wearDamageMultiplier(currentWear) * ammo.damageMultiplier();
+        float damage = baseDamage(stack) * wearDamageMultiplier(currentWear) * ammo.damageMultiplier();
         boolean aiming = tag.getBoolean(AIMING);
-        float spread = ammo.spread() + (aiming ? 0.0F : HIP_SPREAD) + wearSpread(currentWear);
+        float spread = innateSpread(stack) + ammo.spread() * ammoSpreadMultiplier(stack)
+                + (aiming ? 0.0F : HIP_SPREAD) + wearSpread(currentWear);
         Vec3 origin = projectileOrigin(player, aiming);
         Vec3 heading = player.getLookAngle();
         for (int projectile = 0; projectile < ammo.projectiles(); projectile++) {
@@ -307,6 +309,14 @@ public final class DoubleBarrelItem extends SednaGunItem {
         return percent < 0.5F ? 0.0F : (percent - 0.5F) * 2.0F * MAX_WEAR_SPREAD;
     }
 
+    public static boolean isSawedOff(ItemStack stack) {
+        return WeaponModManager.hasMod(stack, 0, WeaponModManager.SAWED_OFF);
+    }
+
+    public static float baseDamage(ItemStack stack) { return isSawedOff(stack) ? BASE_DAMAGE * 1.35F : BASE_DAMAGE; }
+    public static float innateSpread(ItemStack stack) { return isSawedOff(stack) ? 0.025F : 0.0F; }
+    public static float ammoSpreadMultiplier(ItemStack stack) { return isSawedOff(stack) ? 1.5F : 1.0F; }
+
     public static int rounds(ItemStack stack) { return rounds(data(stack)); }
     private static int rounds(CompoundTag tag) {
         return Mth.clamp(tag.getInt(MAG_COUNT), 0, CAPACITY);
@@ -379,13 +389,14 @@ public final class DoubleBarrelItem extends SednaGunItem {
     public void appendHoverText(ItemStack stack, TooltipContext context,
                                 List<Component> tooltip, TooltipFlag flag) {
         Shotgun10GaugeAmmoType ammo = loadedAmmo(stack);
-        float pelletDamage = BASE_DAMAGE * ammo.damageMultiplier();
+        float gunDamage = baseDamage(stack);
+        float pelletDamage = gunDamage * ammo.damageMultiplier();
         float totalDamage = pelletDamage * ammo.projectiles();
         tooltip.add(Component.translatable("gui.weapon.ammo").append(": ")
                 .append(Component.translatable("item.hbm.ammo_standard." + ammo.serializedName()))
                 .append(" " + rounds(stack) + " / " + CAPACITY).withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.baseDamage")
-                .append(": " + trimDamage(BASE_DAMAGE)).withStyle(ChatFormatting.GRAY));
+                .append(": " + trimDamage(gunDamage)).withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.damageWithAmmo")
                 .append(": " + trimDamage(totalDamage) + " (" + ammo.projectiles()
                         + " x " + trimDamage(pelletDamage) + ")")
@@ -395,6 +406,9 @@ public final class DoubleBarrelItem extends SednaGunItem {
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.quality.special")
                 .withStyle(ChatFormatting.YELLOW));
+        for (ItemStack mod : WeaponModManager.installedMods(stack, 0)) {
+            tooltip.add(mod.getHoverName().copy().withStyle(ChatFormatting.YELLOW));
+        }
     }
 
     private static String trimDamage(float damage) {

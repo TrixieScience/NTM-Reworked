@@ -40,9 +40,9 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
                 || context == ItemDisplayContext.FIRST_PERSON_LEFT_HAND;
 
         poses.pushPose();
-        setupContext(context, poses);
+        setupContext(stack, context, poses);
         if (firstPerson) renderFirstPerson(stack, poses, buffers, packedLight, packedOverlay);
-        else renderStatic(poses, buffers, packedLight, packedOverlay);
+        else renderStatic(stack, poses, buffers, packedLight, packedOverlay);
 
         boolean held = firstPerson || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND
                 || context == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
@@ -50,7 +50,8 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
         long elapsed = System.currentTimeMillis() - shot;
         if (held && elapsed >= 0L && elapsed < 75L) {
             double turn = firstPerson ? animation(stack).turn.z : 0.0D;
-            renderMuzzleFlash(poses, buffers, elapsed / 75.0F, turn, shot);
+            renderMuzzleFlash(poses, buffers, elapsed / 75.0F, turn, shot,
+                    MaresLegItem.isSawedOff(stack));
         }
         poses.popPose();
     }
@@ -58,6 +59,7 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
     private static void renderFirstPerson(ItemStack stack, PoseStack poses,
                                           MultiBufferSource buffers, int light, int overlay) {
         Animation animation = animation(stack);
+        boolean sawed = MaresLegItem.isSawedOff(stack);
 
         poses.translate(animation.recoil.x * 2.0D, animation.recoil.y, animation.recoil.z);
         poses.mulPose(Axis.XP.rotationDegrees((float) (animation.recoil.z * 5.0D)));
@@ -70,9 +72,16 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
         poses.mulPose(Axis.XN.rotationDegrees((float) animation.equip.x));
         poses.translate(0.0D, 0.0D, 4.0D);
 
+        if (sawed) {
+            poses.translate(0.0D, 0.0D, -2.0D);
+            poses.mulPose(Axis.XN.rotationDegrees((float) shortFlip(stack)));
+            poses.translate(0.0D, 0.0D, 2.0D);
+        }
+
         poses.pushPose();
-        poses.translate(0.0D, 1.0D, 8.0D);
+        poses.translate(0.0D, 1.0D, sawed ? 3.75D : 8.0D);
         poses.mulPose(Axis.ZN.rotationDegrees((float) animation.turn.z));
+        if (sawed) poses.mulPose(Axis.XP.rotationDegrees((float) shortFlip(stack)));
         poses.mulPose(Axis.YP.rotationDegrees(90.0F));
         WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.25D,
                 WeaponSmokeRenderer.STANDARD,
@@ -80,8 +89,10 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
         poses.popPose();
 
         renderModel(GUN, poses, buffers, light, overlay);
-        renderModel(STOCK, poses, buffers, light, overlay);
-        renderModel(BARREL, poses, buffers, light, overlay);
+        if (!sawed) {
+            renderModel(STOCK, poses, buffers, light, overlay);
+            renderModel(BARREL, poses, buffers, light, overlay);
+        }
 
         poses.pushPose();
         poses.translate(0.0D, 0.125D, -2.875D);
@@ -103,15 +114,17 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
         }
     }
 
-    private static void renderStatic(PoseStack poses, MultiBufferSource buffers,
+    private static void renderStatic(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
                                      int light, int overlay) {
         renderModel(GUN, poses, buffers, light, overlay);
-        renderModel(STOCK, poses, buffers, light, overlay);
-        renderModel(BARREL, poses, buffers, light, overlay);
+        if (!MaresLegItem.isSawedOff(stack)) {
+            renderModel(STOCK, poses, buffers, light, overlay);
+            renderModel(BARREL, poses, buffers, light, overlay);
+        }
         renderModel(LEVER, poses, buffers, light, overlay);
     }
 
-    private static void setupContext(ItemDisplayContext context, PoseStack poses) {
+    private static void setupContext(ItemStack stack, ItemDisplayContext context, PoseStack poses) {
         poses.translate(0.5D, 0.5D, 0.5D);
         switch (context) {
             case GUI -> {
@@ -120,10 +133,12 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
                 poses.scale(1.0F, 1.0F, -1.0F);
                 poses.mulPose(Axis.ZP.rotationDegrees(225.0F));
                 poses.mulPose(Axis.YP.rotationDegrees(90.0F));
-                poses.scale(1.4375F / 16.0F, 1.4375F / 16.0F, 1.4375F / 16.0F);
+                float scale = MaresLegItem.isSawedOff(stack) ? 2.5F : 1.4375F;
+                poses.scale(scale / 16.0F, scale / 16.0F, scale / 16.0F);
                 poses.mulPose(Axis.XP.rotationDegrees(25.0F));
                 poses.mulPose(Axis.YP.rotationDegrees(45.0F));
-                poses.translate(-0.5D, 0.5D, 0.0D);
+                poses.translate(MaresLegItem.isSawedOff(stack) ? -1.0D : -0.5D,
+                        MaresLegItem.isSawedOff(stack) ? 0.0D : 0.5D, 0.0D);
             }
             case GROUND -> {
                 poses.scale(0.125F, 0.125F, 0.125F);
@@ -179,26 +194,28 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
     private static Animation animation(ItemStack stack) {
         float partial = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
         double time = (MaresLegItem.animationTimer(stack) + partial) * 50.0D;
+        boolean sawed = MaresLegItem.isSawedOff(stack);
         return switch (MaresLegItem.animation(stack)) {
             case EQUIP -> new Animation(ZERO,
-                    sequence(time, frame(-60, 0, 0, 0), frame(0, 0, -3, 500, Curve.SIN_DOWN)),
+                    sequence(time, frame(-60, 0, 0, 0), frame(0, 0, -3,
+                            sawed ? 250 : 500, Curve.SIN_DOWN)),
                     ZERO, ZERO, ZERO, ZERO, ZERO);
             case CYCLE -> new Animation(
                     sequence(time, frame(0, 0, 0, 50), frame(0, 0, -1, 50), frame(0, 0, 0, 250)),
                     ZERO,
                     sequence(time, frame(0, 0, 0, 600), frame(-85, 0, 0, 200), frame(0, 0, 0, 200)),
-                    sequence(time, frame(0, 0, 0, 600), frame(0, 0, 45, 200, Curve.SIN_DOWN),
-                            frame(0, 0, 0, 200, Curve.SIN_UP)),
-                    ZERO, ZERO, ZERO);
+                    sawed ? ZERO : sequence(time, frame(0, 0, 0, 600),
+                            frame(0, 0, 45, 200, Curve.SIN_DOWN), frame(0, 0, 0, 200, Curve.SIN_UP)),
+                    ZERO, sawed ? new Vec(-20, 0, 0) : ZERO, ZERO);
             case CYCLE_DRY -> new Animation(ZERO, ZERO,
                     sequence(time, frame(0, 0, 0, 600), frame(-90, 0, 0, 200), frame(0, 0, 0, 200)),
-                    sequence(time, frame(0, 0, 0, 600), frame(0, 0, 45, 200, Curve.SIN_DOWN),
-                            frame(0, 0, 0, 200, Curve.SIN_UP)),
-                    ZERO, ZERO, ZERO);
+                    sawed ? ZERO : sequence(time, frame(0, 0, 0, 600),
+                            frame(0, 0, 45, 200, Curve.SIN_DOWN), frame(0, 0, 0, 200, Curve.SIN_UP)),
+                    ZERO, sawed ? new Vec(-20, 0, 0) : ZERO, ZERO);
             case RELOAD -> reload(time, MaresLegItem.amountBeforeReload(stack) <= 0);
             case RELOAD_CYCLE -> reloadCycle(time);
             case RELOAD_END -> reloadEnd(time);
-            case JAMMED -> jammed(time);
+            case JAMMED -> sawed ? shortJammed(time) : jammed(time);
             case INSPECT -> new Animation(ZERO, ZERO, ZERO,
                     sequence(time, frame(0, 0, 0, 450), frame(0, 0, -90, 500, Curve.SIN_FULL),
                             frame(0, 0, -90, 500), frame(0, 0, 0, 500, Curve.SIN_FULL)),
@@ -206,6 +223,20 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
                             frame(-35, 0, 0, 1150), frame(0, 0, 0, 500, Curve.SIN_FULL)), ZERO, ZERO);
             default -> Animation.NONE;
         };
+    }
+
+    private static double shortFlip(ItemStack stack) {
+        if (MaresLegItem.animation(stack) != MaresLegItem.GunAnimation.CYCLE
+                && MaresLegItem.animation(stack) != MaresLegItem.GunAnimation.CYCLE_DRY) return 0.0D;
+        float partial = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+        double time = (MaresLegItem.animationTimer(stack) + partial) * 50.0D;
+        return sequence(time, frame(0, 0, 0, 600), frame(360, 0, 0, 400)).x;
+    }
+
+    private static Animation shortJammed(double time) {
+        Animation normal = jammed(time);
+        return new Animation(normal.recoil, normal.equip, normal.lever, ZERO,
+                normal.lift, normal.shell, normal.flag);
     }
 
     private static Animation reload(double time, boolean empty) {
@@ -293,9 +324,9 @@ public final class MaresLegItemRenderer extends BlockEntityWithoutLevelRenderer 
     }
 
     private static void renderMuzzleFlash(PoseStack poses, MultiBufferSource buffers, float progress,
-                                          double turn, long shot) {
+                                          double turn, long shot, boolean sawed) {
         poses.pushPose();
-        poses.translate(0.0D, 1.0D, 8.0D);
+        poses.translate(0.0D, 1.0D, sawed ? 3.75D : 8.0D);
         poses.mulPose(Axis.ZN.rotationDegrees((float) turn));
         poses.mulPose(Axis.YP.rotationDegrees(90.0F));
         poses.mulPose(Axis.XP.rotationDegrees((shot & 3L) * 90.0F));

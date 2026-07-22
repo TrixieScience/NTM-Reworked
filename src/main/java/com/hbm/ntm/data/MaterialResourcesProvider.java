@@ -1417,6 +1417,9 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, generatedItemModel("weapon_mod_scope"), itemModels,
                 hbm("weapon_mod_scope")));
         writes.add(save(output, scopeRecipe(), recipes, hbm("weapon_mod_scope")));
+        writes.add(save(output, generatedItemModel("weapon_mod_saw"), itemModels,
+                hbm("weapon_mod_saw")));
+        writes.add(save(output, sawRecipe(), recipes, hbm("weapon_mod_saw")));
         for (String material : List.of("iron", "lead", "steel", "desh", "ferrouranium", "saturnite",
                 "bismuth_bronze", "arsenic_bronze", "schrabidate", "dnt", "osmiridium", "murky")) {
             writes.add(save(output, selfDropLoot("anvil_" + material), lootTables, hbm("anvil_" + material)));
@@ -2342,6 +2345,14 @@ public final class MaterialResourcesProvider implements DataProvider {
         key.put("S", tagIngredient("c:plates/steel"));
         key.put("G", tagIngredient("c:glass_panes"));
         return shapedItemRecipe(List.of("SPS", "G G", "SPS"), key, "hbm:weapon_mod_scope");
+    }
+
+    private JsonObject sawRecipe() {
+        Map<String, JsonObject> key = new LinkedHashMap<>();
+        key.put("B", materialComponentIngredient("hbm:bolt", "steel", 30));
+        key.put("S", tagIngredient("c:rods/wooden"));
+        key.put("H", tagIngredient("c:plates/dura_steel"));
+        return shapedItemRecipe(List.of("BBS", "BHS"), key, "hbm:weapon_mod_saw");
     }
 
     private JsonObject baseAnvilRecipe(String material) {

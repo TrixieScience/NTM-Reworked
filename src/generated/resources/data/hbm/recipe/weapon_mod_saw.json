@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:bolt",
+      "strict": false
+    },
+    "H": {
+      "tag": "c:plates/dura_steel"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    "BBS",
+    "BHS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:weapon_mod_saw"
+  }
+}
