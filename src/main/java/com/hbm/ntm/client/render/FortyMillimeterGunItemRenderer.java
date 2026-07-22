@@ -105,6 +105,18 @@ public final class FortyMillimeterGunItemRenderer extends BlockEntityWithoutLeve
         poses.translate(animation.shell.x, animation.shell.y, animation.shell.z);
         render(FortyMillimeterGunItem.Variant.FLARE_GUN, "Flare", FLARE_TEXTURE, poses, buffers, light, overlay, -1);
         poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 4.0D, 9.0D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        boolean reloading = FortyMillimeterGunItem.state(stack) == FortyMillimeterGunItem.GunState.RELOADING;
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 2.5D,
+                WeaponSmokeRenderer.FORTY_MM, reloading);
+        poses.translate(0.0D, 0.0D, 0.1D);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 2.0D,
+                WeaponSmokeRenderer.FORTY_MM, reloading);
+        poses.popPose();
     }
 
     private void renderCongo(ItemStack stack, PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
@@ -142,6 +154,21 @@ public final class FortyMillimeterGunItemRenderer extends BlockEntityWithoutLeve
                     0xFF000000 | color);
             poses.popPose();
         }
+
+        poses.pushPose();
+        poses.translate(0.0D, 1.75D, 4.25D);
+        if (clip != null) {
+            double[] gun = congoAnimations().transform(clip, "Gun", time).values();
+            poses.mulPose(Axis.ZN.rotationDegrees((float) gun[5]));
+            poses.mulPose(Axis.YN.rotationDegrees((float) gun[4]));
+            poses.mulPose(Axis.XN.rotationDegrees((float) gun[3]));
+        }
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
+                WeaponSmokeRenderer.FORTY_MM,
+                FortyMillimeterGunItem.state(stack) == FortyMillimeterGunItem.GunState.RELOADING);
+        poses.popPose();
     }
 
     private void renderCongoChild(String group, String clip, double time, PoseStack poses,

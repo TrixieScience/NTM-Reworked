@@ -107,6 +107,15 @@ public final class DualUziItemRenderer extends BlockEntityWithoutLevelRenderer {
             renderModel(NineMillimeterGunItemRenderer.UZI_BULLET, poses, buffers, light, overlay);
         }
         poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 0.75D, 8.5D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, index, poses, buffers, 0.75D,
+                WeaponSmokeRenderer.NINE_MM,
+                DualUziItem.state(stack, index) == DualUziItem.GunState.RELOADING);
+        poses.popPose();
     }
 
     private static void renderInventory(ItemStack stack, PoseStack poses,

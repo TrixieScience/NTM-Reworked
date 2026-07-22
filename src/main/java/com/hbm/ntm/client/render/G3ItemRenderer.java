@@ -101,6 +101,15 @@ public final class G3ItemRenderer extends BlockEntityWithoutLevelRenderer {
         if (zebra) {
             render("Silencer", ATTACHMENTS_TEXTURE, poses, buffers, light, overlay);
             render("Scope", ATTACHMENTS_TEXTURE, poses, buffers, light, overlay);
+        } else {
+            poses.pushPose();
+            poses.translate(0.0D, 0.0D, 13.0D);
+            poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+            poses.scale(0.75F, 0.75F, 0.75F);
+            WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.5D,
+                    WeaponSmokeRenderer.SEVEN_SIX_TWO,
+                    G3Item.state(stack) == G3Item.GunState.RELOADING);
+            poses.popPose();
         }
     }
 

@@ -106,6 +106,15 @@ public final class Stg77ItemRenderer extends BlockEntityWithoutLevelRenderer {
         apply(poses, clip, "Barrel", time);
         render("Barrel", poses, buffers, light, overlay);
         poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 0.0D, 8.0D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.75F, 0.75F, 0.75F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.SEVEN_SIX_TWO,
+                Stg77Item.state(stack) == Stg77Item.GunState.RELOADING);
+        poses.popPose();
     }
 
     private void renderStatic(PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

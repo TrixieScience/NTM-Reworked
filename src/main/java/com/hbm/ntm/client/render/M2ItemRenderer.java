@@ -59,6 +59,15 @@ public final class M2ItemRenderer extends BlockEntityWithoutLevelRenderer {
         }
         poses.mulPose(Axis.YP.rotationDegrees(180.0F));
         renderAll(poses, buffers, light, overlay);
+        if (firstPerson) {
+            poses.pushPose();
+            poses.translate(0.0D, 1.625D, 5.0D);
+            poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+            poses.scale(0.5F, 0.5F, 0.5F);
+            WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.375D,
+                    WeaponSmokeRenderer.FIFTY, false);
+            poses.popPose();
+        }
         if (held && elapsed >= 0L && elapsed < 75L) {
             poses.mulPose(Axis.YP.rotationDegrees(180.0F));
             renderFlash(poses, buffers, elapsed, ClientWeaponEvents.shotRandom(stack));

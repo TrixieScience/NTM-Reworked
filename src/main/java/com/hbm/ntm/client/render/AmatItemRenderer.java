@@ -125,6 +125,15 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
         renderLeftBipod(bipodX, bipodY, poses, buffers, light, overlay);
         renderRightBipod(bipodX, bipodY, poses, buffers, light, overlay);
         renderMuzzle(poses, buffers, light, overlay);
+
+        poses.pushPose();
+        poses.translate(0.0D, 0.625D, 12.0D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
+                WeaponSmokeRenderer.SEVEN_SIX_TWO,
+                AmatItem.state(stack) == AmatItem.GunState.RELOADING);
+        poses.popPose();
     }
 
     private void renderLeftBipod(double deployed, double spread, PoseStack poses,
