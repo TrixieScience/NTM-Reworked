@@ -84,6 +84,9 @@ import com.hbm.ntm.item.HangmanItem;
 import com.hbm.ntm.item.HeavyRevolverItem;
 import com.hbm.ntm.item.LegendaryHeavyRevolverItem;
 import com.hbm.ntm.item.DaniItem;
+import com.hbm.ntm.item.DebugGunItem;
+import com.hbm.ntm.item.DualMinigunItem;
+import com.hbm.ntm.item.LacunaeItem;
 import com.hbm.ntm.item.FoundryMoldItem;
 import com.hbm.ntm.item.FoundryPartItem;
 import com.hbm.ntm.item.FoundryIngotItem;
@@ -435,11 +438,13 @@ public final class ModItems {
     public static final DeferredItem<CustomLoreItem> IGNITER;
     public static final DeferredItem<AmmoStandardItem> AMMO_STANDARD;
     public static final DeferredItem<AmmoSecretItem> AMMO_SECRET;
+    public static final DeferredItem<Item> AMMO_DEBUG;
     public static final DeferredItem<FireExtinguisherAmmoItem> AMMO_FIREEXT;
     public static final DeferredItem<PepperboxItem> GUN_PEPPERBOX;
     public static final DeferredItem<BreakActionRevolverItem> GUN_LIGHT_REVOLVER;
     public static final DeferredItem<BreakActionRevolverItem> GUN_LIGHT_REVOLVER_ATLAS;
     public static final DeferredItem<DaniItem> GUN_LIGHT_REVOLVER_DANI;
+    public static final DeferredItem<DebugGunItem> GUN_DEBUG;
     public static final DeferredItem<HenryRifleItem> GUN_HENRY;
     public static final DeferredItem<HenryRifleItem> GUN_HENRY_LINCOLN;
     public static final DeferredItem<HeavyRevolverItem> GUN_HEAVY_REVOLVER;
@@ -466,6 +471,8 @@ public final class ModItems {
     public static final DeferredItem<FortyMillimeterGunItem> GUN_MK108;
     public static final DeferredItem<SevenSixTwoGunItem> GUN_CARBINE;
     public static final DeferredItem<SevenSixTwoGunItem> GUN_MINIGUN;
+    public static final DeferredItem<LacunaeItem> GUN_MINIGUN_LACUNAE;
+    public static final DeferredItem<DualMinigunItem> GUN_MINIGUN_DUAL;
     public static final DeferredItem<SevenSixTwoGunItem> GUN_MAS36;
     public static final DeferredItem<TwentyTwoGunItem> GUN_AM180;
     public static final DeferredItem<TwentyTwoGunItem> GUN_STAR_F;
@@ -1229,11 +1236,13 @@ public final class ModItems {
                 "item.hbm.igniter.desc.0", "item.hbm.igniter.desc.1", "item.hbm.igniter.desc.2",
                 "item.hbm.igniter.desc.3", "item.hbm.igniter.desc.4", "item.hbm.igniter.desc.5"));
         AMMO_STANDARD = ITEMS.register("ammo_standard", AmmoStandardItem::new);
+        AMMO_DEBUG = ITEMS.registerSimpleItem("ammo_debug");
         AMMO_FIREEXT = ITEMS.register("ammo_fireext", FireExtinguisherAmmoItem::new);
         GUN_PEPPERBOX = ITEMS.register("gun_pepperbox", PepperboxItem::new);
         GUN_LIGHT_REVOLVER = ITEMS.register("gun_light_revolver", () -> new BreakActionRevolverItem(false));
         GUN_LIGHT_REVOLVER_ATLAS = ITEMS.register("gun_light_revolver_atlas", () -> new BreakActionRevolverItem(true));
         GUN_LIGHT_REVOLVER_DANI = ITEMS.register("gun_light_revolver_dani", DaniItem::new);
+        GUN_DEBUG = ITEMS.register("gun_debug", DebugGunItem::new);
         GUN_HENRY = ITEMS.register("gun_henry", () -> new HenryRifleItem(false));
         GUN_HENRY_LINCOLN = ITEMS.register("gun_henry_lincoln", () -> new HenryRifleItem(true));
         GUN_HEAVY_REVOLVER = ITEMS.register("gun_heavy_revolver", HeavyRevolverItem::new);
@@ -1270,6 +1279,8 @@ public final class ModItems {
                 () -> new SevenSixTwoGunItem(SevenSixTwoGunItem.Variant.CARBINE));
         GUN_MINIGUN = ITEMS.register("gun_minigun",
                 () -> new SevenSixTwoGunItem(SevenSixTwoGunItem.Variant.MINIGUN));
+        GUN_MINIGUN_LACUNAE = ITEMS.register("gun_minigun_lacunae", LacunaeItem::new);
+        GUN_MINIGUN_DUAL = ITEMS.register("gun_minigun_dual", DualMinigunItem::new);
         GUN_MAS36 = ITEMS.register("gun_mas36",
                 () -> new SevenSixTwoGunItem(SevenSixTwoGunItem.Variant.MAS36));
         GUN_AM180 = ITEMS.register("gun_am180",

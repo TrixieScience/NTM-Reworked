@@ -73,6 +73,7 @@ public final class BulletEntity extends Projectile {
         // Secret .50 ammo overlaps ordinary metadata, so sync its config ID instead.
         int projectileAmmo = ammo instanceof com.hbm.ntm.weapon.FiftyCalAmmoType fifty && fifty.secret()
                 || ammo instanceof com.hbm.ntm.weapon.Equestrian44AmmoType
+                || ammo instanceof com.hbm.ntm.weapon.DebugAmmoType
                 ? ammo.legacyBulletConfig() : ammo.legacyMetadata();
         entityData.set(AMMO, projectileAmmo);
         entityData.set(DAMAGE, damage);
@@ -107,6 +108,9 @@ public final class BulletEntity extends Projectile {
         }
         if (config == 102 || config == 103) {
             return com.hbm.ntm.weapon.Equestrian44AmmoType.fromLegacyBulletConfig(config);
+        }
+        if (config == 110 || config == 111) {
+            return com.hbm.ntm.weapon.DebugAmmoType.fromConfig(config);
         }
         return StandardAmmoTypes.fromLegacyMetadata(config);
     }

@@ -841,6 +841,8 @@ final class HbmEnglishTranslations {
         language.addProperty("entity.hbm.entity_bullet_40mm", "40mm Grenade");
         language.addProperty("entity.hbm.entity_fire_lingering", "Lingering Fire");
         language.addProperty("item.hbm.gun_pepperbox", "Pepperbox");
+        language.addProperty("item.hbm.gun_debug", "Debug Gun");
+        language.addProperty("item.hbm.ammo_debug", "Debug Ammo");
         language.addProperty("item.hbm.ammo_standard.stone", "Ball and Powder");
         language.addProperty("item.hbm.ammo_standard.stone_ap", "Flint and Powder");
         language.addProperty("item.hbm.ammo_standard.stone_iron", "Iron Ball and Powder");
@@ -873,6 +875,8 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.gun_mk108", "Grenade Machinegun");
         language.addProperty("item.hbm.gun_carbine", "Carbine");
         language.addProperty("item.hbm.gun_minigun", "Minigun");
+        language.addProperty("item.hbm.gun_minigun_lacunae", "Lacunae");
+        language.addProperty("item.hbm.gun_minigun_dual", "Dual Minigun");
         language.addProperty("item.hbm.gun_mas36", "South Star");
         language.addProperty("item.hbm.gun_am180", ".22 Submachine Gun");
         language.addProperty("item.hbm.gun_star_f", "Target Pistol");

@@ -571,6 +571,7 @@ public final class ModCreativeTabs {
                     .icon(() -> ModItems.GUN_PEPPERBOX.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.GUN_PEPPERBOX.get());
+                        output.accept(ModItems.GUN_DEBUG.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER_ATLAS.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER_DANI.get());
@@ -599,6 +600,8 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GUN_MK108.get());
                         output.accept(ModItems.GUN_CARBINE.get());
                         output.accept(ModItems.GUN_MINIGUN.get());
+                        output.accept(ModItems.GUN_MINIGUN_LACUNAE.get());
+                        output.accept(ModItems.GUN_MINIGUN_DUAL.get());
                         // MAS-36 is also squatting in /give until the Red Room opens.
                         output.accept(ModItems.GUN_MAS36.get());
                         output.accept(ModItems.GUN_AM180.get());

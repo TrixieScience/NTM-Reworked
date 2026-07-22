@@ -299,8 +299,10 @@ public final class ClientWeaponEvents {
         if (gun.gunHasMirroredHud()) {
             int mirroredX = graphics.guiWidth() / 2 - 150;
             graphics.renderItem(gun.gunMirroredAmmoIcon(stack), mirroredX, ammoY);
-            graphics.drawString(minecraft.font,
-                    gun.gunMirroredRounds(stack) + " / " + gun.gunMirroredCapacity(),
+            String mirroredAmmo = gun.gunBeltFed()
+                    ? "x" + gun.gunMirroredRounds(stack)
+                    : gun.gunMirroredRounds(stack) + " / " + gun.gunMirroredCapacity();
+            graphics.drawString(minecraft.font, mirroredAmmo,
                     mirroredX + 17, ammoY + 6, 0xFFFFFF, false);
 
             if (gun.gunShowMirroredDurability()) {

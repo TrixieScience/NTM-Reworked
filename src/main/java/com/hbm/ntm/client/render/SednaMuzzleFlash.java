@@ -16,6 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 final class SednaMuzzleFlash {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
             HbmNtm.MOD_ID, "textures/models/weapons/lilmac_plume.png");
+    private static final ResourceLocation LASER_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            HbmNtm.MOD_ID, "textures/models/weapons/laser_flash.png");
 
     static final RenderType TYPE = RenderType.create(
             "hbm_sedna_muzzle_flash", DefaultVertexFormat.NEW_ENTITY,
@@ -23,6 +25,18 @@ final class SednaMuzzleFlash {
             RenderType.CompositeState.builder()
                     .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
                     .setTextureState(new RenderStateShard.TextureStateShard(TEXTURE, false, false))
+                    .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
+                    .setCullState(RenderStateShard.NO_CULL)
+                    .setLightmapState(RenderStateShard.LIGHTMAP)
+                    .setOverlayState(RenderStateShard.OVERLAY)
+                    .setWriteMaskState(RenderStateShard.COLOR_WRITE)
+                    .createCompositeState(false));
+    private static final RenderType LASER_TYPE = RenderType.create(
+            "hbm_sedna_laser_flash", DefaultVertexFormat.NEW_ENTITY,
+            VertexFormat.Mode.QUADS, 256, false, true,
+            RenderType.CompositeState.builder()
+                    .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_SHADER)
+                    .setTextureState(new RenderStateShard.TextureStateShard(LASER_TEXTURE, false, false))
                     .setTransparencyState(RenderStateShard.LIGHTNING_TRANSPARENCY)
                     .setCullState(RenderStateShard.NO_CULL)
                     .setLightmapState(RenderStateShard.LIGHTMAP)
@@ -78,6 +92,24 @@ final class SednaMuzzleFlash {
         vertex(consumer, pose, -height, -offset, 0.0F, 1.0F, 1.0F);
         vertex(consumer, pose, -height, -offset + length, -side, 1.0F, 0.0F);
         vertex(consumer, pose, height, -offset + length, -side, 0.0F, 0.0F);
+    }
+
+    static void renderLaser(PoseStack poses, MultiBufferSource buffers, float progress,
+                            float scale, int color) {
+        float size = 4.0F * Math.max(0.0F, Math.min(progress, 1.0F)) * scale;
+        VertexConsumer consumer = buffers.getBuffer(LASER_TYPE);
+        PoseStack.Pose pose = poses.last();
+        laserVertex(consumer, pose, 0, -size, -size, 1, 1, color);
+        laserVertex(consumer, pose, 0, size, -size, 0, 1, color);
+        laserVertex(consumer, pose, 0, size, size, 0, 0, color);
+        laserVertex(consumer, pose, 0, -size, size, 1, 0, color);
+    }
+
+    private static void laserVertex(VertexConsumer consumer, PoseStack.Pose pose,
+                                    float x, float y, float z, float u, float v, int color) {
+        consumer.addVertex(pose, x, y, z).setColor(color).setUv(u, v)
+                .setOverlay(OverlayTexture.NO_OVERLAY).setLight(LightTexture.FULL_BRIGHT)
+                .setNormal(0.0F, 1.0F, 0.0F);
     }
 
     private static void vertex(VertexConsumer consumer, PoseStack.Pose pose,

@@ -5,6 +5,7 @@ import com.hbm.ntm.item.DualUziItem;
 import com.hbm.ntm.item.EyesOfTheTempestItem;
 import com.hbm.ntm.item.DaniItem;
 import com.hbm.ntm.item.DualStarFItem;
+import com.hbm.ntm.item.DualMinigunItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.model.PlayerModel;
@@ -39,6 +40,7 @@ public final class DualUziAkimboLayer
                 && !(stack.getItem() instanceof DualMaresLegItem)
                 && !(stack.getItem() instanceof DualStarFItem)
                 && !(stack.getItem() instanceof DaniItem)
+                && !(stack.getItem() instanceof DualMinigunItem)
                 && !(stack.getItem() instanceof EyesOfTheTempestItem)) return;
 
         poses.pushPose();

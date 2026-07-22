@@ -64,6 +64,8 @@ public final class ModSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_HEAVY_RIFLE_FIRE =
             register("weapon.fire.rifleheavy");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_MINIGUN_FIRE = register("weapon.calshoot");
+    public static final DeferredHolder<SoundEvent, SoundEvent> GUN_LASER_GATLING_FIRE =
+            register("weapon.fire.lasergatling");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_ASSAULT_FIRE = register("weapon.fire.assault");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_RIFLE_SILENCER =
             register("weapon.fire.silenced");

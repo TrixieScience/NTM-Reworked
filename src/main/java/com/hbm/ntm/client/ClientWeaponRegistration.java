@@ -38,6 +38,8 @@ import com.hbm.ntm.client.render.HangmanItemRenderer;
 import com.hbm.ntm.client.render.HeavyRevolverItemRenderer;
 import com.hbm.ntm.client.render.LegendaryHeavyRevolverItemRenderer;
 import com.hbm.ntm.client.render.DaniItemRenderer;
+import com.hbm.ntm.client.render.DebugGunItemRenderer;
+import com.hbm.ntm.client.render.FinalMinigunItemRenderer;
 import com.hbm.ntm.client.render.LaserDetonatorItemRenderer;
 import com.hbm.ntm.client.render.LaserPistolBeamRenderer;
 import com.hbm.ntm.client.render.LaserPistolItemRenderer;
@@ -430,6 +432,8 @@ public final class ClientWeaponRegistration {
                                                               float equipProgress, float swingProgress) { return true; }
         }, ModItems.GUN_LIGHT_REVOLVER_DANI.get());
 
+        event.registerItem(weaponExtension(new DebugGunItemRenderer()), ModItems.GUN_DEBUG.get());
+
         event.registerItem(new IClientItemExtensions() {
             private final HeavyRevolverItemRenderer renderer = new HeavyRevolverItemRenderer();
 
@@ -587,6 +591,9 @@ public final class ClientWeaponRegistration {
                 return true;
             }
         }, ModItems.GUN_CARBINE.get(), ModItems.GUN_MINIGUN.get(), ModItems.GUN_MAS36.get());
+
+        event.registerItem(weaponExtension(new FinalMinigunItemRenderer()),
+                ModItems.GUN_MINIGUN_LACUNAE.get(), ModItems.GUN_MINIGUN_DUAL.get());
 
         event.registerItem(new IClientItemExtensions() {
             private final G3ItemRenderer renderer = new G3ItemRenderer();
