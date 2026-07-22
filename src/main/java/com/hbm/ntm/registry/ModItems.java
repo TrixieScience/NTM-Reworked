@@ -151,6 +151,7 @@ import com.hbm.ntm.item.SpasItem;
 import com.hbm.ntm.item.StampItem;
 import com.hbm.ntm.item.StirlingMachineBlockItem;
 import com.hbm.ntm.item.TurbofanBlockItem;
+import com.hbm.ntm.item.TurretChipItem;
 import com.hbm.ntm.item.ZirnoxRodItem;
 import com.hbm.ntm.item.StoneResourceBlockItem;
 import com.hbm.ntm.item.SawmillMachineBlockItem;
@@ -243,6 +244,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> RED_CABLE_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_PRESS_ITEM;
     public static final DeferredItem<BlockItem> AMMO_PRESS_ITEM;
+    public static final DeferredItem<BlockItem> TURRET_FRIENDLY_ITEM;
+    public static final DeferredItem<TurretChipItem> TURRET_CHIP;
     public static final DeferredItem<BlockItem> PRESS_PREHEATER_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_SHREDDER_ITEM;
     public static final DeferredItem<? extends BlockItem> GRAVEL_OBSIDIAN_ITEM;
@@ -906,6 +909,8 @@ public final class ModItems {
         RED_CABLE_ITEM = ITEMS.registerSimpleBlockItem("red_cable", ModBlocks.RED_CABLE);
         MACHINE_PRESS_ITEM = ITEMS.registerSimpleBlockItem("machine_press", ModBlocks.MACHINE_PRESS);
         AMMO_PRESS_ITEM = ITEMS.registerSimpleBlockItem("machine_ammo_press", ModBlocks.AMMO_PRESS);
+        TURRET_FRIENDLY_ITEM = ITEMS.registerSimpleBlockItem("turret_friendly", ModBlocks.TURRET_FRIENDLY);
+        TURRET_CHIP = ITEMS.register("turret_chip", TurretChipItem::new);
         PRESS_PREHEATER_ITEM = ITEMS.registerSimpleBlockItem("press_preheater", ModBlocks.PRESS_PREHEATER);
         MACHINE_SHREDDER_ITEM = ITEMS.registerSimpleBlockItem("machine_shredder", ModBlocks.MACHINE_SHREDDER);
         GRAVEL_OBSIDIAN_ITEM = ITEMS.register("gravel_obsidian",

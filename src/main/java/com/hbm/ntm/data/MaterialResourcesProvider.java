@@ -894,6 +894,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:machine_battery_redd");
         mineableBlocks.add("hbm:machine_press");
         mineableBlocks.add("hbm:machine_ammo_press");
+        mineableBlocks.add("hbm:turret_friendly");
         mineableBlocks.add("hbm:press_preheater");
         mineableBlocks.add("hbm:machine_shredder");
         mineableBlocks.add("hbm:machine_assembly_machine");
@@ -1019,6 +1020,11 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, unconditionalMultipartState("machine_ammo_press"), blockStates, hbm("machine_ammo_press")));
         writes.add(save(output, selfDropLoot("machine_ammo_press"), lootTables, hbm("machine_ammo_press")));
         writes.add(save(output, ammoPressRecipe(), recipes, hbm("machine_ammo_press")));
+        writes.add(save(output, emptyModel("block_steel"), blockModels, hbm("turret_friendly")));
+        writes.add(save(output, unconditionalMultipartState("turret_friendly"), blockStates,
+                hbm("turret_friendly")));
+        writes.add(save(output, selfDropLoot("turret_friendly"), lootTables, hbm("turret_friendly")));
+        writes.add(save(output, generatedItemModel("turret_chip"), itemModels, hbm("turret_chip")));
         writes.add(save(output, pressPreheaterRecipe(), recipes, hbm("press_preheater")));
         addFlatStampRecipes(writes, output);
 

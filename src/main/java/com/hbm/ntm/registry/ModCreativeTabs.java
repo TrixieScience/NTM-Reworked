@@ -573,6 +573,8 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.hbm.weapon"))
                     .icon(() -> ModItems.GUN_PEPPERBOX.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
+                        output.accept(ModItems.TURRET_FRIENDLY_ITEM.get());
+                        output.accept(ModItems.TURRET_CHIP.get());
                         output.accept(ModItems.GUN_PEPPERBOX.get());
                         output.accept(ModItems.GUN_DEBUG.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER.get());

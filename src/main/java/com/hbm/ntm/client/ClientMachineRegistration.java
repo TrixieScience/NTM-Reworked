@@ -77,6 +77,8 @@ import com.hbm.ntm.client.render.SteelFurnaceRenderer;
 import com.hbm.ntm.client.render.StirlingItemRenderer;
 import com.hbm.ntm.client.render.TurbofanItemRenderer;
 import com.hbm.ntm.client.render.TurbofanRenderer;
+import com.hbm.ntm.client.render.TurretFriendlyRenderer;
+import com.hbm.ntm.client.render.TurretFriendlyItemRenderer;
 import com.hbm.ntm.client.render.SawmillRenderer;
 import com.hbm.ntm.client.render.SawmillItemRenderer;
 import com.hbm.ntm.client.render.SteamEngineRenderer;
@@ -139,6 +141,7 @@ import com.hbm.ntm.client.screen.SolderingStationScreen;
 import com.hbm.ntm.client.screen.SteelFurnaceScreen;
 import com.hbm.ntm.client.screen.SteamTurbineScreen;
 import com.hbm.ntm.client.screen.TurbofanScreen;
+import com.hbm.ntm.client.screen.TurretFriendlyScreen;
 import com.hbm.ntm.client.screen.WoodBurnerScreen;
 import com.hbm.ntm.client.screen.WasteDrumScreen;
 import com.hbm.ntm.client.screen.SirenScreen;
@@ -241,6 +244,7 @@ public final class ClientMachineRegistration {
         event.register(ModMenus.CRANE_EXTRACTOR.get(), CraneExtractorScreen::new);
         event.register(ModMenus.CRANE_INSERTER.get(), CraneInserterScreen::new);
         event.register(ModMenus.RADIO_TORCH.get(), RadioTorchScreen::new);
+        event.register(ModMenus.TURRET_FRIENDLY.get(), TurretFriendlyScreen::new);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -315,6 +319,7 @@ public final class ClientMachineRegistration {
         event.registerBlockEntityRenderer(ModBlockEntities.FOUNDRY_CHANNEL.get(), FoundryStorageRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.FOUNDRY_TANK.get(), FoundryStorageRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DYNAMIC_SLAG.get(), DynamicSlagRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_FRIENDLY.get(), TurretFriendlyRenderer::new);
         event.registerEntityRenderer(ModEntities.COG.get(), CogRenderer::new);
         event.registerEntityRenderer(ModEntities.SAWBLADE.get(), SawbladeRenderer::new);
         event.registerEntityRenderer(ModEntities.PRIMED_EXPLOSIVE.get(), PrimedExplosiveRenderer::new);
@@ -521,6 +526,10 @@ public final class ClientMachineRegistration {
     }
 
     private static void registerExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            private final TurretFriendlyItemRenderer renderer = new TurretFriendlyItemRenderer();
+            @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
+        }, ModItems.TURRET_FRIENDLY_ITEM.get());
         event.registerItem(new IClientItemExtensions() {
             private final BatteryPackItemRenderer renderer = new BatteryPackItemRenderer();
 

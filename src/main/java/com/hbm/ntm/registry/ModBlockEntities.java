@@ -120,6 +120,8 @@ import com.hbm.ntm.blockentity.WasteDrumBlockEntity;
 import com.hbm.ntm.blockentity.ZirnoxBlockEntity;
 import com.hbm.ntm.blockentity.ZirnoxProxyBlockEntity;
 import com.hbm.ntm.blockentity.ZirnoxDestroyedBlockEntity;
+import com.hbm.ntm.blockentity.TurretFriendlyBlockEntity;
+import com.hbm.ntm.blockentity.TurretFriendlyProxyBlockEntity;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -687,6 +689,13 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeigerCounterBlockEntity>> GEIGER =
             BLOCK_ENTITY_TYPES.register("geiger",
                     () -> BlockEntityType.Builder.of(GeigerCounterBlockEntity::new, ModBlocks.GEIGER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_FRIENDLY =
+            BLOCK_ENTITY_TYPES.register("turret_friendly", () -> BlockEntityType.Builder.of(
+                    TurretFriendlyBlockEntity::new, ModBlocks.TURRET_FRIENDLY.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyProxyBlockEntity>> TURRET_FRIENDLY_PROXY =
+            BLOCK_ENTITY_TYPES.register("turret_friendly_proxy", () -> BlockEntityType.Builder.of(
+                    TurretFriendlyProxyBlockEntity::new, ModBlocks.TURRET_FRIENDLY.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RadioTorchBlockEntity>> RADIO_TORCH =
             BLOCK_ENTITY_TYPES.register("radio_torch", () -> BlockEntityType.Builder.of(RadioTorchBlockEntity::new,

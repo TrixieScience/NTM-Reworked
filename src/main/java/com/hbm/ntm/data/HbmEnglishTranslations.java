@@ -26,6 +26,16 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.red_cable", "Red Copper Cable");
         language.addProperty("block.hbm.machine_press", "Burner Press");
         language.addProperty("block.hbm.machine_ammo_press", "Ammo Press");
+        language.addProperty("block.hbm.turret_friendly", "Chaingun Turret \"Mister Friendly\"");
+        language.addProperty("item.hbm.turret_chip", "Turret AI-Chip");
+        language.addProperty("container.turretFriendly", "Mister Friendly");
+        language.addProperty("turret.none", "None");
+        language.addProperty("turret.on", "ON");
+        language.addProperty("turret.off", "OFF");
+        language.addProperty("turret.players", "Target Players: %s");
+        language.addProperty("turret.animals", "Target Animals: %s");
+        language.addProperty("turret.mobs", "Target Mobs: %s");
+        language.addProperty("turret.machines", "Target Machines: %s");
         language.addProperty("container.ammo_press", "Ammo Press");
         language.addProperty("jei.hbm.ammo_press", "Ammo Press");
         language.addProperty("block.hbm.press_preheater", "Burner Press Preheater");

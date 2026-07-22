@@ -3,6 +3,7 @@ package com.hbm.ntm.registry;
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.block.ArmorTableBlock;
 import com.hbm.ntm.block.WeaponModifierBlock;
+import com.hbm.ntm.block.TurretFriendlyBlock;
 import com.hbm.ntm.block.AmmoPressBlock;
 import com.hbm.ntm.block.AirIntakeBlock;
 import com.hbm.ntm.block.ArcWelderBlock;
@@ -203,6 +204,7 @@ public final class ModBlocks {
     public static final DeferredBlock<FensuBlock> MACHINE_BATTERY_REDD;
     public static final DeferredBlock<MachinePressBlock> MACHINE_PRESS;
     public static final DeferredBlock<AmmoPressBlock> AMMO_PRESS;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_FRIENDLY;
     public static final DeferredBlock<Block> PRESS_PREHEATER;
     public static final DeferredBlock<MachineShredderBlock> MACHINE_SHREDDER;
     public static final DeferredBlock<ColoredFallingBlock> GRAVEL_OBSIDIAN;
@@ -593,6 +595,9 @@ public final class ModBlocks {
                         .requiresCorrectToolForDrops()
                         .noOcclusion())
         );
+        TURRET_FRIENDLY = BLOCKS.register("turret_friendly", () -> new TurretFriendlyBlock(
+                BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5F, 10F)
+                        .sound(SoundType.METAL).noOcclusion()));
         PRESS_PREHEATER = BLOCKS.register(
                 "press_preheater",
                 () -> new Block(BlockBehaviour.Properties.of()

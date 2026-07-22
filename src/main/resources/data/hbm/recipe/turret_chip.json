@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": ["WWW", "CPC", "WWW"],
+  "key": {
+    "W": {
+      "type": "neoforge:components",
+      "items": "hbm:wire_fine",
+      "components": {
+        "minecraft:custom_data": {"material": "gold"},
+        "minecraft:custom_model_data": 7900
+      },
+      "strict": false
+    },
+    "C": {
+      "type": "neoforge:components",
+      "items": "hbm:circuit",
+      "components": {
+        "minecraft:custom_data": {"type": "advanced"},
+        "minecraft:custom_model_data": 9
+      },
+      "strict": false
+    },
+    "P": {"tag": "c:ingots/polymer"}
+  },
+  "result": {"id": "hbm:turret_chip", "count": 1}
+}

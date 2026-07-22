@@ -95,6 +95,11 @@ public final class ModNetwork {
                 CombustionEngineControlPayload.STREAM_CODEC,
                 CombustionEngineControlPayload::handle
         );
+        registrar.playToServer(
+                TurretWhitelistPayload.TYPE,
+                TurretWhitelistPayload.STREAM_CODEC,
+                TurretWhitelistPayload::handle
+        );
         registrar.playToClient(
                 VomitPayload.TYPE,
                 VomitPayload.STREAM_CODEC,

@@ -7,7 +7,8 @@
   "mixins": [
     "ServerGamePacketListenerImplAccessor",
     "compat.sable.TurbofanSableMixin",
-    "compat.sable.BombImpactFuseSableMixin"
+    "compat.sable.BombImpactFuseSableMixin",
+    "compat.sable.TurretFriendlySableMixin"
   ],
   "injectors": {
     "defaultRequire": 1

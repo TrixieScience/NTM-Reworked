@@ -168,7 +168,11 @@ public final class BulletEntity extends Projectile {
         super.tick();
         if (level().isClientSide) {
             Vec3 start = position();
-            interpolateClientPosition();
+            if (turnProgress > 0) {
+                interpolateClientPosition();
+            } else {
+                setPos(start.add(getDeltaMovement()));
+            }
             Vec3 displacement = position().subtract(start);
             previousTracerVelocity = tracerVelocity;
             tracerVelocity = displacement.length();

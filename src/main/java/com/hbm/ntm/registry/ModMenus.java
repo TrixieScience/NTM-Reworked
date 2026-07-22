@@ -56,6 +56,7 @@ import com.hbm.ntm.inventory.WoodBurnerMenu;
 import com.hbm.ntm.inventory.WasteDrumMenu;
 import com.hbm.ntm.inventory.WeaponModifierMenu;
 import com.hbm.ntm.inventory.ZirnoxMenu;
+import com.hbm.ntm.inventory.TurretFriendlyMenu;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.neoforged.bus.api.IEventBus;
@@ -241,6 +242,8 @@ public final class ModMenus {
 
     public static final DeferredHolder<MenuType<?>, MenuType<RadioTorchMenu>> RADIO_TORCH = MENUS.register(
             "radio_torch", () -> IMenuTypeExtension.create(RadioTorchMenu::new));
+    public static final DeferredHolder<MenuType<?>, MenuType<TurretFriendlyMenu>> TURRET_FRIENDLY = MENUS.register(
+            "turret_friendly", () -> IMenuTypeExtension.create(TurretFriendlyMenu::new));
 
     private ModMenus() {
     }

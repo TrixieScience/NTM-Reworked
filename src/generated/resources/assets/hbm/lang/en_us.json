@@ -357,6 +357,7 @@
   "block.hbm.therm_endo": "Endothermic Bomb",
   "block.hbm.therm_exo": "Exothermic Bomb",
   "block.hbm.tnt_ntm": "Actual TNT",
+  "block.hbm.turret_friendly": "Chaingun Turret \"Mister Friendly\"",
   "block.hbm.vent_chlorine": "Chlorine Vent",
   "block.hbm.vent_chlorine_seal": "Chlorine Seal",
   "block.hbm.waste_earth": "Dead Grass",
@@ -410,6 +411,7 @@
   "container.machineSolderingStation": "Soldering Station",
   "container.machineTurbine": "Steam Turbine",
   "container.machineTurbofan": "Turbofan",
+  "container.turretFriendly": "Mister Friendly",
   "container.machineWoodBurner": "Wood-Burning Generator",
   "container.microwave": "Microwave",
   "container.nukeBoy": "Little Boy",
@@ -1774,6 +1776,7 @@
   "item.hbm.tsar_core": "Tsar Bomba Core",
   "item.hbm.turbine_titanium": "Titanium Steam Turbine",
   "item.hbm.turbine_tungsten": "Reinforced Turbofan Blades",
+  "item.hbm.turret_chip": "Turret AI-Chip",
   "item.hbm.upgrade_afterburn_1": "Afterburner Upgrade Mk.I",
   "item.hbm.upgrade_afterburn_2": "Afterburner Upgrade Mk.II",
   "item.hbm.upgrade_afterburn_3": "Afterburner Upgrade Mk.III",
@@ -1928,5 +1931,12 @@
   "trait.drop": "[Dangerous Drop]",
   "trait.radResistance": "Radiation resistance: %s",
   "trait.radioactive.bracketed": "[Radioactive]",
-  "trait.tile.depth": "Can only be destroyed by explosions"
+  "trait.tile.depth": "Can only be destroyed by explosions",
+  "turret.animals": "Target Animals: %s",
+  "turret.machines": "Target Machines: %s",
+  "turret.mobs": "Target Mobs: %s",
+  "turret.none": "None",
+  "turret.off": "OFF",
+  "turret.on": "ON",
+  "turret.players": "Target Players: %s"
 }
