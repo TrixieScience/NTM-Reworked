@@ -100,6 +100,25 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
         poses.translate(0.0D, -0.5125D, 0.0D);
         renderModel(GREASE_FLAP, poses, buffers, light, overlay);
         poses.popPose();
+
+        boolean reloading = NineMillimeterGunItem.state(stack) == NineMillimeterGunItem.GunState.RELOADING;
+        poses.pushPose();
+        poses.translate(-0.25D, 0.0D, 1.5D);
+        poses.mulPose(Axis.ZN.rotationDegrees((float) animation.turn.z));
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.25F, 0.25F, 0.25F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
+                WeaponSmokeRenderer.NINE_MM, reloading);
+        poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 0.0D, 8.0D);
+        poses.mulPose(Axis.ZN.rotationDegrees((float) animation.turn.z));
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.25F, 0.25F, 0.25F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
+                WeaponSmokeRenderer.NINE_MM, reloading);
+        poses.popPose();
     }
 
     private static void renderUziFirstPerson(ItemStack stack, PoseStack poses,
@@ -133,6 +152,15 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
         poses.translate(animation.mag.x, animation.mag.y, animation.mag.z);
         renderModel(UZI_MAGAZINE, poses, buffers, light, overlay);
         if (animation.bullet.x == 1.0D) renderModel(UZI_BULLET, poses, buffers, light, overlay);
+        poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 0.75D, 8.5D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.75D,
+                WeaponSmokeRenderer.NINE_MM,
+                NineMillimeterGunItem.state(stack) == NineMillimeterGunItem.GunState.RELOADING);
         poses.popPose();
     }
 

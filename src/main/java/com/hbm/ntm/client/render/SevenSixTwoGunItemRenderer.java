@@ -93,6 +93,13 @@ public final class SevenSixTwoGunItemRenderer extends BlockEntityWithoutLevelRen
         }
         poses.popPose();
         render(SevenSixTwoGunItem.Variant.CARBINE, "IronSight", poses, buffers, light, overlay);
+
+        poses.pushPose();
+        poses.translate(0.0D, 1.0D, 8.0D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.25D,
+                WeaponSmokeRenderer.SEVEN_SIX_TWO, reloading(stack));
+        poses.popPose();
     }
 
     private void renderMinigun(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
@@ -106,6 +113,14 @@ public final class SevenSixTwoGunItemRenderer extends BlockEntityWithoutLevelRen
         poses.pushPose();
         poses.mulPose(Axis.ZP.rotationDegrees((float) animation.rotate.z));
         render(SevenSixTwoGunItem.Variant.MINIGUN, "Barrels", poses, buffers, light, overlay);
+        poses.popPose();
+
+        poses.pushPose();
+        poses.translate(-2.0D, 1.25D, -3.5D);
+        poses.mulPose(Axis.YP.rotationDegrees(45.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.SEVEN_SIX_TWO, reloading(stack));
         poses.popPose();
     }
 
@@ -149,6 +164,18 @@ public final class SevenSixTwoGunItemRenderer extends BlockEntityWithoutLevelRen
             render(SevenSixTwoGunItem.Variant.MAS36, "Bullets", poses, buffers, light, overlay);
             poses.popPose();
         }
+
+        poses.pushPose();
+        poses.translate(0.0D, 1.125D, 8.0D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.25F, 0.25F, 0.25F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
+                WeaponSmokeRenderer.SEVEN_SIX_TWO, reloading(stack));
+        poses.popPose();
+    }
+
+    private static boolean reloading(ItemStack stack) {
+        return SevenSixTwoGunItem.state(stack) == SevenSixTwoGunItem.GunState.RELOADING;
     }
 
     private void renderStatic(SevenSixTwoGunItem.Variant variant, PoseStack poses,

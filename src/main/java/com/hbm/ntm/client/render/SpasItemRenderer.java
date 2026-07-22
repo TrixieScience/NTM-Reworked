@@ -94,6 +94,14 @@ public final class SpasItemRenderer extends BlockEntityWithoutLevelRenderer {
         int[] shellColors = shellColors(SpasItem.loadedAmmo(stack));
         render("Shell", CASINGS, poses, buffers, light, overlay, shellColors[1]);
         render("ShellFore", CASINGS, poses, buffers, light, overlay, shellColors[0]);
+        poses.pushPose();
+        poses.translate(0.0D, 1.5D, -11.0D);
+        poses.mulPose(Axis.YN.rotationDegrees(90.0F));
+        poses.scale(0.25F, 0.25F, 0.25F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.75D,
+                WeaponSmokeRenderer.STANDARD,
+                SpasItem.state(stack) == SpasItem.GunState.RELOADING);
+        poses.popPose();
         if (flash) {
             poses.pushPose();
             poses.translate(0.0D, 1.5D, -11.0D);
