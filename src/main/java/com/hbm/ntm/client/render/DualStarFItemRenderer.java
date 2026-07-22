@@ -64,6 +64,14 @@ public final class DualStarFItemRenderer extends BlockEntityWithoutLevelRenderer
             TwentyTwoGunItemRenderer.renderStarAnimated(mesh(),
                     TwentyTwoGunItemRenderer.STAR_ELITE_TEXTURE, animation, direction,
                     poses, buffers, light, overlay);
+            poses.pushPose();
+            poses.translate(0.0D, 3.0D, 6.125D);
+            poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+            poses.scale(0.5F, 0.5F, 0.5F);
+            WeaponSmokeRenderer.render(stack, index, poses, buffers, 0.75D,
+                    WeaponSmokeRenderer.TWENTY_TWO,
+                    DualStarFItem.state(stack, index) == DualStarFItem.GunState.RELOADING);
+            poses.popPose();
             renderHeldFlash(stack, index, poses, buffers);
             poses.popPose();
         }

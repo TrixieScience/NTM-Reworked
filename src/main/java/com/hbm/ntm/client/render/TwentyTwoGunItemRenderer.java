@@ -105,6 +105,14 @@ public final class TwentyTwoGunItemRenderer extends BlockEntityWithoutLevelRende
         poses.popPose();
         render(TwentyTwoGunItem.Variant.AM180, "MagPlate", poses, buffers, light, overlay);
         poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 1.875D, 13.0D);
+        poses.mulPose(Axis.ZN.rotationDegrees((float) animation.turn.z));
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.25D,
+                WeaponSmokeRenderer.TWENTY_TWO, reloading(stack));
+        poses.popPose();
     }
 
     private void renderStarFirstPerson(ItemStack stack, PoseStack poses,
@@ -116,6 +124,18 @@ public final class TwentyTwoGunItemRenderer extends BlockEntityWithoutLevelRende
         poses.scale(0.25F, 0.25F, 0.25F);
         renderStarAnimated(mesh(TwentyTwoGunItem.Variant.STAR_F), STAR_TEXTURE,
                 animation, 1, poses, buffers, light, overlay);
+
+        poses.pushPose();
+        poses.translate(0.0D, 3.0D, 6.125D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.75D,
+                WeaponSmokeRenderer.TWENTY_TWO, reloading(stack));
+        poses.popPose();
+    }
+
+    private static boolean reloading(ItemStack stack) {
+        return TwentyTwoGunItem.state(stack) == TwentyTwoGunItem.GunState.RELOADING;
     }
 
     static void renderStarAnimated(EnvsuitMesh mesh, ResourceLocation texture,
