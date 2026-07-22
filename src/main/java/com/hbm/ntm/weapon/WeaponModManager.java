@@ -38,7 +38,8 @@ public final class WeaponModManager {
         if (gun.getItem() instanceof NineMillimeterGunItem item) {
             return item.variant() == NineMillimeterGunItem.Variant.UZI;
         }
-        return gun.getItem() instanceof G3Item item && item.variant() == G3Item.Variant.STANDARD;
+        if (gun.getItem() instanceof G3Item item) return item.variant() == G3Item.Variant.STANDARD;
+        return gun.is(ModItems.GUN_AMAT.get());
     }
 
     public static int configCount(ItemStack gun) {
@@ -50,6 +51,7 @@ public final class WeaponModManager {
         if (gun.getItem() instanceof NineMillimeterGunItem item
                 && item.variant() == NineMillimeterGunItem.Variant.UZI) return 1;
         if (gun.getItem() instanceof G3Item item && item.variant() == G3Item.Variant.STANDARD) return 1;
+        if (gun.is(ModItems.GUN_AMAT.get())) return 1;
         return 0;
     }
 

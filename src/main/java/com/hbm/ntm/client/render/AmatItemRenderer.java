@@ -4,6 +4,7 @@ import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.client.ClientWeaponEvents;
 import com.hbm.ntm.client.model.EnvsuitMesh;
 import com.hbm.ntm.item.AmatItem;
+import com.hbm.ntm.weapon.WeaponModManager;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -47,7 +48,7 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
             "BipodHingeRight", "MuzzleBrake", "BipodHingeLeft", "BipodLeft");
 
     private final ResourceLocation texture;
-    private final boolean silenced;
+    private final boolean builtInSilencer;
     private EnvsuitMesh mesh;
     private EnvsuitMesh attachmentMesh;
 
@@ -65,7 +66,7 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
         super(Minecraft.getInstance().getBlockEntityRenderDispatcher(),
                 Minecraft.getInstance().getEntityModels());
         this.texture = texture;
-        this.silenced = silenced;
+        this.builtInSilencer = silenced;
     }
 
     @Override
@@ -75,14 +76,16 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
                 || context == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND;
         boolean held = firstPerson || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND
                 || context == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND;
+        boolean silenced = builtInSilencer
+                || WeaponModManager.hasMod(stack, 0, WeaponModManager.SILENCER);
         boolean hiddenByScope = firstPerson && ClientWeaponEvents.fullyAimed();
         long elapsed = System.currentTimeMillis() - ClientWeaponEvents.lastShot(stack);
 
         poses.pushPose();
         setupContext(context, poses, silenced);
         if (!hiddenByScope) {
-            if (firstPerson) renderFirstPerson(stack, poses, buffers, light, overlay);
-            else renderStatic(poses, buffers, light, overlay);
+            if (firstPerson) renderFirstPerson(stack, poses, buffers, light, overlay, silenced);
+            else renderStatic(poses, buffers, light, overlay, silenced);
             if (!silenced && held && elapsed >= 0L && elapsed < 75L) {
                 renderGapFlash(poses, buffers, elapsed);
             }
@@ -91,7 +94,7 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     private void renderFirstPerson(ItemStack stack, PoseStack poses, MultiBufferSource buffers,
-                                   int light, int overlay) {
+                                   int light, int overlay, boolean silenced) {
         AmatAnimation animation = animation(stack, animationTime(stack));
         poses.scale(0.375F, 0.375F, 0.375F);
         poses.translate(0.0D, 0.0D, animation.recoil.z);
@@ -124,16 +127,18 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
                 ? animation.bipod.y : 25.0D;
         renderLeftBipod(bipodX, bipodY, poses, buffers, light, overlay);
         renderRightBipod(bipodX, bipodY, poses, buffers, light, overlay);
-        renderMuzzle(poses, buffers, light, overlay);
+        renderMuzzle(poses, buffers, light, overlay, silenced);
 
-        poses.pushPose();
-        poses.translate(0.0D, 0.625D, 12.0D);
-        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
-        poses.scale(0.5F, 0.5F, 0.5F);
-        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
-                WeaponSmokeRenderer.SEVEN_SIX_TWO,
-                AmatItem.state(stack) == AmatItem.GunState.RELOADING);
-        poses.popPose();
+        if (!silenced) {
+            poses.pushPose();
+            poses.translate(0.0D, 0.625D, 12.0D);
+            poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+            poses.scale(0.5F, 0.5F, 0.5F);
+            WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D,
+                    WeaponSmokeRenderer.SEVEN_SIX_TWO,
+                    AmatItem.state(stack) == AmatItem.GunState.RELOADING);
+            poses.popPose();
+        }
     }
 
     private void renderLeftBipod(double deployed, double spread, PoseStack poses,
@@ -164,7 +169,8 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
         poses.popPose();
     }
 
-    private void renderStatic(PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
+    private void renderStatic(PoseStack poses, MultiBufferSource buffers, int light, int overlay,
+                              boolean silenced) {
         render("Gun", poses, buffers, light, overlay);
         render("Bolt", poses, buffers, light, overlay);
         render("Magazine", poses, buffers, light, overlay);
@@ -173,10 +179,11 @@ public final class AmatItemRenderer extends BlockEntityWithoutLevelRenderer {
         render("BipodRight", poses, buffers, light, overlay);
         render("BipodHingeRight", poses, buffers, light, overlay);
         render("Scope", poses, buffers, light, overlay);
-        renderMuzzle(poses, buffers, light, overlay);
+        renderMuzzle(poses, buffers, light, overlay, silenced);
     }
 
-    private void renderMuzzle(PoseStack poses, MultiBufferSource buffers, int light, int overlay) {
+    private void renderMuzzle(PoseStack poses, MultiBufferSource buffers, int light, int overlay,
+                              boolean silenced) {
         if (!silenced) {
             render("MuzzleBrake", poses, buffers, light, overlay);
             return;

@@ -47,6 +47,14 @@ public final class WeaponModifierGameTests {
         helper.assertTrue(!WeaponModManager.isApplicable(
                         new ItemStack(ModItems.GUN_G3_ZEBRA.get()), silencer, 0),
                 "Zebra must keep its built-in suppressor instead of accepting another one");
+        helper.assertTrue(WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_AMAT.get()), silencer, 0),
+                "Silencer must fit the ordinary AMAT receiver");
+        helper.assertTrue(!WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_AMAT_SUBTLETY.get()), silencer, 0)
+                        && !WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_AMAT_PENANCE.get()), silencer, 0),
+                "Subtlety and permanently silenced Penance must stay outside the source definition");
         helper.succeed();
     }
 
