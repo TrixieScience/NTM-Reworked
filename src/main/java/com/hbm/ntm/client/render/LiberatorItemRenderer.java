@@ -70,6 +70,21 @@ public final class LiberatorItemRenderer extends BlockEntityWithoutLevelRenderer
         poses.translate(animation.recoil.x * 2.0D, animation.recoil.y, animation.recoil.z);
         poses.mulPose(Axis.XP.rotationDegrees((float) (animation.recoil.z * 10.0D)));
 
+        poses.pushPose();
+        poses.translate(0.0D, 0.25D, 7.25D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.375F, 0.375F, 0.375F);
+        boolean reloading = LiberatorItem.state(stack) == LiberatorItem.GunState.RELOADING;
+        poses.translate(0.0D, 0.0D, 0.25D / 0.375D);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D, WeaponSmokeRenderer.STANDARD, reloading);
+        poses.translate(0.0D, 0.0D, -0.5D / 0.375D);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D, WeaponSmokeRenderer.STANDARD, reloading);
+        poses.translate(0.0D, 0.5D / 0.375D, 0.0D);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D, WeaponSmokeRenderer.STANDARD, reloading);
+        poses.translate(0.0D, 0.0D, 0.5D / 0.375D);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 1.0D, WeaponSmokeRenderer.STANDARD, reloading);
+        poses.popPose();
+
         renderModel(GUN, poses, buffers, light, overlay);
 
         poses.pushPose();

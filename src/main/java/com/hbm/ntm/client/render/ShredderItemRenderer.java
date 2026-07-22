@@ -79,6 +79,15 @@ public final class ShredderItemRenderer extends BlockEntityWithoutLevelRenderer 
         poses.translate(0.0D, 1.0D, 0.5D);
         renderModel(SHELLS, poses, buffers, light, overlay);
         poses.popPose();
+
+        poses.pushPose();
+        poses.translate(0.0D, 1.0D, 7.5D);
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.75F, 0.75F, 0.75F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.STANDARD,
+                ShredderItem.state(stack) == ShredderItem.GunState.RELOADING);
+        poses.popPose();
     }
 
     private static void renderStatic(PoseStack poses, MultiBufferSource buffers, int light, int overlay) {

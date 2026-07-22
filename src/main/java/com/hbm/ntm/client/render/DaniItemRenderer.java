@@ -113,6 +113,15 @@ public final class DaniItemRenderer extends BlockEntityWithoutLevelRenderer {
         poses.mulPose(Axis.XN.rotationDegrees((float) animation.equip.x));
         poses.translate(0.0D, 2.0D, 2.0D);
 
+        poses.pushPose();
+        poses.translate(0.0D, 1.5D, 9.25D);
+        poses.mulPose(Axis.XP.rotationDegrees((float) (-animation.recoil.z * 10.0D)));
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        WeaponSmokeRenderer.render(stack, index, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.STANDARD,
+                DaniItem.state(stack, index) == DaniItem.GunState.RELOADING);
+        poses.popPose();
+
         poses.translate(animation.reloadMove.x, animation.reloadMove.y, animation.reloadMove.z);
         poses.mulPose(Axis.XP.rotationDegrees((float) animation.reloadRot.x));
         poses.mulPose(Axis.ZP.rotationDegrees((float) animation.reloadRot.z * direction));

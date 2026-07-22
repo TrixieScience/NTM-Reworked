@@ -112,6 +112,14 @@ public final class LagPistolItemRenderer extends BlockEntityWithoutLevelRenderer
         render("Magazine", poses, buffers, light, overlay);
         poses.popPose();
 
+        poses.pushPose();
+        poses.translate(-10.25D, 1.0D, 0.0D);
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.STANDARD,
+                LagPistolItem.state(stack) == LagPistolItem.GunState.RELOADING);
+        poses.popPose();
+
         if (flash) {
             poses.pushPose();
             poses.translate(-10.25D, 1.0D, 0.0D);

@@ -68,6 +68,15 @@ public final class BreakActionRevolverItemRenderer extends BlockEntityWithoutLev
         poses.mulPose(Axis.XN.rotationDegrees((float) animation.equip.x));
         poses.translate(0.0D, 0.0D, 7.0D);
 
+        poses.pushPose();
+        poses.translate(0.0D, 1.5D, 9.25D);
+        poses.mulPose(Axis.XP.rotationDegrees((float) (-animation.recoil.z * 10.0D)));
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        WeaponSmokeRenderer.render(stack, 0, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.STANDARD,
+                BreakActionRevolverItem.state(stack) == BreakActionRevolverItem.GunState.RELOADING);
+        poses.popPose();
+
         poses.translate(animation.reloadMove.x, animation.reloadMove.y, animation.reloadMove.z);
         poses.mulPose(Axis.XP.rotationDegrees((float) animation.reloadRot.x));
         poses.mulPose(Axis.ZP.rotationDegrees((float) animation.reloadRot.z));

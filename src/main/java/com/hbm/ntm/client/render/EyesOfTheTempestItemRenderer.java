@@ -86,6 +86,17 @@ public final class EyesOfTheTempestItemRenderer extends BlockEntityWithoutLevelR
         poses.mulPose(Axis.ZP.rotationDegrees((float) animation.roll.z * direction));
         poses.translate(0.0D, -1.0D, 0.0D);
 
+        poses.pushPose();
+        poses.translate(0.0D, 2.0D, 4.0D);
+        poses.mulPose(Axis.XN.rotationDegrees((float) animation.recoil.x));
+        poses.mulPose(Axis.ZN.rotationDegrees((float) animation.roll.z * direction));
+        poses.mulPose(Axis.YP.rotationDegrees(90.0F));
+        poses.scale(0.5F, 0.5F, 0.5F);
+        WeaponSmokeRenderer.render(stack, index, poses, buffers, 0.5D,
+                WeaponSmokeRenderer.STANDARD,
+                EyesOfTheTempestItem.state(stack, index) == EyesOfTheTempestItem.GunState.RELOADING);
+        poses.popPose();
+
         render("Gun", poses, buffers, light, overlay);
 
         poses.pushPose();
