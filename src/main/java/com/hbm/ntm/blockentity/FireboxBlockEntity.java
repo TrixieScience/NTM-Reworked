@@ -39,7 +39,8 @@ import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
-public final class FireboxBlockEntity extends BlockEntity implements WorldlyContainer, MenuProvider, HeatSource {
+public final class FireboxBlockEntity extends BlockEntity implements WorldlyContainer, MenuProvider, HeatSource,
+        MufflableMachine {
     public static final int SLOT_COUNT = 2;
     public static final int MAX_HEAT = 100_000;
     public static final int BASE_HEAT = 100;
@@ -366,6 +367,7 @@ public final class FireboxBlockEntity extends BlockEntity implements WorldlyCont
         tag.putInt("heatEnergy", heatEnergy);
         tag.putInt("playersUsing", playersUsing);
         tag.putBoolean("wasOn", wasOn);
+        tag.putBoolean("muffled", muffled);
         return tag;
     }
 
@@ -377,6 +379,7 @@ public final class FireboxBlockEntity extends BlockEntity implements WorldlyCont
         heatEnergy = tag.getInt("heatEnergy");
         playersUsing = tag.getInt("playersUsing");
         wasOn = tag.getBoolean("wasOn");
+        muffled = tag.getBoolean("muffled");
     }
 
     @Nullable
@@ -404,6 +407,21 @@ public final class FireboxBlockEntity extends BlockEntity implements WorldlyCont
     public int heatEnergy() { return heatEnergy; }
     public int smokeStored() { return smoke; }
     public boolean wasOn() { return wasOn; }
+
+    @Override
+    public boolean installMuffler() {
+        if (muffled) return false;
+        muffled = true;
+        setChanged();
+        syncNow();
+        return true;
+    }
+
+    @Override
+    public boolean isMuffled() {
+        return muffled;
+    }
+
     public boolean isHeatingOven() {
         return getBlockState().is(com.hbm.ntm.registry.ModBlocks.HEATER_OVEN.get());
     }

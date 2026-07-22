@@ -1159,6 +1159,11 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, legacyBlockItemModel("foundry_slagtap", List.of(30, 135, 0),
                 List.of(0, 0, 0), List.of(0.625, 0.625, 0.625)), itemModels, hbm("foundry_slagtap")));
         writes.add(save(output, generatedItemModel("blueprints"), itemModels, hbm("blueprints")));
+        writes.add(save(output, generatedItemModel("upgrade_muffler"), itemModels, hbm("upgrade_muffler")));
+        writes.add(save(output, foundryShaped(List.of("III", "IWI", "III"), Map.of(
+                "I", tagIngredient("hbm:ingots/any_rubber"),
+                "W", tagIngredient("minecraft:wool")), "hbm:upgrade_muffler", 16), recipes,
+                hbm("upgrade_muffler")));
         writes.add(save(output, generatedItemModel("centrifuge_element"), itemModels,
                 hbm("centrifuge_element")));
         for (String type : List.of("speed", "power", "afterburn", "overdrive", "ejector", "stack")) for (int level = 1; level <= 3; level++) {

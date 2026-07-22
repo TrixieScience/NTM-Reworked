@@ -121,6 +121,7 @@ import com.hbm.ntm.item.NtmAnvilBlockItem;
 import com.hbm.ntm.item.NuclearWasteItem;
 import com.hbm.ntm.item.MachineUpgradeItem;
 import com.hbm.ntm.item.MultiDetonatorItem;
+import com.hbm.ntm.item.MufflerItem;
 import com.hbm.ntm.item.MkuSyringeItem;
 import com.hbm.ntm.item.NineMillimeterGunItem;
 import com.hbm.ntm.item.OilDerrickBlockItem;
@@ -707,6 +708,7 @@ public final class ModItems {
     public static final DeferredItem<DescriptionBlockItem> CRANE_INSERTER_ITEM;
     public static final DeferredItem<BlockItem> CRANE_BOXER_ITEM;
     public static final DeferredItem<BlueprintItem> BLUEPRINTS;
+    public static final DeferredItem<MufflerItem> UPGRADE_MUFFLER;
     public static final Map<String, DeferredItem<MachineUpgradeItem>> MACHINE_UPGRADES;
     public static final Map<String, DeferredItem<StampItem>> STAMPS;
 
@@ -1644,6 +1646,7 @@ public final class ModItems {
                         "block.hbm.crane_boxer.desc.2",
                         "block.hbm.crane_boxer.desc.3"));
         BLUEPRINTS = ITEMS.register("blueprints", BlueprintItem::new);
+        UPGRADE_MUFFLER = ITEMS.register("upgrade_muffler", MufflerItem::new);
         Map<String, DeferredItem<MachineUpgradeItem>> upgrades = new LinkedHashMap<>();
         for (MachineUpgradeItem.Type type : MachineUpgradeItem.Type.values()) {
             String prefix = "upgrade_" + type.name().toLowerCase(java.util.Locale.ROOT) + "_";

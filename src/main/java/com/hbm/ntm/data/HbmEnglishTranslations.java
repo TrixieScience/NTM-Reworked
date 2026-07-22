@@ -635,6 +635,7 @@ final class HbmEnglishTranslations {
         language.addProperty("gui.recipe.crucible.steel", "Steel");
         language.addProperty("gui.recipe.crucible.hss", "High-Speed Steel");
         language.addProperty("item.hbm.blueprints", "Machine Template Folder");
+        language.addProperty("item.hbm.upgrade_muffler", "Muffler");
         language.addProperty("gui.recipe.setRecipe", "Set Recipe");
         language.addProperty("gui.recipe.search", "Search recipes");
         language.addProperty("gui.recipe.select", "Select Recipe");

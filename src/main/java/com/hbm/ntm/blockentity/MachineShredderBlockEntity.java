@@ -31,7 +31,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public final class MachineShredderBlockEntity extends BlockEntity implements WorldlyContainer, MenuProvider, HeReceiver {
+public final class MachineShredderBlockEntity extends BlockEntity implements WorldlyContainer, MenuProvider, HeReceiver,
+        MufflableMachine {
     public static final int INPUT_START = 0;
     public static final int INPUT_END = 9;
     public static final int OUTPUT_START = 9;
@@ -261,6 +262,23 @@ public final class MachineShredderBlockEntity extends BlockEntity implements Wor
     @Override
     public boolean isHeLoaded() {
         return hasLevel() && !isRemoved();
+    }
+
+    @Override
+    public boolean installMuffler() {
+        if (muffled) return false;
+        muffled = true;
+        setChanged();
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(),
+                    net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isMuffled() {
+        return muffled;
     }
 
     @Override

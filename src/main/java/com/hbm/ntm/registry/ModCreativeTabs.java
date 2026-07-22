@@ -374,6 +374,7 @@ public final class ModCreativeTabs {
                                 "alt.plates", "alt..lube", "alt..electrodes", "discover..stone")) {
                             output.accept(BlueprintItem.forPool(ModItems.BLUEPRINTS.get(), pool));
                         }
+                        output.accept(ModItems.UPGRADE_MUFFLER.get());
                         ModItems.MACHINE_UPGRADES.values().forEach(upgrade -> output.accept(upgrade.get()));
                         for (BatteryPackItem.BatteryType type : BatteryPackItem.BatteryType.values()) {
                             output.accept(BatteryPackItem.create(ModItems.BATTERY_PACK.get(), type, false));
