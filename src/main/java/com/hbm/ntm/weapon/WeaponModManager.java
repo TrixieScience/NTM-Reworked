@@ -29,6 +29,7 @@ public final class WeaponModManager {
     public static final int SAWED_OFF = 203;
     public static final int NO_SHIELD = 204;
     public static final int NO_STOCK = 205;
+    public static final int GREASE_GUN_CLEAN = 206;
     private static final String MOD_LIST = "KEY_MOD_LIST_";
 
     private WeaponModManager() {}
@@ -37,7 +38,8 @@ public final class WeaponModManager {
         return stack.is(ModItems.WEAPON_MOD_SILENCER.get())
                 || stack.is(ModItems.WEAPON_MOD_SPEEDLOADER.get())
                 || stack.is(ModItems.WEAPON_MOD_SCOPE.get())
-                || stack.is(ModItems.WEAPON_MOD_SAW.get());
+                || stack.is(ModItems.WEAPON_MOD_SAW.get())
+                || stack.is(ModItems.WEAPON_MOD_GREASE_GUN.get());
     }
 
     public static boolean isApplicable(ItemStack gun, ItemStack mod, int config) {
@@ -60,6 +62,10 @@ public final class WeaponModManager {
                     || gun.is(ModItems.GUN_PANZERSCHRECK.get())
                     || gun.getItem() instanceof G3Item;
         }
+        if (mod.is(ModItems.WEAPON_MOD_GREASE_GUN.get())) {
+            return gun.getItem() instanceof NineMillimeterGunItem item
+                    && item.variant() == NineMillimeterGunItem.Variant.GREASE_GUN;
+        }
         if (!mod.is(ModItems.WEAPON_MOD_SILENCER.get())) return false;
         if (gun.getItem() instanceof TwentyTwoGunItem item) {
             return item.variant() == TwentyTwoGunItem.Variant.AM180
@@ -79,8 +85,7 @@ public final class WeaponModManager {
         if (gun.getItem() instanceof TwentyTwoGunItem item
                 && (item.variant() == TwentyTwoGunItem.Variant.AM180
                 || item.variant() == TwentyTwoGunItem.Variant.STAR_F)) return 1;
-        if (gun.getItem() instanceof NineMillimeterGunItem item
-                && item.variant() == NineMillimeterGunItem.Variant.UZI) return 1;
+        if (gun.getItem() instanceof NineMillimeterGunItem) return 1;
         if (gun.getItem() instanceof G3Item) return 1;
         if (gun.is(ModItems.GUN_AMAT.get())) return 1;
         if (gun.is(ModItems.GUN_LIBERATOR.get())) return 1;
@@ -113,6 +118,9 @@ public final class WeaponModManager {
             if (id == SAWED_OFF || id == NO_SHIELD || id == NO_STOCK) {
                 result.add(new ItemStack(ModItems.WEAPON_MOD_SAW.get()));
             }
+            if (id == GREASE_GUN_CLEAN) {
+                result.add(new ItemStack(ModItems.WEAPON_MOD_GREASE_GUN.get()));
+            }
         }
         return result;
     }
@@ -142,10 +150,12 @@ public final class WeaponModManager {
         if (stack.is(ModItems.WEAPON_MOD_SPEEDLOADER.get())) return SPEEDLOADER;
         if (stack.is(ModItems.WEAPON_MOD_SILENCER.get())) return SILENCER;
         if (stack.is(ModItems.WEAPON_MOD_SCOPE.get())) return SCOPE;
-        if (!stack.is(ModItems.WEAPON_MOD_SAW.get())) return -1;
-        if (gun.is(ModItems.GUN_PANZERSCHRECK.get())) return NO_SHIELD;
-        if (gun.getItem() instanceof G3Item) return NO_STOCK;
-        return SAWED_OFF;
+        if (stack.is(ModItems.WEAPON_MOD_SAW.get())) {
+            if (gun.is(ModItems.GUN_PANZERSCHRECK.get())) return NO_SHIELD;
+            if (gun.getItem() instanceof G3Item) return NO_STOCK;
+            return SAWED_OFF;
+        }
+        return stack.is(ModItems.WEAPON_MOD_GREASE_GUN.get()) ? GREASE_GUN_CLEAN : -1;
     }
 
     private static int priority(ItemStack stack) {

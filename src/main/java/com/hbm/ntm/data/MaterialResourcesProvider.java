@@ -1420,6 +1420,9 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, generatedItemModel("weapon_mod_saw"), itemModels,
                 hbm("weapon_mod_saw")));
         writes.add(save(output, sawRecipe(), recipes, hbm("weapon_mod_saw")));
+        writes.add(save(output, generatedItemModel("weapon_mod_grease_gun"), itemModels,
+                hbm("weapon_mod_grease_gun")));
+        writes.add(save(output, greaseGunKitRecipe(), recipes, hbm("weapon_mod_grease_gun")));
         for (String material : List.of("iron", "lead", "steel", "desh", "ferrouranium", "saturnite",
                 "bismuth_bronze", "arsenic_bronze", "schrabidate", "dnt", "osmiridium", "murky")) {
             writes.add(save(output, selfDropLoot("anvil_" + material), lootTables, hbm("anvil_" + material)));
@@ -2353,6 +2356,16 @@ public final class MaterialResourcesProvider implements DataProvider {
         key.put("S", tagIngredient("c:rods/wooden"));
         key.put("H", tagIngredient("c:plates/dura_steel"));
         return shapedItemRecipe(List.of("BBS", "BHS"), key, "hbm:weapon_mod_saw");
+    }
+
+    private JsonObject greaseGunKitRecipe() {
+        Map<String, JsonObject> key = new LinkedHashMap<>();
+        key.put("B", foundryPart("part_barrel_light", "weapon_steel", 50));
+        key.put("R", foundryPart("part_receiver_light", "weapon_steel", 50));
+        key.put("M", foundryPart("part_mechanism", "weapon_steel", 50));
+        key.put("P", tagIngredient("c:plates/dura_steel"));
+        key.put("G", foundryPart("part_grip", "polymer", 20_001));
+        return shapedItemRecipe(List.of("BRM", "P G"), key, "hbm:weapon_mod_grease_gun");
     }
 
     private JsonObject baseAnvilRecipe(String material) {

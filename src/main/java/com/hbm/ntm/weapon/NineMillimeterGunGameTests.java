@@ -170,6 +170,30 @@ public final class NineMillimeterGunGameTests {
         helper.succeed();
     }
 
+    @GameTest(template = "empty")
+    public static void modernizedGreaseGunUsesTheSourceReceiverChanges(GameTestHelper helper) {
+        Player player = armedPlayer(helper, NineMillimeterGunItem.Variant.GREASE_GUN,
+                NineMillimeterAmmoType.SOFT_POINT, 3, 0.0F, 2);
+        ItemStack stack = player.getMainHandItem();
+        WeaponModManager.install(stack, 0,
+                List.of(new ItemStack(ModItems.WEAPON_MOD_GREASE_GUN.get())));
+
+        helper.assertTrue(NineMillimeterGunItem.durability(stack) == 9_000.0F
+                        && NineMillimeterGunItem.baseDamage(stack) == 5.0F
+                        && NineMillimeterGunItem.innateSpread(stack) == 0.0F
+                        && NineMillimeterGunItem.fireDelay(stack) == 2
+                        && NineMillimeterGunItem.casingTick(stack) == 1
+                        && stack.getDescriptionId().equals("item.hbm.gun_greasegun_m3"),
+                "Modernized M3 must triple durability, add two damage, remove innate spread, and halve delay");
+        SednaGunItem.handleInput(player, GunInput.PRIMARY);
+        helper.assertTrue(NineMillimeterGunItem.rounds(stack) == 2
+                        && NineMillimeterGunItem.timer(stack) == 2
+                        && bullets(helper, player).size() == 1
+                        && bullets(helper, player).getFirst().damage() == 5.0F,
+                "Modernized M3 shot must use its source five damage and two-tick automatic cycle");
+        helper.succeed();
+    }
+
     private static Player armedPlayer(GameTestHelper helper, NineMillimeterGunItem.Variant variant,
                                       NineMillimeterAmmoType ammo, int rounds, float wear, int x) {
         Player player = helper.makeMockPlayer(GameType.SURVIVAL);

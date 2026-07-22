@@ -188,6 +188,23 @@ public final class WeaponModifierGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void modernizationKitOnlyFitsTheGreaseGun(GameTestHelper helper) {
+        ItemStack kit = new ItemStack(ModItems.WEAPON_MOD_GREASE_GUN.get());
+        ItemStack greaseGun = new ItemStack(ModItems.GUN_GREASEGUN.get());
+        helper.assertTrue(WeaponModManager.isApplicable(greaseGun, kit, 0)
+                        && !WeaponModManager.isApplicable(new ItemStack(ModItems.GUN_UZI.get()), kit, 0)
+                        && !WeaponModManager.isApplicable(new ItemStack(ModItems.GUN_AM180.get()), kit, 0),
+                "Modernization Kit must fit only its source Grease Gun receiver");
+        WeaponModManager.install(greaseGun, 0, List.of(kit));
+        helper.assertTrue(WeaponModManager.hasMod(
+                        greaseGun, 0, WeaponModManager.GREASE_GUN_CLEAN)
+                        && WeaponModManager.installedMods(greaseGun, 0).getFirst()
+                        .is(ModItems.WEAPON_MOD_GREASE_GUN.get()),
+                "Modernization Kit must store source ID 206 and rebuild its table item");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void dualReceiverStorageStaysIndependent(GameTestHelper helper) {
         ItemStack dual = new ItemStack(ModItems.GUN_UZI_AKIMBO.get());
         ItemStack silencer = new ItemStack(ModItems.WEAPON_MOD_SILENCER.get());

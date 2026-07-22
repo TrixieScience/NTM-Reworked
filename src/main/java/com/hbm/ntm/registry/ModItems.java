@@ -593,6 +593,7 @@ public final class ModItems {
     public static final DeferredItem<Item> WEAPON_MOD_SPEEDLOADER;
     public static final DeferredItem<Item> WEAPON_MOD_SCOPE;
     public static final DeferredItem<Item> WEAPON_MOD_SAW;
+    public static final DeferredItem<Item> WEAPON_MOD_GREASE_GUN;
     public static final DeferredItem<ArmorCladdingItem> CLADDING_PAINT;
     public static final DeferredItem<ArmorCladdingItem> CLADDING_RUBBER;
     public static final DeferredItem<ArmorCladdingItem> CLADDING_LEAD;
@@ -1477,6 +1478,7 @@ public final class ModItems {
         WEAPON_MOD_SPEEDLOADER = ITEMS.registerSimpleItem("weapon_mod_speedloader", new Item.Properties().stacksTo(1));
         WEAPON_MOD_SCOPE = ITEMS.registerSimpleItem("weapon_mod_scope", new Item.Properties().stacksTo(1));
         WEAPON_MOD_SAW = ITEMS.registerSimpleItem("weapon_mod_saw", new Item.Properties().stacksTo(1));
+        WEAPON_MOD_GREASE_GUN = ITEMS.registerSimpleItem("weapon_mod_grease_gun", new Item.Properties().stacksTo(1));
         CLADDING_PAINT = registerCladding("cladding_paint", ArmorCladdingItem.Effect.RADIATION, 0.025F);
         CLADDING_RUBBER = registerCladding("cladding_rubber", ArmorCladdingItem.Effect.RADIATION, 0.005F);
         CLADDING_LEAD = registerCladding("cladding_lead", ArmorCladdingItem.Effect.RADIATION, 0.1F);

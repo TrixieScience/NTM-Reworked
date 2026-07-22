@@ -86,6 +86,7 @@ public final class NineMillimeterGunItem extends SednaGunItem {
     @Override public int gunCapacity() { return CAPACITY; }
     @Override public float gunWear(ItemStack stack) { return wear(stack); }
     @Override public float gunDurability() { return DURABILITY; }
+    @Override public float gunDurability(ItemStack stack) { return durability(stack); }
     @Override public ItemStack gunAmmoIcon(ItemStack stack) {
         return loadedAmmo(stack).createStack(ModItems.AMMO_STANDARD.get(), 1);
     }
@@ -118,7 +119,7 @@ public final class NineMillimeterGunItem extends SednaGunItem {
         tag.putBoolean(EQUIPPED, true);
 
         int animationTimer = tag.getInt(ANIM_TIMER);
-        playOrchestra(level, living, tag, animation(tag), animationTimer, variant);
+        playOrchestra(level, living, stack, tag, animation(tag), animationTimer, variant);
         tag.putInt(ANIM_TIMER, animationTimer + 1);
 
         int timer = tag.getInt(TIMER);
@@ -146,7 +147,7 @@ public final class NineMillimeterGunItem extends SednaGunItem {
         if (previous != GunState.RELOADING || !(living instanceof Player player)) return;
 
         reloadAction(player, tag);
-        if (jamChance(tag.getFloat(WEAR)) > living.getRandom().nextFloat()) {
+        if (jamChance(tag.getFloat(WEAR), durability(stack)) > living.getRandom().nextFloat()) {
             tag.putByte(STATE, (byte) GunState.JAMMED.ordinal());
             tag.putInt(TIMER, gun.variant.jamTicks);
             playAnimation(tag, GunAnimation.JAMMED);
@@ -196,10 +197,13 @@ public final class NineMillimeterGunItem extends SednaGunItem {
         if (loaded <= 0 || !(player.level() instanceof ServerLevel level)) return;
 
         NineMillimeterAmmoType ammo = NineMillimeterAmmoType.fromLegacyBulletConfig(tag.getInt(MAG_TYPE));
-        float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, DURABILITY);
-        float damage = BASE_DAMAGE * wearDamageMultiplier(currentWear) * ammo.damageMultiplier();
-        float spread = variant.innateSpread + ammo.spread()
-                + (tag.getBoolean(AIMING) ? 0.0F : HIP_SPREAD) + wearSpread(currentWear);
+        float durability = durability(stack);
+        float currentWear = Mth.clamp(tag.getFloat(WEAR), 0.0F, durability);
+        float damage = baseDamage(stack) * wearDamageMultiplier(currentWear, durability)
+                * ammo.damageMultiplier();
+        float spread = innateSpread(stack) + ammo.spread()
+                + (tag.getBoolean(AIMING) ? 0.0F : HIP_SPREAD)
+                + wearSpread(currentWear, durability);
         Vec3 origin = projectileOrigin(player, tag.getBoolean(AIMING));
         Vec3 heading = player.getLookAngle();
 
@@ -215,9 +219,9 @@ public final class NineMillimeterGunItem extends SednaGunItem {
         }
 
         tag.putInt(MAG_COUNT, loaded - 1);
-        tag.putFloat(WEAR, Math.min(currentWear + ammo.wear(), DURABILITY));
+        tag.putFloat(WEAR, Math.min(currentWear + ammo.wear(), durability));
         tag.putByte(STATE, (byte) GunState.COOLDOWN.ordinal());
-        tag.putInt(TIMER, variant.fireDelay);
+        tag.putInt(TIMER, fireDelay(stack));
         playAnimation(tag, GunAnimation.CYCLE);
     }
 
@@ -287,8 +291,8 @@ public final class NineMillimeterGunItem extends SednaGunItem {
         return player.getEyePosition().add(offset);
     }
 
-    private static void playOrchestra(Level level, LivingEntity entity, CompoundTag tag, GunAnimation animation,
-                                      int timer, Variant variant) {
+    private static void playOrchestra(Level level, LivingEntity entity, ItemStack stack, CompoundTag tag,
+                                      GunAnimation animation, int timer, Variant variant) {
         if (animation == GunAnimation.EQUIP && timer == variant.equipSoundTick) {
             play(level, entity, ModSounds.GUN_LATCH_OPEN.get(), variant == Variant.UZI ? 1.25F : 1.0F);
         }
@@ -298,8 +302,7 @@ public final class NineMillimeterGunItem extends SednaGunItem {
                 play(level, entity, ModSounds.GUN_PISTOL_COCK.get(), variant == Variant.UZI ? 1.0F : 0.8F);
             }
         }
-        if (animation == GunAnimation.CYCLE
-                && timer == (variant == Variant.GREASE_GUN ? 2 : 1)) {
+        if (animation == GunAnimation.CYCLE && timer == casingTick(stack)) {
             boolean aiming = tag.getBoolean(AIMING);
             float momentumPitch = variant == Variant.GREASE_GUN
                     ? -7.5F + (float) entity.getRandom().nextGaussian() * 5.0F
@@ -338,23 +341,60 @@ public final class NineMillimeterGunItem extends SednaGunItem {
     }
 
     public static float jamChance(float wear) {
-        float percent = wear / DURABILITY;
+        return jamChance(wear, DURABILITY);
+    }
+
+    private static float jamChance(float wear, float durability) {
+        float percent = wear / durability;
         return percent < 0.66F ? 0.0F : Math.min((percent - 0.66F) * 4.0F, 1.0F);
     }
 
     public static float wearDamageMultiplier(float wear) {
-        float percent = wear / DURABILITY;
+        return wearDamageMultiplier(wear, DURABILITY);
+    }
+
+    private static float wearDamageMultiplier(float wear, float durability) {
+        float percent = wear / durability;
         return percent < 0.75F ? 1.0F : 1.0F - (percent - 0.75F) * 2.0F;
     }
 
     public static float wearSpread(float wear) {
-        float percent = wear / DURABILITY;
+        return wearSpread(wear, DURABILITY);
+    }
+
+    private static float wearSpread(float wear, float durability) {
+        float percent = wear / durability;
         return percent < 0.5F ? 0.0F : (percent - 0.5F) * 2.0F * MAX_WEAR_SPREAD;
     }
 
     public static int rounds(ItemStack stack) { return rounds(data(stack)); }
     private static int rounds(CompoundTag tag) { return Mth.clamp(tag.getInt(MAG_COUNT), 0, CAPACITY); }
-    public static float wear(ItemStack stack) { return Mth.clamp(data(stack).getFloat(WEAR), 0.0F, DURABILITY); }
+    public static float wear(ItemStack stack) {
+        return Mth.clamp(data(stack).getFloat(WEAR), 0.0F, durability(stack));
+    }
+    public static boolean isModernized(ItemStack stack) {
+        return stack.getItem() instanceof NineMillimeterGunItem item
+                && item.variant == Variant.GREASE_GUN
+                && WeaponModManager.hasMod(stack, 0, WeaponModManager.GREASE_GUN_CLEAN);
+    }
+    public static float durability(ItemStack stack) { return isModernized(stack) ? DURABILITY * 3.0F : DURABILITY; }
+    public static float baseDamage(ItemStack stack) { return isModernized(stack) ? BASE_DAMAGE + 2.0F : BASE_DAMAGE; }
+    public static float innateSpread(ItemStack stack) {
+        return isModernized(stack) ? 0.0F : ((NineMillimeterGunItem) stack.getItem()).variant.innateSpread;
+    }
+    public static int fireDelay(ItemStack stack) {
+        int delay = ((NineMillimeterGunItem) stack.getItem()).variant.fireDelay;
+        return isModernized(stack) ? delay / 2 : delay;
+    }
+    public static int casingTick(ItemStack stack) {
+        if (isModernized(stack)) return 1;
+        return ((NineMillimeterGunItem) stack.getItem()).variant == Variant.GREASE_GUN ? 2 : 1;
+    }
+
+    @Override
+    public String getDescriptionId(ItemStack stack) {
+        return isModernized(stack) ? "item.hbm.gun_greasegun_m3" : super.getDescriptionId(stack);
+    }
     public static boolean aiming(ItemStack stack) { return data(stack).getBoolean(AIMING); }
     public static boolean primaryHeld(ItemStack stack) { return data(stack).getBoolean(PRIMARY_HELD); }
     public static GunState state(ItemStack stack) { return state(data(stack)); }
@@ -373,7 +413,7 @@ public final class NineMillimeterGunItem extends SednaGunItem {
         tag.putInt(TIMER, timer);
         tag.putInt(MAG_COUNT, Mth.clamp(rounds, 0, CAPACITY));
         tag.putInt(MAG_TYPE, ammo.legacyBulletConfig());
-        tag.putFloat(WEAR, Mth.clamp(wear, 0.0F, DURABILITY));
+        tag.putFloat(WEAR, Mth.clamp(wear, 0.0F, durability(stack)));
         tag.putBoolean(PRIMARY_HELD, primaryHeld);
         save(stack, tag);
     }
@@ -412,15 +452,17 @@ public final class NineMillimeterGunItem extends SednaGunItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         NineMillimeterAmmoType ammo = loadedAmmo(stack);
-        float damage = BASE_DAMAGE * ammo.damageMultiplier();
+        float gunDamage = baseDamage(stack);
+        float damage = gunDamage * ammo.damageMultiplier();
         tooltip.add(Component.translatable("gui.weapon.ammo").append(": ")
                 .append(Component.translatable("item.hbm.ammo_standard." + ammo.serializedName()))
                 .append(" " + rounds(stack) + " / " + CAPACITY).withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("gui.weapon.baseDamage").append(": " + trimDamage(BASE_DAMAGE))
+        tooltip.add(Component.translatable("gui.weapon.baseDamage").append(": " + trimDamage(gunDamage))
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.translatable("gui.weapon.damageWithAmmo").append(": " + trimDamage(damage))
                 .withStyle(ChatFormatting.GRAY));
-        int condition = Mth.clamp((int) ((DURABILITY - wear(stack)) * 100.0F / DURABILITY), 0, 100);
+        float durability = durability(stack);
+        int condition = Mth.clamp((int) ((durability - wear(stack)) * 100.0F / durability), 0, 100);
         tooltip.add(Component.translatable("gui.weapon.condition").append(": " + condition + "%")
                 .withStyle(ChatFormatting.GRAY));
         for (ItemStack mod : WeaponModManager.installedMods(stack, 0)) {

@@ -39,6 +39,7 @@ public abstract class SednaGunItem extends Item {
     public abstract int gunCapacity();
     public abstract float gunWear(ItemStack stack);
     public abstract float gunDurability();
+    public float gunDurability(ItemStack stack) { return gunDurability(); }
     /** Broken Maresleg has no condition because zero durability means forever. */
     public boolean gunShowDurability() { return true; }
     /** Belt guns count boxes, not individual regrets. */

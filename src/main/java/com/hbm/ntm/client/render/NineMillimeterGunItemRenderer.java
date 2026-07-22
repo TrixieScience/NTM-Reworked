@@ -2,6 +2,7 @@ package com.hbm.ntm.client.render;
 
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.client.ClientWeaponEvents;
+import com.hbm.ntm.client.model.EnvsuitMesh;
 import com.hbm.ntm.item.NineMillimeterGunItem;
 import com.hbm.ntm.weapon.WeaponModManager;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -21,8 +23,15 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.Set;
+
 /** Exact grouped ItemRenderGreasegun/ItemRenderUzi transforms and XFactory9mm buses. */
 public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevelRenderer {
+    private static final ResourceLocation GREASE_MODEL = id("models/item/greasegun.obj");
+    private static final ResourceLocation GREASE_TEXTURE = id("textures/block/greasegun.png");
+    private static final ResourceLocation GREASE_CLEAN_TEXTURE = id("textures/block/greasegun_clean.png");
+    private static final Set<String> GREASE_GROUPS = Set.of(
+            "Gun", "Stock", "Magazine", "Bullet", "Handle", "Flap");
     public static final ModelResourceLocation GREASE_GUN = model("greasegun_gun");
     public static final ModelResourceLocation GREASE_STOCK = model("greasegun_stock");
     public static final ModelResourceLocation GREASE_MAGAZINE = model("greasegun_magazine");
@@ -36,6 +45,7 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
     public static final ModelResourceLocation UZI_MAGAZINE = model("uzi_magazine");
     public static final ModelResourceLocation UZI_BULLET = model("uzi_bullet");
     public static final ModelResourceLocation UZI_SILENCER = model("uzi_silencer");
+    private EnvsuitMesh greaseMesh;
 
     public NineMillimeterGunItemRenderer() {
         super(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
@@ -72,8 +82,8 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
         poses.popPose();
     }
 
-    private static void renderGreaseFirstPerson(ItemStack stack, PoseStack poses,
-                                                 MultiBufferSource buffers, int light, int overlay) {
+    private void renderGreaseFirstPerson(ItemStack stack, PoseStack poses,
+                                         MultiBufferSource buffers, int light, int overlay) {
         GreaseAnimation animation = greaseAnimation(stack);
         pivotRotateX(poses, 0.0D, -3.0D, -3.0D, animation.equip.x);
         pivotRotateX(poses, 0.0D, -3.0D, -3.0D, animation.lift.x);
@@ -83,29 +93,29 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
         }
         poses.translate(0.0D, 0.0D, animation.recoil.z);
 
-        renderModel(GREASE_GUN, poses, buffers, light, overlay);
+        renderGrease("Gun", stack, poses, buffers, light, overlay);
 
         poses.pushPose();
         poses.translate(0.0D, 0.0D, -4.0D - animation.stock.z);
-        renderModel(GREASE_STOCK, poses, buffers, light, overlay);
+        renderGrease("Stock", stack, poses, buffers, light, overlay);
         poses.popPose();
 
         poses.pushPose();
         poses.translate(animation.mag.x, animation.mag.y, animation.mag.z);
-        renderModel(GREASE_MAGAZINE, poses, buffers, light, overlay);
-        if (animation.bullet.x != 1.0D) renderModel(GREASE_BULLET, poses, buffers, light, overlay);
+        renderGrease("Magazine", stack, poses, buffers, light, overlay);
+        if (animation.bullet.x != 1.0D) renderGrease("Bullet", stack, poses, buffers, light, overlay);
         poses.popPose();
 
         poses.pushPose();
         pivotRotateX(poses, 0.0D, -1.4375D, -0.125D, animation.handle.x);
-        renderModel(GREASE_HANDLE, poses, buffers, light, overlay);
+        renderGrease("Handle", stack, poses, buffers, light, overlay);
         poses.popPose();
 
         poses.pushPose();
         poses.translate(0.0D, 0.53125D, 0.0D);
         poses.mulPose(Axis.ZP.rotationDegrees((float) animation.flap.z));
         poses.translate(0.0D, -0.5125D, 0.0D);
-        renderModel(GREASE_FLAP, poses, buffers, light, overlay);
+        renderGrease("Flap", stack, poses, buffers, light, overlay);
         poses.popPose();
 
         boolean reloading = NineMillimeterGunItem.state(stack) == NineMillimeterGunItem.GunState.RELOADING;
@@ -175,15 +185,12 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
         }
     }
 
-    private static void renderStatic(ItemStack stack, boolean grease, PoseStack poses, MultiBufferSource buffers,
-                                     int light, int overlay) {
+    private void renderStatic(ItemStack stack, boolean grease, PoseStack poses, MultiBufferSource buffers,
+                              int light, int overlay) {
         if (grease) {
-            renderModel(GREASE_GUN, poses, buffers, light, overlay);
-            renderModel(GREASE_STOCK, poses, buffers, light, overlay);
-            renderModel(GREASE_MAGAZINE, poses, buffers, light, overlay);
-            renderModel(GREASE_BULLET, poses, buffers, light, overlay);
-            renderModel(GREASE_HANDLE, poses, buffers, light, overlay);
-            renderModel(GREASE_FLAP, poses, buffers, light, overlay);
+            for (String group : GREASE_GROUPS) {
+                renderGrease(group, stack, poses, buffers, light, overlay);
+            }
         } else {
             renderModel(UZI_GUN, poses, buffers, light, overlay);
             renderModel(UZI_STOCK_FRONT, poses, buffers, light, overlay);
@@ -194,6 +201,22 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
                 renderModel(UZI_SILENCER, poses, buffers, light, overlay);
             }
         }
+    }
+
+    private void renderGrease(String group, ItemStack stack, PoseStack poses,
+                              MultiBufferSource buffers, int light, int overlay) {
+        ResourceLocation texture = NineMillimeterGunItem.isModernized(stack)
+                ? GREASE_CLEAN_TEXTURE : GREASE_TEXTURE;
+        greaseMesh().render(group, poses.last(), buffers.getBuffer(RenderType.entityCutout(texture)),
+                1.0F, light, overlay, -1);
+    }
+
+    private EnvsuitMesh greaseMesh() {
+        if (greaseMesh == null) {
+            greaseMesh = EnvsuitMesh.load(Minecraft.getInstance().getResourceManager(),
+                    GREASE_MODEL, GREASE_GROUPS, "Grease Gun");
+        }
+        return greaseMesh;
     }
 
     private static void setupContext(ItemDisplayContext context, PoseStack poses, boolean grease) {
@@ -403,6 +426,10 @@ public final class NineMillimeterGunItemRenderer extends BlockEntityWithoutLevel
 
     private static ModelResourceLocation model(String path) {
         return ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "item/" + path));
+    }
+
+    private static ResourceLocation id(String path) {
+        return ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, path);
     }
 
     private static final Vec ZERO = new Vec(0, 0, 0);

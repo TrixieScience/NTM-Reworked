@@ -292,7 +292,7 @@ public final class ClientWeaponEvents {
         int barY = graphics.guiHeight() - 5;
         // Broken Maresleg has zero durability. Do not draw a bar by dividing by zero.
         if (gun.gunShowDurability()) {
-            int used = (int) (50.0F * gun.gunWear(stack) / gun.gunDurability());
+            int used = (int) (50.0F * gun.gunWear(stack) / gun.gunDurability(stack));
             graphics.blit(OVERLAY, x, barY, 94.0F, 0.0F, 52, 3, 256, 256);
             graphics.blit(OVERLAY, x + 1, barY, 95.0F, 3.0F, 50 - used, 3, 256, 256);
         }
