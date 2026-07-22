@@ -18,17 +18,22 @@ import java.util.List;
 
 public final class WeaponModManager {
     public static final int TABLE_SLOTS = 7;
+    public static final int SPEEDLOADER = 200;
     public static final int SILENCER = 201;
     private static final String MOD_LIST = "KEY_MOD_LIST_";
 
     private WeaponModManager() {}
 
     public static boolean isMod(ItemStack stack) {
-        return stack.is(ModItems.WEAPON_MOD_SILENCER.get());
+        return stack.is(ModItems.WEAPON_MOD_SILENCER.get())
+                || stack.is(ModItems.WEAPON_MOD_SPEEDLOADER.get());
     }
 
     public static boolean isApplicable(ItemStack gun, ItemStack mod, int config) {
         if (gun.isEmpty() || mod.isEmpty() || config < 0 || config >= configCount(gun)) return false;
+        if (mod.is(ModItems.WEAPON_MOD_SPEEDLOADER.get())) {
+            return gun.is(ModItems.GUN_LIBERATOR.get());
+        }
         if (!mod.is(ModItems.WEAPON_MOD_SILENCER.get())) return false;
         if (gun.getItem() instanceof TwentyTwoGunItem item) {
             return item.variant() == TwentyTwoGunItem.Variant.AM180
@@ -52,6 +57,7 @@ public final class WeaponModManager {
                 && item.variant() == NineMillimeterGunItem.Variant.UZI) return 1;
         if (gun.getItem() instanceof G3Item item && item.variant() == G3Item.Variant.STANDARD) return 1;
         if (gun.is(ModItems.GUN_AMAT.get())) return 1;
+        if (gun.is(ModItems.GUN_LIBERATOR.get())) return 1;
         return 0;
     }
 
@@ -68,6 +74,7 @@ public final class WeaponModManager {
     public static List<ItemStack> installedMods(ItemStack gun, int config) {
         List<ItemStack> result = new ArrayList<>();
         for (int id : installedIds(gun, config)) {
+            if (id == SPEEDLOADER) result.add(new ItemStack(ModItems.WEAPON_MOD_SPEEDLOADER.get()));
             if (id == SILENCER) result.add(new ItemStack(ModItems.WEAPON_MOD_SILENCER.get()));
         }
         return result;
@@ -95,6 +102,7 @@ public final class WeaponModManager {
     }
 
     private static int id(ItemStack stack) {
+        if (stack.is(ModItems.WEAPON_MOD_SPEEDLOADER.get())) return SPEEDLOADER;
         return stack.is(ModItems.WEAPON_MOD_SILENCER.get()) ? SILENCER : -1;
     }
 

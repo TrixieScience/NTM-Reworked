@@ -1411,6 +1411,9 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, generatedItemModel("weapon_mod_silencer"), itemModels,
                 hbm("weapon_mod_silencer")));
         writes.add(save(output, silencerRecipe(), recipes, hbm("weapon_mod_silencer")));
+        writes.add(save(output, generatedItemModel("weapon_mod_speedloader"), itemModels,
+                hbm("weapon_mod_speedloader")));
+        writes.add(save(output, speedloaderRecipe(), recipes, hbm("weapon_mod_speedloader")));
         for (String material : List.of("iron", "lead", "steel", "desh", "ferrouranium", "saturnite",
                 "bismuth_bronze", "arsenic_bronze", "schrabidate", "dnt", "osmiridium", "murky")) {
             writes.add(save(output, selfDropLoot("anvil_" + material), lootTables, hbm("anvil_" + material)));
@@ -2321,6 +2324,13 @@ public final class MaterialResourcesProvider implements DataProvider {
         key.put("P", tagIngredient("c:ingots/polymer"));
         key.put("B", foundryPart("part_barrel_light", "steel", 30));
         return shapedItemRecipe(List.of("P", "B", "P"), key, "hbm:weapon_mod_silencer");
+    }
+
+    private JsonObject speedloaderRecipe() {
+        Map<String, JsonObject> key = new LinkedHashMap<>();
+        key.put("B", materialComponentIngredient("hbm:bolt", "steel", 30));
+        key.put("S", itemIngredient("hbm:plate_weaponsteel"));
+        return shapedItemRecipe(List.of(" B ", "BSB", " B "), key, "hbm:weapon_mod_speedloader");
     }
 
     private JsonObject baseAnvilRecipe(String material) {

@@ -74,6 +74,18 @@ public final class WeaponModifierGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void speedloaderOnlyFitsLiberator(GameTestHelper helper) {
+        ItemStack speedloader = new ItemStack(ModItems.WEAPON_MOD_SPEEDLOADER.get());
+        helper.assertTrue(WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_LIBERATOR.get()), speedloader, 0),
+                "Speedloader must fit the Liberator");
+        helper.assertTrue(!WeaponModManager.isApplicable(
+                        new ItemStack(ModItems.GUN_AMAT.get()), speedloader, 0),
+                "Speedloader must not fit unrelated magazine-fed guns");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void dualReceiverStorageStaysIndependent(GameTestHelper helper) {
         ItemStack dual = new ItemStack(ModItems.GUN_UZI_AKIMBO.get());
         ItemStack silencer = new ItemStack(ModItems.WEAPON_MOD_SILENCER.get());

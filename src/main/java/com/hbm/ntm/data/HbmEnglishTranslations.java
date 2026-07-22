@@ -1293,6 +1293,7 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.machine_armor_table", "Armor Table");
         language.addProperty("block.hbm.machine_weapon_table", "Weapon Modifier");
         language.addProperty("item.hbm.weapon_mod_silencer", "Silencer");
+        language.addProperty("item.hbm.weapon_mod_speedloader", "Speedloader");
         language.addProperty("block.hbm.anvil_iron", "Iron Anvil");
         language.addProperty("block.hbm.anvil_lead", "Lead Anvil");
         language.addProperty("block.hbm.anvil_steel", "Steel Anvil");

@@ -3,6 +3,7 @@ package com.hbm.ntm.client.render;
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.client.ClientWeaponEvents;
 import com.hbm.ntm.item.LiberatorItem;
+import com.hbm.ntm.weapon.WeaponModManager;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
@@ -205,7 +206,8 @@ public final class LiberatorItemRenderer extends BlockEntityWithoutLevelRenderer
                     sequence(time, frame(0, 0, -2.5, 50, Curve.SIN_DOWN), frame(0, 0, 0, 350, Curve.SIN_FULL)),
                     ZERO, ZERO, ZERO, ZERO, ZERO, ZERO);
             case CYCLE_DRY -> Animation.NONE; // empty BusAnimation: no gun movement.
-            case RELOAD -> reload(time, rounds);
+            case RELOAD -> WeaponModManager.hasMod(stack, 0, WeaponModManager.SPEEDLOADER)
+                    ? speedloaderReload(time) : reload(time, rounds);
             case RELOAD_CYCLE -> reloadCycle(time, rounds, LiberatorItem.amountBeforeReload(stack));
             case RELOAD_END -> new Animation(ZERO, ZERO,
                     sequence(time, frame(15, 0, 0, 0), frame(15, 0, 0, 250), frame(0, 0, 0, 50)),
@@ -239,6 +241,14 @@ public final class LiberatorItemRenderer extends BlockEntityWithoutLevelRenderer
         return new Animation(ZERO, ZERO, latch, brk,
                 shellReload(time, rounds, 0), shellReload(time, rounds, 1),
                 shellReload(time, rounds, 2), shellReload(time, rounds, 3));
+    }
+
+    private static Animation speedloaderReload(double time) {
+        Vec latch = sequence(time, frame(15, 0, 0, 100));
+        Vec brk = sequence(time, frame(0, 0, 0, 100), frame(60, 0, 0, 350, Curve.SIN_DOWN));
+        Vec shell = sequence(time, frame(2, -4, -2, 0), frame(2, -4, -2, 400),
+                frame(0, 0, -2, 450, Curve.SIN_FULL), frame(0, 0, 0, 50, Curve.SIN_UP));
+        return new Animation(ZERO, ZERO, latch, brk, shell, shell, shell, shell);
     }
 
     /** Only the shell currently being bullied into place moves. */

@@ -8,6 +8,7 @@ import com.hbm.ntm.weapon.GunInput;
 import com.hbm.ntm.weapon.Shotgun12GaugeAmmoType;
 import com.hbm.ntm.weapon.SednaCrosshair;
 import com.hbm.ntm.weapon.StandardAmmoTypes;
+import com.hbm.ntm.weapon.WeaponModManager;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -115,11 +116,12 @@ public final class LiberatorItem extends SednaGunItem {
 
         int timer = tag.getInt(TIMER);
         if (timer > 0) tag.putInt(TIMER, timer - 1);
-        if (timer <= 1) decide(living, tag, previous);
+        if (timer <= 1) decide(living, stack, tag, previous);
         save(stack, tag);
     }
 
-    private static void decide(LivingEntity living, CompoundTag tag, GunState previous) {
+    private static void decide(LivingEntity living, ItemStack stack, CompoundTag tag,
+                               GunState previous) {
         if (previous == GunState.DRAWING || previous == GunState.COOLDOWN || previous == GunState.JAMMED) {
             tag.putByte(STATE, (byte) GunState.IDLE.ordinal());
             tag.putInt(TIMER, 0);
@@ -127,8 +129,10 @@ public final class LiberatorItem extends SednaGunItem {
         }
         if (previous != GunState.RELOADING || !(living instanceof Player player)) return;
 
-        reloadOne(player, tag);
-        if (!tag.getBoolean(CANCEL_RELOAD) && canReload(player.getInventory(), tag)) {
+        boolean speedloader = WeaponModManager.hasMod(stack, 0, WeaponModManager.SPEEDLOADER);
+        if (speedloader) reloadAll(player, tag);
+        else reloadOne(player, tag);
+        if (!speedloader && !tag.getBoolean(CANCEL_RELOAD) && canReload(player.getInventory(), tag)) {
             tag.putByte(STATE, (byte) GunState.RELOADING.ordinal());
             tag.putInt(TIMER, RELOAD_CYCLE_TICKS);
             playAnimation(tag, GunAnimation.RELOAD_CYCLE);
@@ -250,6 +254,26 @@ public final class LiberatorItem extends SednaGunItem {
             gun.putInt(MAG_COUNT, loaded + 1);
             return;
         }
+    }
+
+    private static void reloadAll(Player player, CompoundTag gun) {
+        Inventory inventory = player.getInventory();
+        int loaded = Mth.clamp(gun.getInt(MAG_COUNT), 0, CAPACITY);
+        Shotgun12GaugeAmmoType type = loaded > 0
+                ? Shotgun12GaugeAmmoType.fromLegacyBulletConfig(gun.getInt(MAG_TYPE))
+                : findFirstAmmo(inventory, null);
+        if (type == null || loaded >= CAPACITY) return;
+        if (loaded == 0) gun.putInt(MAG_TYPE, type.legacyBulletConfig());
+
+        for (int slot = 0; slot < inventory.getContainerSize() && loaded < CAPACITY; slot++) {
+            ItemStack candidate = inventory.getItem(slot);
+            if (!candidate.is(ModItems.AMMO_STANDARD.get()) || candidate.isEmpty()
+                    || StandardAmmoTypes.fromStack(candidate) != type) continue;
+            int consumed = Math.min(CAPACITY - loaded, candidate.getCount());
+            candidate.shrink(consumed);
+            loaded += consumed;
+        }
+        gun.putInt(MAG_COUNT, loaded);
     }
 
     private static Shotgun12GaugeAmmoType findFirstAmmo(Inventory inventory, Shotgun12GaugeAmmoType required) {
@@ -381,6 +405,9 @@ public final class LiberatorItem extends SednaGunItem {
         int condition = Mth.clamp((int) ((DURABILITY - wear(stack)) * 100.0F / DURABILITY), 0, 100);
         tooltip.add(Component.translatable("gui.weapon.condition").append(": " + condition + "%")
                 .withStyle(ChatFormatting.GRAY));
+        for (ItemStack mod : WeaponModManager.installedMods(stack, 0)) {
+            tooltip.add(mod.getHoverName().copy().withStyle(ChatFormatting.YELLOW));
+        }
         tooltip.add(Component.translatable("gui.weapon.quality.aside").withStyle(ChatFormatting.YELLOW));
     }
 

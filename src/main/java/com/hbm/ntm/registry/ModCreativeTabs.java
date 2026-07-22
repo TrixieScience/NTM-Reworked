@@ -609,6 +609,7 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GUN_MAS36.get());
                         output.accept(ModItems.GUN_AM180.get());
                         output.accept(ModItems.WEAPON_MOD_SILENCER.get());
+                        output.accept(ModItems.WEAPON_MOD_SPEEDLOADER.get());
                         output.accept(ModItems.GUN_STAR_F.get());
                         output.accept(ModItems.GUN_STAR_F_AKIMBO.get());
                         output.accept(ModItems.GUN_FLAMER.get());

@@ -140,6 +140,29 @@ public final class LiberatorGameTests {
     }
 
     @GameTest(template = "empty")
+    public static void speedloaderFillsAllFourShellsInOpeningPhase(GameTestHelper helper) {
+        Player player = armedPlayer(helper, Shotgun12GaugeAmmoType.BUCKSHOT, 0, 0.0F);
+        ItemStack gun = player.getMainHandItem();
+        WeaponModManager.install(gun, 0,
+                List.of(new ItemStack(ModItems.WEAPON_MOD_SPEEDLOADER.get())));
+        player.getInventory().add(Shotgun12GaugeAmmoType.FLECHETTE.createStack(
+                ModItems.AMMO_STANDARD.get(), 8));
+
+        SednaGunItem.handleInput(player, GunInput.RELOAD);
+        tickHeld(helper, player, 24);
+        helper.assertTrue(LiberatorItem.rounds(gun) == 0,
+                "Speedloader must not transfer shells before the action is fully open");
+        tickHeld(helper, player, 1);
+        helper.assertTrue(LiberatorItem.rounds(gun) == 4
+                        && LiberatorItem.loadedAmmo(gun) == Shotgun12GaugeAmmoType.FLECHETTE
+                        && LiberatorItem.state(gun) == LiberatorItem.GunState.DRAWING
+                        && LiberatorItem.timer(gun) == 7
+                        && LiberatorItem.animation(gun) == LiberatorItem.GunAnimation.RELOAD_END,
+                "Speedloader must fill all four chambers together and immediately close the action");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
     public static void reloadCancelFinishesCurrentShellAndPreservesOtherAmmo(GameTestHelper helper) {
         Player player = armedPlayer(helper, Shotgun12GaugeAmmoType.FLECHETTE, 2, 0.0F);
         ItemStack gun = player.getMainHandItem();
