@@ -894,7 +894,10 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:machine_battery_redd");
         mineableBlocks.add("hbm:machine_press");
         mineableBlocks.add("hbm:machine_ammo_press");
+        mineableBlocks.add("hbm:turret_chekhov");
         mineableBlocks.add("hbm:turret_friendly");
+        mineableBlocks.add("hbm:turret_jeremy");
+        mineableBlocks.add("hbm:turret_tauon");
         mineableBlocks.add("hbm:press_preheater");
         mineableBlocks.add("hbm:machine_shredder");
         mineableBlocks.add("hbm:machine_assembly_machine");
@@ -1020,10 +1023,18 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, unconditionalMultipartState("machine_ammo_press"), blockStates, hbm("machine_ammo_press")));
         writes.add(save(output, selfDropLoot("machine_ammo_press"), lootTables, hbm("machine_ammo_press")));
         writes.add(save(output, ammoPressRecipe(), recipes, hbm("machine_ammo_press")));
-        writes.add(save(output, emptyModel("block_steel"), blockModels, hbm("turret_friendly")));
-        writes.add(save(output, unconditionalMultipartState("turret_friendly"), blockStates,
-                hbm("turret_friendly")));
-        writes.add(save(output, selfDropLoot("turret_friendly"), lootTables, hbm("turret_friendly")));
+        for (String turret : List.of("turret_chekhov", "turret_friendly", "turret_jeremy", "turret_tauon")) {
+            writes.add(save(output, emptyModel("block_steel"), blockModels, hbm(turret)));
+            writes.add(save(output, unconditionalMultipartState(turret), blockStates, hbm(turret)));
+            writes.add(save(output, selfDropLoot(turret), lootTables, hbm(turret)));
+        }
+        writes.add(save(output, ammoShellItemModel(), itemModels, hbm("ammo_shell")));
+        for (com.hbm.ntm.weapon.TurretShellAmmoType shell
+                : com.hbm.ntm.weapon.TurretShellAmmoType.values()) {
+            if (shell.ordinal() == 0) continue;
+            writes.add(save(output, generatedItemModel(shell.serializedName()), itemModels,
+                    hbm(shell.serializedName())));
+        }
         writes.add(save(output, generatedItemModel("turret_chip"), itemModels, hbm("turret_chip")));
         writes.add(save(output, pressPreheaterRecipe(), recipes, hbm("press_preheater")));
         addFlatStampRecipes(writes, output);
@@ -2802,6 +2813,23 @@ public final class MaterialResourcesProvider implements DataProvider {
         display.add("gui", displayTransform(List.of(30, 225, 0), List.of(0, -2, 0),
                 List.of(0.0625, 0.0625, 0.0625)));
         root.add("display", display);
+        return root;
+    }
+
+    private JsonObject ammoShellItemModel() {
+        JsonObject root = generatedItemModel("ammo_shell");
+        JsonArray overrides = new JsonArray();
+        for (com.hbm.ntm.weapon.TurretShellAmmoType shell
+                : com.hbm.ntm.weapon.TurretShellAmmoType.values()) {
+            if (shell.ordinal() == 0) continue;
+            JsonObject override = new JsonObject();
+            JsonObject predicate = new JsonObject();
+            predicate.addProperty("custom_model_data", shell.ordinal());
+            override.add("predicate", predicate);
+            override.addProperty("model", "hbm:item/" + shell.serializedName());
+            overrides.add(override);
+        }
+        root.add("overrides", overrides);
         return root;
     }
 

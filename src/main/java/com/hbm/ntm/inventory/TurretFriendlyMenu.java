@@ -4,8 +4,7 @@ import com.hbm.ntm.blockentity.TurretFriendlyBlockEntity;
 import com.hbm.ntm.item.HeBatteryItem;
 import com.hbm.ntm.item.TurretChipItem;
 import com.hbm.ntm.registry.ModMenus;
-import com.hbm.ntm.weapon.FiveFiveSixAmmoType;
-import com.hbm.ntm.weapon.StandardAmmoTypes;
+import com.hbm.ntm.blockentity.TurretVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -23,19 +22,20 @@ public final class TurretFriendlyMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public TurretFriendlyMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
-        this(id, inventory, find(inventory, buffer.readBlockPos()), new SimpleContainerData(7));
+        this(id, inventory, find(inventory, buffer.readBlockPos()), new SimpleContainerData(8));
     }
 
     public TurretFriendlyMenu(int id, Inventory inventory, Container turret, ContainerData data) {
         super(ModMenus.TURRET_FRIENDLY.get(), id);
         checkContainerSize(turret, TurretFriendlyBlockEntity.SLOT_COUNT);
-        checkContainerDataCount(data, 7);
+        checkContainerDataCount(data, 8);
         this.turret = turret;
         this.data = data;
         addSlot(new FilterSlot(turret, 0, 98, 27, stack -> stack.getItem() instanceof TurretChipItem));
         for (int row = 0; row < 3; row++) for (int column = 0; column < 3; column++) {
             addSlot(new FilterSlot(turret, 1 + row * 3 + column, 80 + column * 18, 63 + row * 18,
-                    stack -> StandardAmmoTypes.fromStack(stack) instanceof FiveFiveSixAmmoType));
+                    stack -> !(turret instanceof TurretFriendlyBlockEntity friendly)
+                            || friendly.variant().accepts(stack)));
         }
         addSlot(new FilterSlot(turret, 10, 152, 99, stack -> stack.getItem() instanceof HeBatteryItem));
         for (int row = 0; row < 3; row++) for (int column = 0; column < 9; column++) {
@@ -76,6 +76,12 @@ public final class TurretFriendlyMenu extends AbstractContainerMenu {
     public boolean active() { return data.get(1) != 0; }
     public boolean mode(int id) { return data.get(id + 1) != 0; }
     public int stattrak() { return data.get(6); }
+    public TurretVariant variant() {
+        int ordinal = data.get(7);
+        return ordinal >= 0 && ordinal < TurretVariant.values().length
+                ? TurretVariant.values()[ordinal] : TurretVariant.FRIENDLY;
+    }
+    public long maxPower() { return variant().maxPower(); }
     public java.util.List<String> whitelist() { return TurretChipItem.names(turret.getItem(0)); }
     public void editWhitelist(int action, String name, int index) {
         if (!(turret instanceof TurretFriendlyBlockEntity friendly)) return;

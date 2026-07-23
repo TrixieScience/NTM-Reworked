@@ -244,7 +244,10 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> RED_CABLE_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_PRESS_ITEM;
     public static final DeferredItem<BlockItem> AMMO_PRESS_ITEM;
+    public static final DeferredItem<BlockItem> TURRET_CHEKHOV_ITEM;
     public static final DeferredItem<BlockItem> TURRET_FRIENDLY_ITEM;
+    public static final DeferredItem<BlockItem> TURRET_JEREMY_ITEM;
+    public static final DeferredItem<BlockItem> TURRET_TAUON_ITEM;
     public static final DeferredItem<TurretChipItem> TURRET_CHIP;
     public static final DeferredItem<BlockItem> PRESS_PREHEATER_ITEM;
     public static final DeferredItem<BlockItem> MACHINE_SHREDDER_ITEM;
@@ -442,6 +445,7 @@ public final class ModItems {
     public static final DeferredItem<Item> CUSTOM_SCHRAB;
     public static final DeferredItem<CustomLoreItem> IGNITER;
     public static final DeferredItem<AmmoStandardItem> AMMO_STANDARD;
+    public static final DeferredItem<com.hbm.ntm.item.AmmoShellItem> AMMO_SHELL;
     public static final DeferredItem<AmmoSecretItem> AMMO_SECRET;
     public static final DeferredItem<Item> AMMO_DEBUG;
     public static final DeferredItem<FireExtinguisherAmmoItem> AMMO_FIREEXT;
@@ -909,7 +913,10 @@ public final class ModItems {
         RED_CABLE_ITEM = ITEMS.registerSimpleBlockItem("red_cable", ModBlocks.RED_CABLE);
         MACHINE_PRESS_ITEM = ITEMS.registerSimpleBlockItem("machine_press", ModBlocks.MACHINE_PRESS);
         AMMO_PRESS_ITEM = ITEMS.registerSimpleBlockItem("machine_ammo_press", ModBlocks.AMMO_PRESS);
+        TURRET_CHEKHOV_ITEM = ITEMS.registerSimpleBlockItem("turret_chekhov", ModBlocks.TURRET_CHEKHOV);
         TURRET_FRIENDLY_ITEM = ITEMS.registerSimpleBlockItem("turret_friendly", ModBlocks.TURRET_FRIENDLY);
+        TURRET_JEREMY_ITEM = ITEMS.registerSimpleBlockItem("turret_jeremy", ModBlocks.TURRET_JEREMY);
+        TURRET_TAUON_ITEM = ITEMS.registerSimpleBlockItem("turret_tauon", ModBlocks.TURRET_TAUON);
         TURRET_CHIP = ITEMS.register("turret_chip", TurretChipItem::new);
         PRESS_PREHEATER_ITEM = ITEMS.registerSimpleBlockItem("press_preheater", ModBlocks.PRESS_PREHEATER);
         MACHINE_SHREDDER_ITEM = ITEMS.registerSimpleBlockItem("machine_shredder", ModBlocks.MACHINE_SHREDDER);
@@ -1252,6 +1259,7 @@ public final class ModItems {
                 "item.hbm.igniter.desc.0", "item.hbm.igniter.desc.1", "item.hbm.igniter.desc.2",
                 "item.hbm.igniter.desc.3", "item.hbm.igniter.desc.4", "item.hbm.igniter.desc.5"));
         AMMO_STANDARD = ITEMS.register("ammo_standard", AmmoStandardItem::new);
+        AMMO_SHELL = ITEMS.register("ammo_shell", com.hbm.ntm.item.AmmoShellItem::new);
         AMMO_DEBUG = ITEMS.registerSimpleItem("ammo_debug");
         AMMO_FIREEXT = ITEMS.register("ammo_fireext", FireExtinguisherAmmoItem::new);
         GUN_PEPPERBOX = ITEMS.register("gun_pepperbox", PepperboxItem::new);

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class TurretFriendlyProxyBlockEntity extends InventoryProxyBlockEntity<TurretFriendlyBlockEntity> {
     public TurretFriendlyProxyBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.TURRET_FRIENDLY_PROXY.get(), pos, state);
+        super(ModBlockEntities.TURRET_PROXY.get(), pos, state);
     }
 
     @Nullable @Override public TurretFriendlyBlockEntity target() {

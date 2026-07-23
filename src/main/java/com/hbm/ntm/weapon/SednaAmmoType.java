@@ -29,6 +29,7 @@ public interface SednaAmmoType {
     default boolean blackPowder() { return false; }
     default float impactExplosionRadius() { return 0.0F; }
     default double impactExplosionRange() { return impactExplosionRadius() * 2.0D; }
+    default boolean impactBreaksBlocks() { return false; }
     default boolean explodesBeforeDirectHit() { return false; }
     default boolean tinyImpactExplosion() { return false; }
     default int phosphorusTicks() { return 0; }
@@ -39,6 +40,7 @@ public interface SednaAmmoType {
     default float blockBreakHardness() { return -1.0F; }
     default boolean spawnsBuildingOnImpact() { return false; }
     default int fallingPayload() { return 0; }
+    default boolean nuclearImpact() { return false; }
     default int tracerDarkColor() { return 0xFFFFBF00; }
     default int tracerLightColor() { return 0xFFFFFFFF; }
     default boolean tracerFullbright() { return false; }

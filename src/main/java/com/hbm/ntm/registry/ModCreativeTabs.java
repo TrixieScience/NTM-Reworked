@@ -573,8 +573,15 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("itemGroup.hbm.weapon"))
                     .icon(() -> ModItems.GUN_PEPPERBOX.get().getDefaultInstance())
                     .displayItems((parameters, output) -> {
+                        output.accept(ModItems.TURRET_CHEKHOV_ITEM.get());
                         output.accept(ModItems.TURRET_FRIENDLY_ITEM.get());
+                        output.accept(ModItems.TURRET_JEREMY_ITEM.get());
+                        output.accept(ModItems.TURRET_TAUON_ITEM.get());
                         output.accept(ModItems.TURRET_CHIP.get());
+                        for (com.hbm.ntm.weapon.TurretShellAmmoType type
+                                : com.hbm.ntm.weapon.TurretShellAmmoType.values()) {
+                            output.accept(type.createStack(ModItems.AMMO_SHELL.get(), 1));
+                        }
                         output.accept(ModItems.GUN_PEPPERBOX.get());
                         output.accept(ModItems.GUN_DEBUG.get());
                         output.accept(ModItems.GUN_LIGHT_REVOLVER.get());

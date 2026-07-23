@@ -693,9 +693,26 @@ public final class ModBlockEntities {
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_FRIENDLY =
             BLOCK_ENTITY_TYPES.register("turret_friendly", () -> BlockEntityType.Builder.of(
                     TurretFriendlyBlockEntity::new, ModBlocks.TURRET_FRIENDLY.get()).build(null));
-    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyProxyBlockEntity>> TURRET_FRIENDLY_PROXY =
-            BLOCK_ENTITY_TYPES.register("turret_friendly_proxy", () -> BlockEntityType.Builder.of(
-                    TurretFriendlyProxyBlockEntity::new, ModBlocks.TURRET_FRIENDLY.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_CHEKHOV =
+            BLOCK_ENTITY_TYPES.register("turret_chekhov", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.CHEKHOV, pos, state),
+                    ModBlocks.TURRET_CHEKHOV.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_JEREMY =
+            BLOCK_ENTITY_TYPES.register("turret_jeremy", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.JEREMY, pos, state),
+                    ModBlocks.TURRET_JEREMY.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_TAUON =
+            BLOCK_ENTITY_TYPES.register("turret_tauon", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.TAUON, pos, state),
+                    ModBlocks.TURRET_TAUON.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyProxyBlockEntity>> TURRET_PROXY =
+            BLOCK_ENTITY_TYPES.register("turret_proxy", () -> BlockEntityType.Builder.of(
+                    TurretFriendlyProxyBlockEntity::new, ModBlocks.TURRET_CHEKHOV.get(),
+                    ModBlocks.TURRET_FRIENDLY.get(), ModBlocks.TURRET_JEREMY.get(),
+                    ModBlocks.TURRET_TAUON.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RadioTorchBlockEntity>> RADIO_TORCH =
             BLOCK_ENTITY_TYPES.register("radio_torch", () -> BlockEntityType.Builder.of(RadioTorchBlockEntity::new,

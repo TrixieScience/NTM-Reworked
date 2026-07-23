@@ -205,6 +205,9 @@ public final class ModBlocks {
     public static final DeferredBlock<MachinePressBlock> MACHINE_PRESS;
     public static final DeferredBlock<AmmoPressBlock> AMMO_PRESS;
     public static final DeferredBlock<TurretFriendlyBlock> TURRET_FRIENDLY;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_CHEKHOV;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_JEREMY;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_TAUON;
     public static final DeferredBlock<Block> PRESS_PREHEATER;
     public static final DeferredBlock<MachineShredderBlock> MACHINE_SHREDDER;
     public static final DeferredBlock<ColoredFallingBlock> GRAVEL_OBSIDIAN;
@@ -595,9 +598,14 @@ public final class ModBlocks {
                         .requiresCorrectToolForDrops()
                         .noOcclusion())
         );
+        TURRET_CHEKHOV = BLOCKS.register("turret_chekhov", () -> new TurretFriendlyBlock(
+                turretProperties(10F), com.hbm.ntm.blockentity.TurretVariant.CHEKHOV));
         TURRET_FRIENDLY = BLOCKS.register("turret_friendly", () -> new TurretFriendlyBlock(
-                BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5F, 10F)
-                        .sound(SoundType.METAL).noOcclusion()));
+                turretProperties(10F), com.hbm.ntm.blockentity.TurretVariant.FRIENDLY));
+        TURRET_JEREMY = BLOCKS.register("turret_jeremy", () -> new TurretFriendlyBlock(
+                turretProperties(600F), com.hbm.ntm.blockentity.TurretVariant.JEREMY));
+        TURRET_TAUON = BLOCKS.register("turret_tauon", () -> new TurretFriendlyBlock(
+                turretProperties(60F), com.hbm.ntm.blockentity.TurretVariant.TAUON));
         PRESS_PREHEATER = BLOCKS.register(
                 "press_preheater",
                 () -> new Block(BlockBehaviour.Properties.of()
@@ -1059,6 +1067,11 @@ public final class ModBlocks {
         BLOCK_COKE_COAL = registerCokeBlock("block_coke_coal");
         BLOCK_COKE_LIGNITE = registerCokeBlock("block_coke_lignite");
         BLOCK_COKE_PETROLEUM = registerCokeBlock("block_coke_petroleum");
+    }
+
+    private static BlockBehaviour.Properties turretProperties(float resistance) {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5F, resistance)
+                .sound(SoundType.METAL).noOcclusion();
     }
 
     private ModBlocks() {

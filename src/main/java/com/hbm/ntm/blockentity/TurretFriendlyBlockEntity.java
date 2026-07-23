@@ -4,6 +4,7 @@ import com.hbm.ntm.energy.HeReceiver;
 import com.hbm.ntm.block.TurretFriendlyBlock;
 import com.hbm.ntm.compat.TurretTargetingFrame;
 import com.hbm.ntm.entity.BulletEntity;
+import com.hbm.ntm.entity.TauBeamEntity;
 import com.hbm.ntm.inventory.TurretFriendlyMenu;
 import com.hbm.ntm.item.HeBatteryItem;
 import com.hbm.ntm.item.TurretChipItem;
@@ -12,8 +13,11 @@ import com.hbm.ntm.registry.ModBlockEntities;
 import com.hbm.ntm.registry.ModItems;
 import com.hbm.ntm.registry.ModSounds;
 import com.hbm.ntm.weapon.FiveFiveSixAmmoType;
+import com.hbm.ntm.weapon.FiftyCalAmmoType;
 import com.hbm.ntm.weapon.SpentCasingPreset;
 import com.hbm.ntm.weapon.StandardAmmoTypes;
+import com.hbm.ntm.weapon.TauAmmoType;
+import com.hbm.ntm.weapon.TurretShellAmmoType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -44,6 +48,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -53,7 +58,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-/** Powered 5.56 chaingun behavior from TileEntityTurretFriendly. */
+/** Shared guts for the first four source NT turrets. */
 public final class TurretFriendlyBlockEntity extends BlockEntity
         implements WorldlyContainer, MenuProvider, HeReceiver, TurretTargetingFrame {
     public static final int SLOT_COUNT = 11;
@@ -75,6 +80,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                 case 4 -> targetMobs ? 1 : 0;
                 case 5 -> targetMachines ? 1 : 0;
                 case 6 -> stattrak;
+                case 7 -> variant.ordinal();
                 default -> 0;
             };
         }
@@ -90,7 +96,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                 default -> { }
             }
         }
-        @Override public int getCount() { return 7; }
+        @Override public int getCount() { return 8; }
     };
 
     private long power;
@@ -107,12 +113,31 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     private float oldSpin;
     private float acceleration;
     private int firingTimer;
+    private int reloadTimer;
+    private int casingTimer;
     private int targetId = -1;
     private int stattrak;
     private Entity lastFiredTarget;
+    private final TurretVariant variant;
 
     public TurretFriendlyBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.TURRET_FRIENDLY.get(), pos, state);
+        this(ModBlockEntities.TURRET_FRIENDLY.get(), pos, state, TurretVariant.FRIENDLY);
+    }
+
+    private TurretFriendlyBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state,
+                                      TurretVariant variant) {
+        super(type, pos, state);
+        this.variant = variant;
+    }
+
+    public static TurretFriendlyBlockEntity create(TurretVariant variant, BlockPos pos, BlockState state) {
+        BlockEntityType<?> type = switch (variant) {
+            case CHEKHOV -> ModBlockEntities.TURRET_CHEKHOV.get();
+            case FRIENDLY -> ModBlockEntities.TURRET_FRIENDLY.get();
+            case JEREMY -> ModBlockEntities.TURRET_JEREMY.get();
+            case TAUON -> ModBlockEntities.TURRET_TAUON.get();
+        };
+        return new TurretFriendlyBlockEntity(type, pos, state, variant);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, TurretFriendlyBlockEntity turret) {
@@ -121,6 +146,11 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     }
 
     private void serverTick(ServerLevel level, BlockPos pos, BlockState state) {
+        if (reloadTimer > 0 && --reloadTimer == 1 && variant == TurretVariant.JEREMY) {
+            level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_JEREMY_RELOAD.get(),
+                    SoundSource.BLOCKS, 2F, 1F);
+        }
+        if (casingTimer > 0 && --casingTimer == 0) ejectJeremyCasing(level);
         if (lastFiredTarget != null && (!lastFiredTarget.isAlive() || lastFiredTarget.isRemoved())) {
             stattrak++;
             lastFiredTarget = null;
@@ -136,12 +166,12 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
         oldYaw = yaw;
         oldPitch = pitch;
-        if (isOn && power >= CONSUMPTION) {
-            power -= CONSUMPTION;
+        if (isOn && power >= variant.consumption()) {
+            power -= variant.consumption();
             if (target != null) {
                 aimAt(target);
                 firingTimer++;
-                if (firingTimer > 20 && firingTimer % 5 == 0 && aligned(target)) fire(level, target);
+                if (readyToFire() && aligned(target)) fire(level, target);
             } else {
                 firingTimer = Mth.clamp(firingTimer - 1, 0, 20);
             }
@@ -154,9 +184,13 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
     private void clientTick() {
         oldSpin = spin;
-        acceleration = targetId >= 0 && isOn ? Math.min(45F, acceleration + 2F)
-                : Math.max(0F, acceleration - 2F);
-        spin += acceleration;
+        if (variant == TurretVariant.TAUON) {
+            if (targetId >= 0 && isOn) spin += 45F;
+        } else if (variant == TurretVariant.CHEKHOV || variant == TurretVariant.FRIENDLY) {
+            acceleration = targetId >= 0 && isOn ? Math.min(45F, acceleration + 2F)
+                    : Math.max(0F, acceleration - 2F);
+            spin += acceleration;
+        }
         if (spin >= 360F) { spin -= 360F; oldSpin -= 360F; }
     }
 
@@ -173,14 +207,14 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     private void dischargeBattery() {
         ItemStack stack = items.get(BATTERY);
         if (!(stack.getItem() instanceof HeBatteryItem battery)) return;
-        long amount = Math.min(Math.min(MAX_POWER - power, battery.getDischargeRate(stack)), battery.getCharge(stack));
+        long amount = Math.min(Math.min(variant.maxPower() - power, battery.getDischargeRate(stack)), battery.getCharge(stack));
         if (amount > 0) { battery.discharge(stack, amount); power += amount; }
     }
 
     @Nullable private Entity findTarget(ServerLevel level) {
         Vec3 pivot = worldPivot();
         List<Entity> candidates = level.getEntitiesOfClass(Entity.class,
-                new AABB(pivot, pivot).inflate(RANGE), this::validTarget);
+                new AABB(pivot, pivot).inflate(variant.range()), this::validTarget);
         return candidates.stream().filter(entity -> hasLineOfSight(level, pivot, hbm$entityEyePosition(entity)))
                 .min(Comparator.comparingDouble(entity -> hbm$entityPosition(entity).distanceToSqr(pivot)))
                 .orElse(null);
@@ -188,7 +222,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
     private boolean validTarget(@Nullable Entity entity) {
         if (entity == null || !entity.isAlive() || entity.isRemoved()) return false;
-        if (hbm$entityPosition(entity).distanceToSqr(worldPivot()) < 9D) return false;
+        if (hbm$entityPosition(entity).distanceToSqr(worldPivot()) < variant.grace() * variant.grace()) return false;
         List<String> whitelist = TurretChipItem.names(items.get(CHIP));
         if (entity instanceof Player player) {
             return targetPlayers && !player.isSpectator() && !player.getAbilities().instabuild
@@ -213,8 +247,9 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
     private void aimAt(Entity target) {
         Aim wanted = wantedAim(target);
-        yaw = stepAngle(yaw, wanted.yaw(), 4.5F);
-        pitch = Mth.clamp(stepAngle(pitch, wanted.pitch(), 3F), -45F, 30F);
+        yaw = stepAngle(yaw, wanted.yaw(), variant.yawSpeed());
+        pitch = Mth.clamp(stepAngle(pitch, wanted.pitch(), variant.pitchSpeed()),
+                variant.minPitch(), variant.maxPitch());
     }
 
     private boolean aligned(Entity target) {
@@ -223,20 +258,25 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                 || Math.abs(Mth.wrapDegrees(wanted.pitch() - pitch)) > 15F) return false;
 
         Vec3 localHeading = barrelDirection(pitch, yaw);
-        Vec3 localMuzzle = localPivot().add(localHeading.scale(3.5D));
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
         Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
         Vec3 velocity = hbm$localVectorToWorld(localHeading).normalize().scale(10D)
                 .add(hbm$velocityAt(localMuzzle));
-        return shotIntersects(target.getBoundingBox().inflate(0.3D), muzzle, velocity);
+        return variant == TurretVariant.TAUON
+                || shotIntersects(target.getBoundingBox().inflate(0.3D), muzzle, velocity, variant.range());
+    }
+
+    public static boolean shotIntersects(AABB targetBounds, Vec3 muzzle, Vec3 velocity, double range) {
+        if (velocity.lengthSqr() < 1.0E-9D) return false;
+        return targetBounds.clip(muzzle, muzzle.add(velocity.normalize().scale(range))).isPresent();
     }
 
     public static boolean shotIntersects(AABB targetBounds, Vec3 muzzle, Vec3 velocity) {
-        if (velocity.lengthSqr() < 1.0E-9D) return false;
-        return targetBounds.clip(muzzle, muzzle.add(velocity.normalize().scale(RANGE))).isPresent();
+        return shotIntersects(targetBounds, muzzle, velocity, RANGE);
     }
 
     private Aim wantedAim(Entity target) {
-        Vec3 localMuzzle = localPivot().add(barrelDirection(pitch, yaw).scale(3.5D));
+        Vec3 localMuzzle = localPivot().add(barrelDirection(pitch, yaw).scale(variant.barrelLength()));
         Vec3 delta = hbm$entityEyePosition(target).subtract(hbm$localPositionToWorld(localMuzzle));
         Vec3 worldDirection = compensatedDirection(delta, hbm$velocityAt(localMuzzle), 10D);
         Vec3 localDirection = hbm$worldVectorToLocal(worldDirection).normalize();
@@ -270,28 +310,82 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         return value + Mth.clamp(Mth.wrapDegrees(target - value), -max, max);
     }
 
+    private boolean readyToFire() {
+        return switch (variant) {
+            case CHEKHOV -> firingTimer > 20 && firingTimer % 2 == 0;
+            case FRIENDLY -> firingTimer > 20 && firingTimer % 5 == 0;
+            case TAUON -> firingTimer % 5 == 0;
+            case JEREMY -> firingTimer % 40 == 0;
+        };
+    }
+
     private void fire(ServerLevel level, Entity target) {
         int slot = firstAmmoSlot();
         if (slot < 0) return;
-        FiveFiveSixAmmoType ammo = (FiveFiveSixAmmoType) StandardAmmoTypes.fromStack(items.get(slot));
+        if (variant == TurretVariant.TAUON) {
+            fireTauon(level, target, slot);
+            return;
+        }
+
+        var ammo = variant == TurretVariant.JEREMY
+                ? TurretShellAmmoType.fromStack(items.get(slot))
+                : StandardAmmoTypes.fromStack(items.get(slot));
+        float baseDamage = switch (variant) {
+            case CHEKHOV, FRIENDLY -> 10F;
+            case JEREMY -> 50F;
+            case TAUON -> 0F;
+        };
         Vec3 localHeading = barrelDirection(pitch, yaw);
         Vec3 heading = hbm$localVectorToWorld(localHeading).normalize();
-        Vec3 localMuzzle = localPivot().add(localHeading.scale(3.5D));
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
         Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
-        BulletEntity bullet = new BulletEntity(level, null, ammo, 10F * ammo.damageMultiplier(),
+        BulletEntity bullet = new BulletEntity(level, null, ammo, baseDamage * ammo.damageMultiplier(),
                 ammo.spread(), muzzle, heading);
         bullet.setDeltaMovement(bullet.getDeltaMovement().add(hbm$velocityAt(localMuzzle)));
         level.addFreshEntity(bullet);
         lastFiredTarget = target;
-        items.get(slot).shrink(1);
-        if (items.get(slot).isEmpty()) items.set(slot, ItemStack.EMPTY);
-        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.GUN_M2_FIRE.get(),
-                SoundSource.BLOCKS, 2F, 1F);
-        level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z, 1, 0, 0, 0, 0);
-        ejectCasing(level);
+        consume(slot);
+        if (variant == TurretVariant.JEREMY) {
+            level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_JEREMY_FIRE.get(),
+                    SoundSource.BLOCKS, 4F, 1F);
+            level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z,
+                    5, 0.1D, 0.1D, 0.1D, 0D);
+            reloadTimer = 20;
+            casingTimer = 22;
+        } else {
+            level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.GUN_M2_FIRE.get(),
+                    SoundSource.BLOCKS, 2F, 1F);
+            level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z, 1, 0, 0, 0, 0);
+            ejectSmallCasing(level, ammo);
+        }
     }
 
-    private void ejectCasing(ServerLevel level) {
+    private void fireTauon(ServerLevel level, Entity target, int slot) {
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        Vec3 targetEye = hbm$entityEyePosition(target);
+        float damage = 30F + level.random.nextInt(11);
+        target.invulnerableTime = 0;
+        target.hurt(level.damageSources().source(com.hbm.ntm.radiation.ModDamageTypes.ELECTRIC), damage);
+        TauBeamEntity beam = TauBeamEntity.visual(level, muzzle, targetEye.subtract(muzzle));
+        level.addFreshEntity(beam);
+        consume(slot);
+        lastFiredTarget = target;
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_TAU_FIRE.get(),
+                SoundSource.BLOCKS, 4F, 0.9F + level.random.nextFloat() * 0.3F);
+        for (int i = 0; i < 5; i++) {
+            level.sendParticles(ParticleTypes.ELECTRIC_SPARK, muzzle.x, muzzle.y, muzzle.z,
+                    1, 0.15D, 0.15D, 0.15D, 0.05D);
+        }
+    }
+
+    private void consume(int slot) {
+        items.get(slot).shrink(1);
+        if (items.get(slot).isEmpty()) items.set(slot, ItemStack.EMPTY);
+    }
+
+    private void ejectSmallCasing(ServerLevel level, com.hbm.ntm.weapon.SednaAmmoType ammo) {
         Vec3 localMotion = new Vec3(-0.3D, 0.6D, 0D)
                 .xRot(pitch * Mth.DEG_TO_RAD)
                 .yRot(-yaw * Mth.DEG_TO_RAD);
@@ -300,17 +394,33 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                 .yRot(-(yaw * Mth.DEG_TO_RAD + Mth.HALF_PI)));
         Vec3 spawn = hbm$localPositionToWorld(localSpawn);
         Vec3 side = hbm$localVectorToWorld(localMotion).add(hbm$velocityAt(localSpawn));
-        SpentCasingPayload payload = new SpentCasingPayload(SpentCasingPreset.RIFLE_BRASS.ordinal(),
+        SpentCasingPreset preset = ammo instanceof FiftyCalAmmoType fifty
+                && (fifty == FiftyCalAmmoType.ARMOR_PIERCING
+                || fifty == FiftyCalAmmoType.DEPLETED_URANIUM
+                || fifty == FiftyCalAmmoType.HIGH_EXPLOSIVE)
+                ? SpentCasingPreset.RIFLE_STEEL : SpentCasingPreset.RIFLE_BRASS;
+        SpentCasingPayload payload = new SpentCasingPayload(preset.ordinal(),
                 spawn.x, spawn.y, spawn.z, side.x, side.y, side.z,
                 yaw, pitch, 0.02F + level.random.nextFloat() * 0.03F,
                 0.02F + level.random.nextFloat() * 0.03F);
         PacketDistributor.sendToPlayersNear(level, null, spawn.x, spawn.y, spawn.z, 50, payload);
     }
 
+    private void ejectJeremyCasing(ServerLevel level) {
+        Vec3 localSpawn = localPivot().add(barrelDirection(pitch, yaw).scale(-2D));
+        Vec3 spawn = hbm$localPositionToWorld(localSpawn);
+        Vec3 localMotion = new Vec3(-0.2D, -0.2D, 0D)
+                .xRot(pitch * Mth.DEG_TO_RAD).yRot(-yaw * Mth.DEG_TO_RAD);
+        Vec3 motion = hbm$localVectorToWorld(localMotion).add(hbm$velocityAt(localSpawn));
+        SpentCasingPayload payload = new SpentCasingPayload(SpentCasingPreset.SHELL_240MM.ordinal(),
+                spawn.x, spawn.y, spawn.z, motion.x, motion.y, motion.z,
+                yaw, pitch, 0.01F, -5F);
+        PacketDistributor.sendToPlayersNear(level, null, spawn.x, spawn.y, spawn.z, 100, payload);
+    }
+
     private int firstAmmoSlot() {
         for (int slot = 1; slot <= 9; slot++) {
-            if (!items.get(slot).isEmpty() && StandardAmmoTypes.fromStack(items.get(slot))
-                    instanceof FiveFiveSixAmmoType) return slot;
+            if (variant.accepts(items.get(slot))) return slot;
         }
         return -1;
     }
@@ -390,7 +500,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    @Override public Component getDisplayName() { return Component.translatable("container.turretFriendly"); }
+    @Override public Component getDisplayName() { return Component.translatable(variant.titleKey()); }
     @Nullable @Override public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         return new TurretFriendlyMenu(id, inventory, this, data);
     }
@@ -398,10 +508,11 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     public float yaw(float partial) { return Mth.lerp(partial, oldYaw, yaw); }
     public float pitch(float partial) { return Mth.lerp(partial, oldPitch, pitch); }
     public float spin(float partial) { return Mth.lerp(partial, oldSpin, spin); }
+    public TurretVariant variant() { return variant; }
 
     @Override public long getPower() { return power; }
-    @Override public void setPower(long power) { this.power = Mth.clamp(power, 0L, MAX_POWER); }
-    @Override public long getMaxPower() { return MAX_POWER; }
+    @Override public void setPower(long power) { this.power = Mth.clamp(power, 0L, variant.maxPower()); }
+    @Override public long getMaxPower() { return variant.maxPower(); }
     @Override public boolean isHeLoaded() { return hasLevel() && !isRemoved(); }
 
     @Override public int getContainerSize() { return SLOT_COUNT; }
@@ -418,8 +529,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     @Override public boolean canPlaceItem(int slot, ItemStack stack) {
         if (slot == CHIP) return stack.getItem() instanceof TurretChipItem;
         if (slot == BATTERY) return stack.getItem() instanceof HeBatteryItem;
-        return stack.is(ModItems.AMMO_STANDARD.get())
-                && StandardAmmoTypes.fromStack(stack) instanceof FiveFiveSixAmmoType;
+        return variant.accepts(stack);
     }
     @Override public int[] getSlotsForFace(Direction side) { return ALL_SLOTS; }
     @Override public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction side) {

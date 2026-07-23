@@ -319,7 +319,10 @@ public final class ClientMachineRegistration {
         event.registerBlockEntityRenderer(ModBlockEntities.FOUNDRY_CHANNEL.get(), FoundryStorageRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.FOUNDRY_TANK.get(), FoundryStorageRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.DYNAMIC_SLAG.get(), DynamicSlagRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_CHEKHOV.get(), TurretFriendlyRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_FRIENDLY.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_JEREMY.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_TAUON.get(), TurretFriendlyRenderer::new);
         event.registerEntityRenderer(ModEntities.COG.get(), CogRenderer::new);
         event.registerEntityRenderer(ModEntities.SAWBLADE.get(), SawbladeRenderer::new);
         event.registerEntityRenderer(ModEntities.PRIMED_EXPLOSIVE.get(), PrimedExplosiveRenderer::new);
@@ -529,7 +532,8 @@ public final class ClientMachineRegistration {
         event.registerItem(new IClientItemExtensions() {
             private final TurretFriendlyItemRenderer renderer = new TurretFriendlyItemRenderer();
             @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
-        }, ModItems.TURRET_FRIENDLY_ITEM.get());
+        }, ModItems.TURRET_CHEKHOV_ITEM.get(), ModItems.TURRET_FRIENDLY_ITEM.get(),
+                ModItems.TURRET_JEREMY_ITEM.get(), ModItems.TURRET_TAUON_ITEM.get());
         event.registerItem(new IClientItemExtensions() {
             private final BatteryPackItemRenderer renderer = new BatteryPackItemRenderer();
 

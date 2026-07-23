@@ -37,6 +37,8 @@ public final class TauBeamEntity extends Projectile {
             SynchedEntityData.defineId(TauBeamEntity.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Boolean> CHARGED =
             SynchedEntityData.defineId(TauBeamEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> LIFE =
+            SynchedEntityData.defineId(TauBeamEntity.class, EntityDataSerializers.INT);
 
     public TauBeamEntity(EntityType<? extends TauBeamEntity> type, Level level) {
         super(type, level);
@@ -66,17 +68,31 @@ public final class TauBeamEntity extends Projectile {
         entityData.set(DIRECTION, new Vector3f((float) direction.x, (float) direction.y, (float) direction.z));
     }
 
+    public static TauBeamEntity visual(ServerLevel level, Vec3 start, Vec3 delta) {
+        TauBeamEntity beam = new TauBeamEntity(ModEntities.TAU_BEAM.get(), level);
+        Vec3 direction = delta.lengthSqr() > 1.0E-8D ? delta.normalize() : new Vec3(0D, 0D, 1D);
+        beam.setPos(start);
+        beam.entityData.set(DAMAGE, 0F);
+        beam.entityData.set(BEAM_LENGTH, (float) delta.length());
+        beam.entityData.set(DIRECTION, direction.toVector3f());
+        beam.entityData.set(CHARGED, false);
+        beam.entityData.set(LIFE, 3);
+        return beam;
+    }
+
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         builder.define(DAMAGE, 0.0F);
         builder.define(BEAM_LENGTH, (float) RANGE);
         builder.define(DIRECTION, new Vector3f(0.0F, 0.0F, 1.0F));
         builder.define(CHARGED, false);
+        builder.define(LIFE, LIFETIME);
     }
 
     public float beamDamage() { return entityData.get(DAMAGE); }
     public float beamLength() { return entityData.get(BEAM_LENGTH); }
     public boolean charged() { return entityData.get(CHARGED); }
+    public int lifetime() { return entityData.get(LIFE); }
 
     public void performHitscan() {
         if (!(level() instanceof ServerLevel server)) return;
@@ -119,7 +135,7 @@ public final class TauBeamEntity extends Projectile {
 
     @Override public void tick() {
         super.tick();
-        if (tickCount >= LIFETIME) discard();
+        if (tickCount >= lifetime()) discard();
     }
 
     @Override protected void readAdditionalSaveData(CompoundTag tag) { }

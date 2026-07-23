@@ -16,7 +16,8 @@ public enum SpentCasingPreset {
     SHOTGUN_10_SHRAPNEL(Shape.SHOTGUN, 0xE5DD00, 0x757575, 1.0F, 1.0F, 1.0F, Sound.SHELL),
     SHOTGUN_10_DU(Shape.SHOTGUN, 0x538D53, 0x757575, 1.0F, 1.0F, 1.0F, Sound.SHELL),
     SHOTGUN_10_SLUG(Shape.SHOTGUN, 0x808080, 0x757575, 1.0F, 1.0F, 1.0F, Sound.SHELL),
-    SHOTGUN_10_EXPLOSIVE(Shape.SHOTGUN, 0xFAC943, 0x757575, 1.0F, 1.0F, 1.0F, Sound.SHELL);
+    SHOTGUN_10_EXPLOSIVE(Shape.SHOTGUN, 0xFAC943, 0x757575, 1.0F, 1.0F, 1.0F, Sound.SHELL),
+    SHELL_240MM(Shape.BOTTLENECK, 0xEBC35E, 0, 7.5F, 7.5F, 7.5F, Sound.LARGE);
 
     private final Shape shape;
     private final int bodyColor;

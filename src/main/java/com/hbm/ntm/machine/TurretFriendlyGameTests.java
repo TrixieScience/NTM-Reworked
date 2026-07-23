@@ -3,10 +3,14 @@ package com.hbm.ntm.machine;
 import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.block.TurretFriendlyBlock;
 import com.hbm.ntm.blockentity.TurretFriendlyBlockEntity;
+import com.hbm.ntm.blockentity.TurretVariant;
 import com.hbm.ntm.item.TurretChipItem;
 import com.hbm.ntm.registry.ModBlocks;
 import com.hbm.ntm.registry.ModItems;
 import com.hbm.ntm.weapon.FiveFiveSixAmmoType;
+import com.hbm.ntm.weapon.FiftyCalAmmoType;
+import com.hbm.ntm.weapon.TauAmmoType;
+import com.hbm.ntm.weapon.TurretShellAmmoType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -95,5 +99,39 @@ public final class TurretFriendlyGameTests {
                     "Mister Friendly must fire one of its accepted 5.56 rounds");
             helper.succeed();
         });
+    }
+
+    @GameTest(template = "empty")
+    public static void turretVariantsKeepTheirOwnAmmoAndSourceStats(GameTestHelper helper) {
+        ItemStack fifty = FiftyCalAmmoType.FULL_METAL_JACKET.createStack(ModItems.AMMO_STANDARD.get(), 1);
+        ItemStack fiveFiveSix = FiveFiveSixAmmoType.FULL_METAL_JACKET.createStack(ModItems.AMMO_STANDARD.get(), 1);
+        ItemStack tau = TauAmmoType.DEPLETED_URANIUM.createStack(ModItems.AMMO_STANDARD.get(), 1);
+        ItemStack shell = TurretShellAmmoType.W9.createStack(ModItems.AMMO_SHELL.get(), 1);
+
+        helper.assertTrue(TurretVariant.CHEKHOV.accepts(fifty)
+                        && !TurretVariant.CHEKHOV.accepts(fiveFiveSix)
+                        && TurretVariant.JEREMY.accepts(shell)
+                        && !TurretVariant.JEREMY.accepts(fifty)
+                        && TurretVariant.TAUON.accepts(tau)
+                        && !TurretVariant.TAUON.accepts(shell),
+                "Each source turret must only accept its own ammunition family");
+        helper.assertTrue(TurretVariant.JEREMY.range() == 80D
+                        && TurretVariant.TAUON.range() == 128D
+                        && TurretVariant.TAUON.maxPower() == 100_000L
+                        && TurretVariant.TAUON.consumption() == 1_000L,
+                "Jeremy and Tauon must retain their source range and power values");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void jeremyShellIdentitySurvivesProjectileSync(GameTestHelper helper) {
+        var level = helper.getLevel();
+        for (TurretShellAmmoType shell : TurretShellAmmoType.values()) {
+            var bullet = new com.hbm.ntm.entity.BulletEntity(level, null, shell, 50F, 0F,
+                    Vec3.ZERO, new Vec3(0D, 0D, 1D));
+            helper.assertTrue(bullet.ammoType() == shell,
+                    "Jeremy projectile lost the " + shell.serializedName() + " shell identity");
+        }
+        helper.succeed();
     }
 }

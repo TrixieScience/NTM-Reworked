@@ -1,6 +1,7 @@
 package com.hbm.ntm.entity;
 
 import com.hbm.ntm.network.ChargeBlastPayload;
+import com.hbm.ntm.network.MiniNukeBlastPayload;
 import com.hbm.ntm.radiation.ModDamageTypes;
 import com.hbm.ntm.registry.ModEntities;
 import com.hbm.ntm.registry.ModSounds;
@@ -70,10 +71,11 @@ public final class BulletEntity extends Projectile {
                         float spread, Vec3 origin, Vec3 heading, boolean incendiary) {
         this(ModEntities.BULLET.get(), level);
         setOwner(owner);
-        // Secret .50 ammo overlaps ordinary metadata, so sync its config ID instead.
+        // These ammo families use config IDs that do not match their item model index.
         int projectileAmmo = ammo instanceof com.hbm.ntm.weapon.FiftyCalAmmoType fifty && fifty.secret()
                 || ammo instanceof com.hbm.ntm.weapon.Equestrian44AmmoType
                 || ammo instanceof com.hbm.ntm.weapon.DebugAmmoType
+                || ammo instanceof com.hbm.ntm.weapon.TurretShellAmmoType
                 ? ammo.legacyBulletConfig() : ammo.legacyMetadata();
         entityData.set(AMMO, projectileAmmo);
         entityData.set(DAMAGE, damage);
@@ -111,6 +113,9 @@ public final class BulletEntity extends Projectile {
         }
         if (config == 110 || config == 111) {
             return com.hbm.ntm.weapon.DebugAmmoType.fromConfig(config);
+        }
+        if (config >= 200 && config <= 204) {
+            return com.hbm.ntm.weapon.TurretShellAmmoType.fromConfig(config);
         }
         return StandardAmmoTypes.fromLegacyMetadata(config);
     }
@@ -213,6 +218,7 @@ public final class BulletEntity extends Projectile {
                 if (nearest == null || intersection.distanceSqr() < nearest.distanceSqr()) nearest = intersection;
             }
             if (nearest != null) {
+                if (spawnNuclearImpact(nearest.location())) return;
                 if (spawnFallingPayload(nearest.location())) return;
                 if (ammoType().spawnsBuildingOnImpact()) {
                     com.hbm.ntm.entity.BuildingEntity.spawn((ServerLevel) level(), nearest.location());
@@ -242,6 +248,7 @@ public final class BulletEntity extends Projectile {
         }
 
         if (blockHit.getType() != net.minecraft.world.phys.HitResult.Type.MISS) {
+            if (spawnNuclearImpact(blockHit.getLocation())) return;
             if (spawnFallingPayload(blockHit.getLocation())) return;
             if (ammoType().spawnsBuildingOnImpact()) {
                 com.hbm.ntm.entity.BuildingEntity.spawn((ServerLevel) level(), blockHit.getLocation());
@@ -265,6 +272,22 @@ public final class BulletEntity extends Projectile {
         if (ammoType().fallingPayload() == 1) BoxcarEntity.spawn(server, impact);
         else if (ammoType().fallingPayload() == 2) TorpedoEntity.spawn(server, impact);
         else return false;
+        setPos(impact);
+        discardWithFinalTeleport();
+        return true;
+    }
+
+    private boolean spawnNuclearImpact(Vec3 impact) {
+        if (!ammoType().nuclearImpact() || !(level() instanceof ServerLevel server)) return false;
+        com.hbm.ntm.explosion.MineExplosion.blastEntities(server, impact.x, impact.y, impact.z,
+                10F, damage(), 2D, 0F, 0F, 1.5F, this, getOwner());
+        com.hbm.ntm.explosion.MineExplosion.incrementRad(server, (int) Math.floor(impact.x),
+                (int) Math.floor(impact.y), (int) Math.floor(impact.z), 1F);
+        server.playSound(null, BlockPos.containing(impact.x, impact.y + 0.5D, impact.z),
+                ModSounds.MUKE_EXPLOSION.get(), SoundSource.BLOCKS, 15F, 1F);
+        PacketDistributor.sendToPlayersNear(server, null, impact.x, impact.y, impact.z, 250D,
+                new MiniNukeBlastPayload(impact.x, impact.y + 0.5D, impact.z,
+                        false, random.nextInt(100) == 0));
         setPos(impact);
         discardWithFinalTeleport();
         return true;
@@ -436,6 +459,10 @@ public final class BulletEntity extends Projectile {
                             push.normalize().scale((1.0D - scaled) * density * knockback)));
                 }
             }
+        }
+        if (ammo.impactBreaksBlocks()) {
+            com.hbm.ntm.explosion.MineExplosion.blastBlocks(level, center.x, center.y, center.z,
+                    ammo.impactExplosionRadius(), 64, false, owner);
         }
         if (ammo.tinyImpactExplosion()) {
             level.playSound(null, center.x, center.y, center.z, ModSounds.GUN_EXPLOSION_TINY.get(),

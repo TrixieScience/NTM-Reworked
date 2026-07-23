@@ -37,7 +37,7 @@ public final class TauBeamRenderer extends EntityRenderer<TauBeamEntity> {
     public void render(TauBeamEntity beam, float yaw, float partialTick, PoseStack poses,
                        MultiBufferSource buffers, int packedLight) {
         float age = Math.max(0.0F, Math.min(1.0F,
-                1.0F - (beam.tickCount - 2.0F + partialTick) / TauBeamEntity.LIFETIME));
+                1.0F - (beam.tickCount - 2.0F + partialTick) / beam.lifetime()));
         if (age <= 0.0F || beam.beamLength() <= 0.0F) return;
 
         poses.pushPose();

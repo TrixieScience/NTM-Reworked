@@ -703,5 +703,17 @@
   "weapon.casing.shell": {
     "category": "player",
     "sounds": ["hbm:weapon/casing/shell1", "hbm:weapon/casing/shell2", "hbm:weapon/casing/shell3"]
+  },
+  "turret.jeremy_fire": {
+    "category": "block",
+    "sounds": ["hbm:turret/jeremy_fire1", "hbm:turret/jeremy_fire2", "hbm:turret/jeremy_fire3", "hbm:turret/jeremy_fire4", "hbm:turret/jeremy_fire5"]
+  },
+  "turret.jeremy_reload": {
+    "category": "block",
+    "sounds": [{"name": "hbm:turret/jeremy_reload", "stream": false}]
+  },
+  "weapon.tau_shoot": {
+    "category": "block",
+    "sounds": [{"name": "hbm:weapon/tauShoot", "stream": false}]
   }
 }

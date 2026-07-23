@@ -1,7 +1,6 @@
 package com.hbm.ntm.client.screen;
 
 import com.hbm.ntm.HbmNtm;
-import com.hbm.ntm.blockentity.TurretFriendlyBlockEntity;
 import com.hbm.ntm.inventory.TurretFriendlyMenu;
 import com.hbm.ntm.network.TurretWhitelistPayload;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,8 +14,10 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.List;
 
 public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFriendlyMenu> {
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
-            HbmNtm.MOD_ID, "textures/gui/weapon/gui_turret_friendly.png");
+    private static final ResourceLocation FRIENDLY = texture("gui_turret_friendly.png");
+    private static final ResourceLocation STANDARD = texture("gui_turret_base.png");
+    private static final ResourceLocation CANNON = texture("gui_turret_cannon.png");
+    private static final ResourceLocation TAU = texture("gui_turret_tau.png");
     private EditBox field;
     private int whitelistIndex;
 
@@ -42,7 +43,7 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
         renderTooltip(graphics, mouseX, mouseY);
         if (isHovering(152, 45, 16, 53, mouseX, mouseY)) {
             graphics.renderTooltip(font, Component.literal(menu.power() + " / "
-                    + TurretFriendlyBlockEntity.MAX_POWER + " HE"), mouseX, mouseY);
+                    + menu.maxPower() + " HE"), mouseX, mouseY);
         } else {
             String[] keys = {"turret.players", "turret.animals", "turret.mobs", "turret.machines"};
             for (int id = 1; id <= 4; id++) if (isHovering(8 + (id - 1) * 14, 30, 10, 10, mouseX, mouseY)) {
@@ -54,13 +55,14 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
     }
 
     @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        ResourceLocation TEXTURE = texture();
         graphics.blit(TEXTURE, leftPos, topPos, 0, 0, imageWidth, imageHeight, 256, 256);
         if (menu.active()) graphics.blit(TEXTURE, leftPos + 115, topPos + 26, 176, 40, 18, 18, 256, 256);
         for (int id = 1; id <= 4; id++) {
             if (menu.mode(id)) graphics.blit(TEXTURE, leftPos + 8 + (id - 1) * 14, topPos + 30,
                     176, (id - 1) * 10, 10, 10, 256, 256);
         }
-        int power = Math.clamp(menu.power() * 53 / (int) TurretFriendlyBlockEntity.MAX_POWER, 0, 53);
+        int power = Math.clamp((int) (menu.power() * 53L / menu.maxPower()), 0, 53);
         if (power > 0) graphics.blit(TEXTURE, leftPos + 152, topPos + 97 - power,
                 194, 52 - power, 16, power, 256, 256);
         int tallies = menu.stattrak();
@@ -91,6 +93,19 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
         if (inside(mouseX, mouseY, 43, 98, 18, 18)) {
             graphics.blit(TEXTURE, leftPos + 43, topPos + 98, 194, 76, 18, 18, 256, 256);
         }
+    }
+
+    private ResourceLocation texture() {
+        return switch (menu.variant()) {
+            case CHEKHOV -> STANDARD;
+            case FRIENDLY -> FRIENDLY;
+            case JEREMY -> CANNON;
+            case TAUON -> TAU;
+        };
+    }
+
+    private static ResourceLocation texture(String name) {
+        return ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "textures/gui/weapon/" + name);
     }
 
     @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {

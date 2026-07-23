@@ -2,6 +2,7 @@ package com.hbm.ntm.block;
 
 import com.hbm.ntm.blockentity.TurretFriendlyBlockEntity;
 import com.hbm.ntm.blockentity.TurretFriendlyProxyBlockEntity;
+import com.hbm.ntm.blockentity.TurretVariant;
 import com.hbm.ntm.registry.ModBlockEntities;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -35,20 +36,27 @@ import org.jetbrains.annotations.Nullable;
 
 /** The source 2x2 half-height mount shared by the first NT turret. */
 public final class TurretFriendlyBlock extends BaseEntityBlock {
-    public static final MapCodec<TurretFriendlyBlock> CODEC = simpleCodec(TurretFriendlyBlock::new);
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final IntegerProperty X = IntegerProperty.create("part_x", 0, 1);
     public static final IntegerProperty Z = IntegerProperty.create("part_z", 0, 1);
     private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 0.5, 1);
     private static final ThreadLocal<Boolean> REMOVING = ThreadLocal.withInitial(() -> false);
+    private final TurretVariant variant;
+    private final MapCodec<TurretFriendlyBlock> codec;
 
     public TurretFriendlyBlock(Properties properties) {
+        this(properties, TurretVariant.FRIENDLY);
+    }
+
+    public TurretFriendlyBlock(Properties properties, TurretVariant variant) {
         super(properties);
+        this.variant = variant;
+        this.codec = simpleCodec(value -> new TurretFriendlyBlock(value, variant));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH)
                 .setValue(X, 0).setValue(Z, 0));
     }
 
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return CODEC; }
+    @Override protected MapCodec<? extends BaseEntityBlock> codec() { return codec; }
 
     @Nullable @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection().getOpposite();
@@ -111,13 +119,19 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
     }
 
     @Nullable @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return isCore(state) ? new TurretFriendlyBlockEntity(pos, state)
+        return isCore(state) ? TurretFriendlyBlockEntity.create(variant, pos, state)
                 : new TurretFriendlyProxyBlockEntity(pos, state);
     }
 
     @Nullable @Override public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
             Level level, BlockState state, BlockEntityType<T> type) {
-        return isCore(state) ? createTickerHelper(type, ModBlockEntities.TURRET_FRIENDLY.get(),
+        BlockEntityType<TurretFriendlyBlockEntity> expected = switch (variant) {
+            case CHEKHOV -> ModBlockEntities.TURRET_CHEKHOV.get();
+            case FRIENDLY -> ModBlockEntities.TURRET_FRIENDLY.get();
+            case JEREMY -> ModBlockEntities.TURRET_JEREMY.get();
+            case TAUON -> ModBlockEntities.TURRET_TAUON.get();
+        };
+        return isCore(state) ? createTickerHelper(type, expected,
                 TurretFriendlyBlockEntity::tick) : null;
     }
 
@@ -126,6 +140,7 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
     }
 
     public static boolean isCore(BlockState state) { return state.getValue(X) == 0 && state.getValue(Z) == 0; }
+    public TurretVariant variant() { return variant; }
 
     public static BlockPos corePosition(BlockPos pos, BlockState state) {
         Direction facing = state.getValue(FACING);
