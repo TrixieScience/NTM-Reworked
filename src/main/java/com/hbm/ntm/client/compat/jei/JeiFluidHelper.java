@@ -1,6 +1,7 @@
 package com.hbm.ntm.client.compat.jei;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.neoforge.NeoForgeTypes;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
@@ -14,7 +15,7 @@ final class JeiFluidHelper {
         if (fluid == null || fluid == Fluids.EMPTY) return;
         var slot = input ? builder.addInputSlot(x, y) : builder.addOutputSlot(x, y);
         slot.setStandardSlotBackground()
-                .setFluidRenderer(Math.max(1_000L, amount), false, 16, 16)
+                .setCustomRenderer(NeoForgeTypes.FLUID_STACK, HbmFluidIngredientRenderer.INSTANCE)
                 .addFluidStack(fluid, amount);
     }
 }

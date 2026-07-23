@@ -96,7 +96,7 @@ public final class FluidStorageTankBlock extends BaseEntityBlock {
     @Override protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level,
                                                          BlockPos position, Player player, InteractionHand hand,
                                                          BlockHitResult hit) {
-        if (!(stack.getItem() instanceof FluidIdentifierItem) || !player.isShiftKeyDown()) {
+        if (!(stack.getItem() instanceof FluidIdentifierItem)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         BlockPos core = corePosition(position, state);

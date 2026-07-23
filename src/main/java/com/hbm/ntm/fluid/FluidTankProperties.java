@@ -15,6 +15,7 @@ public final class FluidTankProperties {
         if (fluid == null) fluid = FluidIdentifierItem.Selection.NONE;
         return switch (fluid) {
             case NONE -> profile(0, 0, 0, Symbol.NONE, Phase.NONE, false);
+            case SMOKE -> profile(1, 0, 0, Symbol.NONE, Phase.GAS, false);
             case AIR -> gas(0, 0, 0, false, false);
             case AIRBLAST -> gas(0, 3, 0, false, false);
             case WATER -> profile(0, 0, 0, Symbol.NONE, Phase.LIQUID, false);
@@ -39,6 +40,7 @@ public final class FluidTankProperties {
             case LUBRICANT -> oil(2, 1, false);
             case DIESEL -> fuel(1, 2, true);
             case KEROSENE -> fuel(1, 2, true);
+            case GASOLINE, GASOLINE_LEADED, COALGAS, COALGAS_LEADED -> fuel(1, 2, true);
             case PETROLEUM -> gas(1, 4, 1, true, true);
             case GAS -> gas(1, 4, 1, true, true);
             case CARBONDIOXIDE -> gas(1, 0, 0, false, false);

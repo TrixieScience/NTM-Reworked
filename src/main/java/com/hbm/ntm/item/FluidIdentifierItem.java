@@ -92,6 +92,7 @@ public final class FluidIdentifierItem extends Item {
 
     public enum Selection implements StringRepresentable {
         NONE("none", "hbmfluid.none", 0xFFFFFF, () -> Fluids.EMPTY),
+        SMOKE("smoke", "hbmfluid.smoke", 0x6E6E6E, () -> ModFluids.SMOKE.get()),
         AIR("air", "hbmfluid.air", 0xE7EAEB, () -> ModFluids.AIR.get()),
         AIRBLAST("airblast", "hbmfluid.airblast", 0xFFDADA, () -> ModFluids.AIRBLAST.get()),
         WATER("water", "block.minecraft.water", 0x3333FF, () -> Fluids.WATER),
@@ -121,6 +122,12 @@ public final class FluidIdentifierItem extends Item {
         LUBRICANT("lubricant", "hbmfluid.lubricant", 0x606060, () -> ModFluids.LUBRICANT.get()),
         DIESEL("diesel", "hbmfluid.diesel", 0xF2EED5, () -> ModFluids.DIESEL.get()),
         KEROSENE("kerosene", "hbmfluid.kerosene", 0xFFA5D2, () -> ModFluids.KEROSENE.get()),
+        GASOLINE("gasoline", "hbmfluid.gasoline", 0x445772, () -> ModFluids.GASOLINE.get()),
+        GASOLINE_LEADED("gasoline_leaded", "hbmfluid.gasoline_leaded", 0x445772,
+                () -> ModFluids.GASOLINE_LEADED.get()),
+        COALGAS("coalgas", "hbmfluid.coalgas", 0x445772, () -> ModFluids.COALGAS.get()),
+        COALGAS_LEADED("coalgas_leaded", "hbmfluid.coalgas_leaded", 0x445772,
+                () -> ModFluids.COALGAS_LEADED.get()),
         PETROLEUM("petroleum", "hbmfluid.petroleum", 0x7CB7C9, () -> ModFluids.PETROLEUM.get()),
         GAS("gas", "hbmfluid.gas", 0xFFFEED, () -> ModFluids.GAS.get()),
         CARBONDIOXIDE("carbondioxide", "hbmfluid.carbondioxide", 0xB0B0B0,

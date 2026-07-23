@@ -53,7 +53,7 @@ public final class BatterySocketRenderer implements BlockEntityRenderer<BatteryS
                        MultiBufferSource buffers, int packedLight, int packedOverlay) {
         poses.pushPose();
         poses.translate(0.5D, 0.0D, 0.5D);
-        poses.mulPose(Axis.YP.rotationDegrees(180.0F
+        poses.mulPose(Axis.YP.rotationDegrees(270.0F
                 - socket.getBlockState().getValue(BatterySocketBlock.FACING).toYRot()));
         poses.translate(-0.5D, 0.0D, 0.5D);
         renderModel(SOCKET, poses, buffers, packedLight, packedOverlay);

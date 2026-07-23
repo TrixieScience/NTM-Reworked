@@ -10,6 +10,9 @@
     "compat.sable.BombImpactFuseSableMixin",
     "compat.sable.TurretFriendlySableMixin"
   ],
+  "client": [
+    "compat.jei.IngredientInfoMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

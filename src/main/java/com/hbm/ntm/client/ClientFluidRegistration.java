@@ -21,6 +21,10 @@ public class ClientFluidRegistration {
     private static final ResourceLocation BITUMEN = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/bitumen");
     private static final ResourceLocation SMEAR = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/smear");
     private static final ResourceLocation HEATINGOIL = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/heatingoil");
+    private static final ResourceLocation GASOLINE = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/gasoline");
+    private static final ResourceLocation GASOLINE_LEADED = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/gasoline_leaded");
+    private static final ResourceLocation COALGAS = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/coalgas");
+    private static final ResourceLocation COALGAS_LEADED = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/coalgas_leaded");
     private static final ResourceLocation PETROLEUM = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/petroleum");
     private static final ResourceLocation UNSATURATEDS = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/unsaturateds");
     private static final ResourceLocation FLUE = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "block/fluid/flue");
@@ -235,6 +239,11 @@ public class ClientFluidRegistration {
             public int getTintColor() {return 0xFFFFA5D2; }
         }, ModFluids.KEROSENE_TYPE.get());
 
+        event.registerFluidType(textured(GASOLINE), ModFluids.GASOLINE_TYPE.get());
+        event.registerFluidType(textured(GASOLINE_LEADED), ModFluids.GASOLINE_LEADED_TYPE.get());
+        event.registerFluidType(textured(COALGAS), ModFluids.COALGAS_TYPE.get());
+        event.registerFluidType(textured(COALGAS_LEADED), ModFluids.COALGAS_LEADED_TYPE.get());
+
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
             public ResourceLocation getStillTexture() {return PETROLEUM; }
@@ -364,5 +373,19 @@ public class ClientFluidRegistration {
             @Override
             public int getTintColor() {return 0xFF938541; }
         }, ModFluids.PAIN_TYPE.get());
+    }
+
+    private static IClientFluidTypeExtensions textured(ResourceLocation texture) {
+        return new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return texture;
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return texture;
+            }
+        };
     }
 }

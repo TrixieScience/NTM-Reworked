@@ -1,5 +1,6 @@
 package com.hbm.ntm.blockentity;
 
+import com.hbm.ntm.radiation.ChunkRadiationData;
 import com.hbm.ntm.radiation.RadiationSystem;
 import com.hbm.ntm.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -35,6 +36,9 @@ public final class ZirnoxDestroyedBlockEntity extends BlockEntity {
                     pos.getZ() + .5, 3, .25, .15, .25, .01);
             server.playSound(null, pos, SoundEvents.FIRE_AMBIENT, SoundSource.BLOCKS,
                     1.0F + server.random.nextFloat(), server.random.nextFloat() * .7F + .3F);
+        }
+        if (server.getGameTime() % 20 == 0) {
+            ChunkRadiationData.get(server).increment(pos, wreck.onFire ? 500F : 75F);
         }
         Vec3 origin = pos.getCenter();
         float source = wreck.onFire ? 500_000F : 75_000F;

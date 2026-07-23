@@ -1,5 +1,6 @@
 package com.hbm.ntm.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.hbm.ntm.client.model.AshGlassesModel;
 import com.hbm.ntm.client.model.EnvsuitArmorModel;
 import com.hbm.ntm.client.model.DntArmorModel;
@@ -91,8 +92,11 @@ public final class ClientRadiationRegistration {
                     GuiGraphics graphics,
                     DeltaTracker deltaTracker
             ) {
+                RenderSystem.enableBlend();
+                RenderSystem.defaultBlendFunc();
                 graphics.blit(HAZMAT_OVERLAY, 0, 0, -90, 0.0F, 0.0F,
                         graphics.guiWidth(), graphics.guiHeight(), graphics.guiWidth(), graphics.guiHeight());
+                RenderSystem.disableBlend();
             }
         }, ModItems.HAZMAT_HELMET.get());
         event.registerItem(maskExtension(ProtectiveMaskModel.GOGGLES_LAYER,

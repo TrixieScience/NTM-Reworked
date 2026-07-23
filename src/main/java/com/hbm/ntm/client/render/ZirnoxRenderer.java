@@ -22,7 +22,7 @@ public final class ZirnoxRenderer implements BlockEntityRenderer<ZirnoxBlockEnti
                                  MultiBufferSource buffers, int light, int overlay) {
         poses.pushPose();
         poses.translate(.5D, 0D, .5D);
-        poses.mulPose(Axis.YP.rotationDegrees(90F - reactor.getBlockState().getValue(ZirnoxBlock.FACING).toYRot()));
+        poses.mulPose(Axis.YP.rotationDegrees(270F - reactor.getBlockState().getValue(ZirnoxBlock.FACING).toYRot()));
         ThermalModelRenderer.render(MODEL, poses, buffers, light, overlay);
         poses.popPose();
     }

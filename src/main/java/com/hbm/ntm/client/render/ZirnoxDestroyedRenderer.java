@@ -19,7 +19,7 @@ public final class ZirnoxDestroyedRenderer implements BlockEntityRenderer<Zirnox
     @Override public void render(ZirnoxDestroyedBlockEntity wreck, float partialTick, PoseStack poses,
                                  MultiBufferSource buffers, int light, int overlay) {
         poses.pushPose(); poses.translate(.5, 0, .5);
-        poses.mulPose(Axis.YP.rotationDegrees(90F - wreck.getBlockState().getValue(ZirnoxDestroyedBlock.FACING).toYRot()));
+        poses.mulPose(Axis.YP.rotationDegrees(270F - wreck.getBlockState().getValue(ZirnoxDestroyedBlock.FACING).toYRot()));
         ThermalModelRenderer.render(MODEL, poses, buffers, light, overlay); poses.popPose();
     }
     @Override public AABB getRenderBoundingBox(ZirnoxDestroyedBlockEntity wreck) { return wreck.renderBounds(); }

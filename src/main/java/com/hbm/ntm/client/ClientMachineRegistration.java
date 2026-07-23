@@ -520,7 +520,7 @@ public final class ClientMachineRegistration {
 
     private static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) -> tintIndex == 1
-                        ? state.getValue(FluidDuctBlock.TYPE).color() : 0xFFFFFF,
+                        ? opaque(state.getValue(FluidDuctBlock.TYPE).color()) : -1,
                 ModBlocks.FLUID_DUCT_NEO.get());
         // Source Balefire.colorMultiplier: Color.HSBtoRGB(0, 0, 1 - meta / 30F) whitens fire by age.
         event.register((state, level, pos, tintIndex) -> java.awt.Color.HSBtoRGB(0.0F, 0.0F,

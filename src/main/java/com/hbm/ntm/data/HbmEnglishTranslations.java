@@ -274,6 +274,8 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.magnetron", "Magnetron");
         language.addProperty("block.hbm.fluid_duct_neo", "Universal Fluid Duct");
         language.addProperty("item.hbm.fluid_duct", "Fluid Duct:");
+        language.addProperty("hbmfluid.smoke", "Smoke");
+        language.addProperty("fluid.hbm.smoke", "Smoke");
         language.addProperty("hbmfluid.steam", "Steam");
         language.addProperty("fluid.hbm.steam", "Steam");
         language.addProperty("hbmfluid.hotsteam", "Dense Steam");
@@ -347,8 +349,8 @@ final class HbmEnglishTranslations {
         language.addProperty("fluid.hbm.unsaturateds", "Unsaturated Hydrocarbons");
         language.addProperty("hbmfluid.spentsteam", "Low-Pressure Steam");
         language.addProperty("fluid.hbm.spentsteam", "Low-Pressure Steam");
-        language.addProperty("hbmfluid.air", "Air");
-        language.addProperty("fluid.hbm.air", "Air");
+        language.addProperty("hbmfluid.air", "Compressed Air");
+        language.addProperty("fluid.hbm.air", "Compressed Air");
         language.addProperty("hbmfluid.airblast", "Hot Air Blast");
         language.addProperty("fluid.hbm.airblast", "Hot Air Blast");
         language.addProperty("hbmfluid.flue", "Flue Gas");

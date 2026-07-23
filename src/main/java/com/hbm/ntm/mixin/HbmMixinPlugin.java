@@ -11,11 +11,13 @@ import java.util.Set;
 /** Keeps compatibility mixins out of class loading when their target mod is absent. */
 public final class HbmMixinPlugin implements IMixinConfigPlugin {
     private boolean sableLoaded;
+    private boolean jeiLoaded;
 
     @Override
     public void onLoad(String mixinPackage) {
         LoadingModList loadingMods = LoadingModList.get();
         sableLoaded = loadingMods != null && loadingMods.getModFileById("sable") != null;
+        jeiLoaded = loadingMods != null && loadingMods.getModFileById("jei") != null;
     }
 
     @Override
@@ -25,7 +27,9 @@ public final class HbmMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return !mixinClassName.startsWith("com.hbm.ntm.mixin.compat.sable.") || sableLoaded;
+        if (mixinClassName.startsWith("com.hbm.ntm.mixin.compat.sable.")) return sableLoaded;
+        if (mixinClassName.startsWith("com.hbm.ntm.mixin.compat.jei.")) return jeiLoaded;
+        return true;
     }
 
     @Override
