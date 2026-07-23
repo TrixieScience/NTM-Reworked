@@ -48,6 +48,7 @@ import com.hbm.ntm.item.DfcCoreItem;
 import com.hbm.ntm.item.DfcLensItem;
 import com.hbm.ntm.item.DenseWireItem;
 import com.hbm.ntm.item.FluidStorageTankBlockItem;
+import com.hbm.ntm.item.FluidBarrelBlockItem;
 import com.hbm.ntm.item.FortyMillimeterGunItem;
 import com.hbm.ntm.item.FlamerGunItem;
 import com.hbm.ntm.item.FireExtinguisherAmmoItem;
@@ -610,6 +611,7 @@ public final class ModItems {
     public static final DeferredItem<ArmorCladdingItem> CLADDING_IRON;
     public static final DeferredItem<ArmorCladdingItem> CLADDING_OBSIDIAN;
     public static final DeferredItem<Item> PLATE_POLYMER;
+    public static final DeferredItem<Item> PLATE_SATURNITE;
     public static final DeferredItem<WireFineItem> WIRE_FINE;
     public static final DeferredItem<DenseWireItem> WIRE_DENSE;
     public static final DeferredItem<CasingItem> CASING;
@@ -680,6 +682,11 @@ public final class ModItems {
     public static final DeferredItem<PistonSetItem> PISTON_SET_DESH;
     public static final DeferredItem<PistonSetItem> PISTON_SET_STARMETAL;
     public static final DeferredItem<FluidStorageTankBlockItem> MACHINE_FLUIDTANK_ITEM;
+    public static final DeferredItem<FluidBarrelBlockItem> BARREL_PLASTIC;
+    public static final DeferredItem<FluidBarrelBlockItem> BARREL_CORRODED;
+    public static final DeferredItem<FluidBarrelBlockItem> BARREL_STEEL;
+    public static final DeferredItem<FluidBarrelBlockItem> BARREL_TCALLOY;
+    public static final DeferredItem<FluidBarrelBlockItem> BARREL_ANTIMATTER;
     public static final DeferredItem<BlockItem> DFC_CORE_ITEM;
     public static final DeferredItem<BlockItem> DFC_EMITTER_ITEM;
     public static final DeferredItem<BlockItem> DFC_INJECTOR_ITEM;
@@ -1502,6 +1509,7 @@ public final class ModItems {
         CLADDING_IRON = registerCladding("cladding_iron", ArmorCladdingItem.Effect.IRON, 0.0F);
         CLADDING_OBSIDIAN = registerCladding("cladding_obsidian", ArmorCladdingItem.Effect.OBSIDIAN, 0.0F);
         PLATE_POLYMER = ITEMS.registerSimpleItem("plate_polymer", new Item.Properties());
+        PLATE_SATURNITE = ITEMS.registerSimpleItem("plate_saturnite", new Item.Properties());
         WIRE_FINE = ITEMS.register("wire_fine", WireFineItem::new);
         WIRE_DENSE = ITEMS.register("wire_dense", DenseWireItem::new);
         CASING = ITEMS.register("casing", CasingItem::new);
@@ -1621,6 +1629,16 @@ public final class ModItems {
         PISTON_SET_STARMETAL = ITEMS.register("piston_set_starmetal", () -> new PistonSetItem(PistonSetItem.Type.STARMETAL));
         MACHINE_FLUIDTANK_ITEM = ITEMS.register("machine_fluidtank",
                 () -> new FluidStorageTankBlockItem(ModBlocks.MACHINE_FLUIDTANK.get(), new Item.Properties()));
+        BARREL_PLASTIC = ITEMS.register("barrel_plastic",
+                () -> new FluidBarrelBlockItem(ModBlocks.BARREL_PLASTIC.get(), new Item.Properties()));
+        BARREL_CORRODED = ITEMS.register("barrel_corroded",
+                () -> new FluidBarrelBlockItem(ModBlocks.BARREL_CORRODED.get(), new Item.Properties()));
+        BARREL_STEEL = ITEMS.register("barrel_steel",
+                () -> new FluidBarrelBlockItem(ModBlocks.BARREL_STEEL.get(), new Item.Properties()));
+        BARREL_TCALLOY = ITEMS.register("barrel_tcalloy",
+                () -> new FluidBarrelBlockItem(ModBlocks.BARREL_TCALLOY.get(), new Item.Properties()));
+        BARREL_ANTIMATTER = ITEMS.register("barrel_antimatter",
+                () -> new FluidBarrelBlockItem(ModBlocks.BARREL_ANTIMATTER.get(), new Item.Properties()));
         MACHINE_CHEMICAL_PLANT_ITEM = ITEMS.registerSimpleBlockItem(
                 "machine_chemical_plant", ModBlocks.MACHINE_CHEMICAL_PLANT);
         MACHINE_SOLDERING_STATION_ITEM = ITEMS.registerSimpleBlockItem(

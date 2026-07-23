@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "hbm:plate_saturnite"
+    },
+    "P": {
+      "item": "hbm:coil_gold_torus"
+    }
+  },
+  "pattern": [
+    "IPI",
+    "I I",
+    "IPI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:barrel_antimatter"
+  }
+}

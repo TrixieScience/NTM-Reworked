@@ -51,6 +51,7 @@ import com.hbm.ntm.blockentity.FireboxBlockEntity;
 import com.hbm.ntm.blockentity.FensuBlockEntity;
 import com.hbm.ntm.blockentity.FensuProxyBlockEntity;
 import com.hbm.ntm.blockentity.FluidDuctBlockEntity;
+import com.hbm.ntm.blockentity.FluidBarrelBlockEntity;
 import com.hbm.ntm.blockentity.FluidStorageTankBlockEntity;
 import com.hbm.ntm.blockentity.FluidStorageTankProxyBlockEntity;
 import com.hbm.ntm.blockentity.FluidBurnerBlockEntity;
@@ -552,6 +553,12 @@ public final class ModBlockEntities {
             BLOCK_ENTITY_TYPES.register("machine_fluidtank",
                     () -> BlockEntityType.Builder.of(FluidStorageTankBlockEntity::new,
                             ModBlocks.MACHINE_FLUIDTANK.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidBarrelBlockEntity>> FLUID_BARREL =
+            BLOCK_ENTITY_TYPES.register("fluid_barrel",
+                    () -> BlockEntityType.Builder.of(FluidBarrelBlockEntity::new,
+                            ModBlocks.BARREL_PLASTIC.get(), ModBlocks.BARREL_STEEL.get(),
+                            ModBlocks.BARREL_TCALLOY.get(), ModBlocks.BARREL_ANTIMATTER.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidStorageTankProxyBlockEntity>> MACHINE_FLUIDTANK_PROXY =
             BLOCK_ENTITY_TYPES.register("machine_fluidtank_proxy",

@@ -629,6 +629,22 @@ public final class MaterialResourcesProvider implements DataProvider {
                 hbm("machine_diesel")));
         writes.add(save(output, selfDropLoot("machine_diesel"), lootTables, hbm("machine_diesel")));
         writes.add(save(output, selfDropLoot("machine_fluidtank"), lootTables, hbm("machine_fluidtank")));
+        for (String barrel : List.of("barrel_plastic", "barrel_corroded", "barrel_steel",
+                "barrel_tcalloy", "barrel_antimatter")) {
+            writes.add(save(output, selfDropLoot(barrel), lootTables, hbm(barrel)));
+        }
+        writes.add(save(output, barrelRecipe(itemIngredient("hbm:plate_polymer"),
+                        itemIngredient("hbm:plate_aluminium"), "hbm:barrel_plastic"),
+                recipes, hbm("barrel_plastic")));
+        writes.add(save(output, barrelRecipe(tagIngredient("c:plates/steel"),
+                        tagIngredient("c:ingots/steel"), "hbm:barrel_steel"),
+                recipes, hbm("barrel_steel")));
+        writes.add(save(output, barrelRecipe(itemIngredient("hbm:ingot_tcalloy"),
+                        itemIngredient("hbm:plate_titanium"), "hbm:barrel_tcalloy"),
+                recipes, hbm("barrel_tcalloy")));
+        writes.add(save(output, barrelRecipe(itemIngredient("hbm:plate_saturnite"),
+                        itemIngredient("hbm:coil_gold_torus"), "hbm:barrel_antimatter"),
+                recipes, hbm("barrel_antimatter")));
         writes.add(save(output, emptyModel("electric_heater"), blockModels, hbm("heater_electric")));
         writes.add(save(output, unconditionalMultipartState("heater_electric"), blockStates,
                 hbm("heater_electric")));
@@ -975,6 +991,11 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:machine_well");
         mineableBlocks.add("hbm:machine_diesel");
         mineableBlocks.add("hbm:machine_fluidtank");
+        mineableBlocks.add("hbm:barrel_plastic");
+        mineableBlocks.add("hbm:barrel_corroded");
+        mineableBlocks.add("hbm:barrel_steel");
+        mineableBlocks.add("hbm:barrel_tcalloy");
+        mineableBlocks.add("hbm:barrel_antimatter");
         mineableBlocks.add("hbm:steel_scaffold");
         mineableBlocks.add("hbm:steel_beam");
         mineableBlocks.add("hbm:steel_grate");
@@ -1624,6 +1645,7 @@ public final class MaterialResourcesProvider implements DataProvider {
                 "coil_gold_torus", "coil_tungsten", "tank_steel", "motor", "motor_desh", "drill_titanium")) {
             writes.add(save(output, generatedItemModel(component), itemModels, hbm(component)));
         }
+        writes.add(save(output, generatedItemModel("plate_saturnite"), itemModels, hbm("plate_saturnite")));
         addFineWireAndComponentRecipes(writes, output);
         addSiliconConversionRecipes(writes, output);
         writes.add(save(output, circuitModel(), itemModels, hbm("circuit")));
@@ -2183,6 +2205,13 @@ public final class MaterialResourcesProvider implements DataProvider {
 
     private JsonObject shapedItemRecipe(List<String> rows, Map<String, JsonObject> keys, String resultId) {
         return shapedItemRecipe(rows, keys, resultId, 1);
+    }
+
+    private JsonObject barrelRecipe(JsonObject wall, JsonObject cap, String resultId) {
+        Map<String, JsonObject> key = new LinkedHashMap<>();
+        key.put("I", wall);
+        key.put("P", cap);
+        return shapedItemRecipe(List.of("IPI", "I I", "IPI"), key, resultId);
     }
 
     private JsonObject shapedItemRecipe(List<String> rows, Map<String, JsonObject> keys, String resultId,

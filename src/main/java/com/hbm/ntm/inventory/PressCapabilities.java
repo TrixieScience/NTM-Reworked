@@ -168,6 +168,10 @@ public final class PressCapabilities {
                 (proxy, side) -> proxy.fluidHandler(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_DUCT.get(),
                 (duct, side) -> duct.fluidHandler(side));
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.FLUID_BARREL.get(),
+                (barrel, side) -> new SidedInvWrapper(barrel, side == null ? Direction.DOWN : side));
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_BARREL.get(),
+                (barrel, side) -> barrel.fluidHandler());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_FLUIDTANK_PROXY.get(),
                 (proxy, side) -> proxy.fluidHandler(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_WELL.get(),

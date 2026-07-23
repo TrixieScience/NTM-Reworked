@@ -28,6 +28,7 @@ import com.hbm.ntm.inventory.FireboxMenu;
 import com.hbm.ntm.inventory.FensuMenu;
 import com.hbm.ntm.inventory.GasTurbineMenu;
 import com.hbm.ntm.inventory.FluidIdentifierMenu;
+import com.hbm.ntm.inventory.FluidBarrelMenu;
 import com.hbm.ntm.inventory.FluidStorageTankMenu;
 import com.hbm.ntm.inventory.FluidBurnerMenu;
 import com.hbm.ntm.inventory.HeatExchangerMenu;
@@ -230,6 +231,9 @@ public final class ModMenus {
 
     public static final DeferredHolder<MenuType<?>, MenuType<FluidStorageTankMenu>> MACHINE_FLUIDTANK = MENUS.register(
             "machine_fluidtank", () -> IMenuTypeExtension.create(FluidStorageTankMenu::new));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<FluidBarrelMenu>> FLUID_BARREL = MENUS.register(
+            "fluid_barrel", () -> IMenuTypeExtension.create(FluidBarrelMenu::new));
 
     public static final DeferredHolder<MenuType<?>, MenuType<ConveyorBoxerMenu>> CRANE_BOXER = MENUS.register(
             "crane_boxer", () -> IMenuTypeExtension.create(ConveyorBoxerMenu::new));

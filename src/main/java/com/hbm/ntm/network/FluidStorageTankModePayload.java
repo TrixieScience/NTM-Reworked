@@ -1,6 +1,7 @@
 package com.hbm.ntm.network;
 
 import com.hbm.ntm.HbmNtm;
+import com.hbm.ntm.inventory.FluidBarrelMenu;
 import com.hbm.ntm.inventory.FluidStorageTankMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,6 +20,8 @@ public record FluidStorageTankModePayload() implements CustomPacketPayload {
     public static void handle(FluidStorageTankModePayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().containerMenu instanceof FluidStorageTankMenu menu
+                    && menu.blockEntity() != null) menu.blockEntity().cycleMode();
+            if (context.player().containerMenu instanceof FluidBarrelMenu menu
                     && menu.blockEntity() != null) menu.blockEntity().cycleMode();
         });
     }

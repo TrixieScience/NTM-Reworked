@@ -95,8 +95,8 @@ public final class MachinePressScreen extends AbstractContainerScreen<MachinePre
 
     private static void vertex(BufferBuilder builder, Matrix4f pose, float centerX, float centerY,
                                float x, float y, float sin, float cos, float scale, int color) {
-        float rotatedX = (x * cos - y * sin) * scale;
-        float rotatedY = (x * sin + y * cos) * scale;
+        float rotatedX = (x * cos + y * sin) * scale;
+        float rotatedY = (y * cos - x * sin) * scale;
         builder.addVertex(pose, centerX + rotatedX, centerY + rotatedY, 200.0F)
                 .setColor(color | 0xFF000000);
     }

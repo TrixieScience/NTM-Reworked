@@ -104,6 +104,7 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.FILTER_COAL.get());
                         output.accept(ModItems.CATALYST_CLAY.get());
                         output.accept(ModItems.PLATE_POLYMER.get());
+                        output.accept(ModItems.PLATE_SATURNITE.get());
                         output.accept(ModItems.get("ingot_polymer").get());
                         output.accept(ModItems.get("powder_polymer").get());
                         output.accept(ModItems.get("plate_desh").get());
@@ -476,6 +477,10 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.DFC_RECEIVER_ITEM.get());
                         output.accept(ModItems.DFC_STABILIZER_ITEM.get());
                         output.accept(ModItems.MACHINE_FLUIDTANK_ITEM.get());
+                        output.accept(ModItems.BARREL_PLASTIC.get());
+                        output.accept(ModItems.BARREL_STEEL.get());
+                        output.accept(ModItems.BARREL_TCALLOY.get());
+                        output.accept(ModItems.BARREL_ANTIMATTER.get());
                         output.accept(ModItems.FLUID_DUCT_NEO_ITEM.get());
                         output.accept(ModItems.CONVEYOR_WAND.get());
                         output.accept(ModItems.CONVEYOR_WAND_EXPRESS.get());

@@ -44,6 +44,7 @@ import com.hbm.ntm.block.FractionTowerSeparatorBlock;
 import com.hbm.ntm.block.GasTurbineBlock;
 import com.hbm.ntm.block.FluidDuctBlock;
 import com.hbm.ntm.block.FluidBurnerBlock;
+import com.hbm.ntm.block.FluidBarrelBlock;
 import com.hbm.ntm.block.FluidStorageTankBlock;
 import com.hbm.ntm.block.FoundryMoldBlock;
 import com.hbm.ntm.block.FoundryBasinBlock;
@@ -199,6 +200,11 @@ public final class ModBlocks {
     public static final DeferredBlock<DfcComponentBlock> DFC_RECEIVER;
     public static final DeferredBlock<DfcComponentBlock> DFC_STABILIZER;
     public static final DeferredBlock<FluidStorageTankBlock> MACHINE_FLUIDTANK;
+    public static final DeferredBlock<FluidBarrelBlock> BARREL_PLASTIC;
+    public static final DeferredBlock<FluidBarrelBlock> BARREL_CORRODED;
+    public static final DeferredBlock<FluidBarrelBlock> BARREL_STEEL;
+    public static final DeferredBlock<FluidBarrelBlock> BARREL_TCALLOY;
+    public static final DeferredBlock<FluidBarrelBlock> BARREL_ANTIMATTER;
     public static final DeferredBlock<HeCableBlock> RED_CABLE;
     public static final DeferredBlock<BatterySocketBlock> MACHINE_BATTERY_SOCKET;
     public static final DeferredBlock<FensuBlock> MACHINE_BATTERY_REDD;
@@ -553,6 +559,11 @@ public final class ModBlocks {
         MACHINE_FLUIDTANK = BLOCKS.register("machine_fluidtank", () -> new FluidStorageTankBlock(
                 BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0F, 12.0F)
                         .sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+        BARREL_PLASTIC = fluidBarrel("barrel_plastic", FluidBarrelBlock.Type.PLASTIC, SoundType.STONE);
+        BARREL_CORRODED = fluidBarrel("barrel_corroded", FluidBarrelBlock.Type.CORRODED, SoundType.METAL);
+        BARREL_STEEL = fluidBarrel("barrel_steel", FluidBarrelBlock.Type.STEEL, SoundType.METAL);
+        BARREL_TCALLOY = fluidBarrel("barrel_tcalloy", FluidBarrelBlock.Type.TCALLOY, SoundType.METAL);
+        BARREL_ANTIMATTER = fluidBarrel("barrel_antimatter", FluidBarrelBlock.Type.ANTIMATTER, SoundType.METAL);
         RED_CABLE = BLOCKS.register(
                 "red_cable",
                 () -> new HeCableBlock(BlockBehaviour.Properties.of()
@@ -1067,6 +1078,13 @@ public final class ModBlocks {
         BLOCK_COKE_COAL = registerCokeBlock("block_coke_coal");
         BLOCK_COKE_LIGNITE = registerCokeBlock("block_coke_lignite");
         BLOCK_COKE_PETROLEUM = registerCokeBlock("block_coke_petroleum");
+    }
+
+    private static DeferredBlock<FluidBarrelBlock> fluidBarrel(String name, FluidBarrelBlock.Type type,
+                                                               SoundType sound) {
+        return BLOCKS.register(name, () -> new FluidBarrelBlock(BlockBehaviour.Properties.of()
+                .mapColor(MapColor.METAL).strength(2.0F, 5.0F).sound(sound)
+                .requiresCorrectToolForDrops().noOcclusion(), type));
     }
 
     private static BlockBehaviour.Properties turretProperties(float resistance) {

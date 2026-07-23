@@ -371,6 +371,12 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.machine_diesel.desc.3", "-Aviation: 10%");
         language.addProperty("block.hbm.machine_fluidtank", "Tank");
         language.addProperty("container.fluidtank", "Tank");
+        language.addProperty("block.hbm.barrel_plastic", "Safe Barrel\u2122");
+        language.addProperty("block.hbm.barrel_corroded", "Corroded Barrel");
+        language.addProperty("block.hbm.barrel_steel", "Steel Barrel");
+        language.addProperty("block.hbm.barrel_tcalloy", "Technetium Steel Barrel");
+        language.addProperty("block.hbm.barrel_antimatter", "Magnetic Antimatter Container");
+        language.addProperty("container.barrel", "Barrel");
         language.addProperty("gui.hbm.fluidtank.mode.input", "Input");
         language.addProperty("gui.hbm.fluidtank.mode.buffer", "Buffer");
         language.addProperty("gui.hbm.fluidtank.mode.output", "Output");
@@ -1346,6 +1352,7 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.cladding_iron", "Iron Cladding");
         language.addProperty("item.hbm.cladding_obsidian", "Obsidian Skin");
         language.addProperty("item.hbm.plate_polymer", "Insulator");
+        language.addProperty("item.hbm.plate_saturnite", "Saturnite Plate");
         language.addProperty("item.hbm.wire_fine.steel", "Steel Wire");
         language.addProperty("item.hbm.wire_fine.red_copper", "Minecraft Grade Copper Wire");
         language.addProperty("item.hbm.wire_fine.carbon", "Carbon Wire");
