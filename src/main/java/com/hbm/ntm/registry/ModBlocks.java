@@ -214,6 +214,13 @@ public final class ModBlocks {
     public static final DeferredBlock<TurretFriendlyBlock> TURRET_CHEKHOV;
     public static final DeferredBlock<TurretFriendlyBlock> TURRET_JEREMY;
     public static final DeferredBlock<TurretFriendlyBlock> TURRET_TAUON;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_RICHARD;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_HOWARD;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_FRITZ;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_MAXWELL;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_ARTY;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_HIMARS;
+    public static final DeferredBlock<TurretFriendlyBlock> TURRET_SENTRY;
     public static final DeferredBlock<Block> PRESS_PREHEATER;
     public static final DeferredBlock<MachineShredderBlock> MACHINE_SHREDDER;
     public static final DeferredBlock<ColoredFallingBlock> GRAVEL_OBSIDIAN;
@@ -617,6 +624,20 @@ public final class ModBlocks {
                 turretProperties(600F), com.hbm.ntm.blockentity.TurretVariant.JEREMY));
         TURRET_TAUON = BLOCKS.register("turret_tauon", () -> new TurretFriendlyBlock(
                 turretProperties(60F), com.hbm.ntm.blockentity.TurretVariant.TAUON));
+        TURRET_RICHARD = BLOCKS.register("turret_richard", () -> new TurretFriendlyBlock(
+                turretProperties(10F), com.hbm.ntm.blockentity.TurretVariant.RICHARD));
+        TURRET_HOWARD = BLOCKS.register("turret_howard", () -> new TurretFriendlyBlock(
+                turretProperties(600F), com.hbm.ntm.blockentity.TurretVariant.HOWARD));
+        TURRET_FRITZ = BLOCKS.register("turret_fritz", () -> new TurretFriendlyBlock(
+                turretProperties(10F), com.hbm.ntm.blockentity.TurretVariant.FRITZ));
+        TURRET_MAXWELL = BLOCKS.register("turret_maxwell", () -> new TurretFriendlyBlock(
+                turretProperties(60F), com.hbm.ntm.blockentity.TurretVariant.MAXWELL));
+        TURRET_ARTY = BLOCKS.register("turret_arty", () -> new TurretFriendlyBlock(
+                turretProperties(600F), com.hbm.ntm.blockentity.TurretVariant.ARTY));
+        TURRET_HIMARS = BLOCKS.register("turret_himars", () -> new TurretFriendlyBlock(
+                turretProperties(600F), com.hbm.ntm.blockentity.TurretVariant.HIMARS));
+        TURRET_SENTRY = BLOCKS.register("turret_sentry", () -> new TurretFriendlyBlock(
+                turretProperties(5F), com.hbm.ntm.blockentity.TurretVariant.SENTRY));
         PRESS_PREHEATER = BLOCKS.register(
                 "press_preheater",
                 () -> new Block(BlockBehaviour.Properties.of()

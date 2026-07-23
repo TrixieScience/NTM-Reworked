@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "hbm:item/ammo_arty_classic",
+      "predicate": {
+        "custom_model_data": 1
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_he",
+      "predicate": {
+        "custom_model_data": 2
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_mini_nuke",
+      "predicate": {
+        "custom_model_data": 3
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_nuke",
+      "predicate": {
+        "custom_model_data": 4
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_phosphorus",
+      "predicate": {
+        "custom_model_data": 5
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_mini_nuke_multi",
+      "predicate": {
+        "custom_model_data": 6
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_phosphorus_multi",
+      "predicate": {
+        "custom_model_data": 7
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_cargo",
+      "predicate": {
+        "custom_model_data": 8
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_chlorine",
+      "predicate": {
+        "custom_model_data": 9
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_phosgene",
+      "predicate": {
+        "custom_model_data": 10
+      }
+    },
+    {
+      "model": "hbm:item/ammo_arty_mustard_gas",
+      "predicate": {
+        "custom_model_data": 11
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "hbm:item/ammo_arty"
+  }
+}

@@ -288,6 +288,14 @@
       {"name": "hbm:weapon/foley/gunwhack2", "stream": false}
     ]
   },
+  "turret.richard_fire": {
+    "category": "block",
+    "sounds": [{"name": "hbm:turret/richard_fire", "stream": false}]
+  },
+  "turret.howard_fire": {
+    "category": "block",
+    "sounds": [{"name": "hbm:turret/howard_fire", "stream": false}]
+  },
   "weapon.sparkshoot": {
     "category": "player",
     "sounds": [
@@ -715,5 +723,17 @@
   "weapon.tau_shoot": {
     "category": "block",
     "sounds": [{"name": "hbm:weapon/tauShoot", "stream": false}]
+  },
+  "turret.maxwell_fire": {
+    "category": "block",
+    "sounds": [{"name": "hbm:turret/maxwellLoop", "stream": false}]
+  },
+  "turret.sentry_fire": {
+    "category": "block",
+    "sounds": [{"name": "hbm:turret/sentry_fire", "stream": false}]
+  },
+  "turret.sentry_lock": {
+    "category": "block",
+    "sounds": [{"name": "hbm:turret/sentry_lockon", "stream": false}]
   }
 }

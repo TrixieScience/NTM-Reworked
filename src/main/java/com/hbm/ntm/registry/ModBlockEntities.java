@@ -715,11 +715,49 @@ public final class ModBlockEntities {
                     (pos, state) -> TurretFriendlyBlockEntity.create(
                             com.hbm.ntm.blockentity.TurretVariant.TAUON, pos, state),
                     ModBlocks.TURRET_TAUON.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_RICHARD =
+            BLOCK_ENTITY_TYPES.register("turret_richard", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.RICHARD, pos, state),
+                    ModBlocks.TURRET_RICHARD.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_HOWARD =
+            BLOCK_ENTITY_TYPES.register("turret_howard", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.HOWARD, pos, state),
+                    ModBlocks.TURRET_HOWARD.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_FRITZ =
+            BLOCK_ENTITY_TYPES.register("turret_fritz", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.FRITZ, pos, state),
+                    ModBlocks.TURRET_FRITZ.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_MAXWELL =
+            BLOCK_ENTITY_TYPES.register("turret_maxwell", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.MAXWELL, pos, state),
+                    ModBlocks.TURRET_MAXWELL.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_ARTY =
+            BLOCK_ENTITY_TYPES.register("turret_arty", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.ARTY, pos, state),
+                    ModBlocks.TURRET_ARTY.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_HIMARS =
+            BLOCK_ENTITY_TYPES.register("turret_himars", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.HIMARS, pos, state),
+                    ModBlocks.TURRET_HIMARS.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyBlockEntity>> TURRET_SENTRY =
+            BLOCK_ENTITY_TYPES.register("turret_sentry", () -> BlockEntityType.Builder.of(
+                    (pos, state) -> TurretFriendlyBlockEntity.create(
+                            com.hbm.ntm.blockentity.TurretVariant.SENTRY, pos, state),
+                    ModBlocks.TURRET_SENTRY.get()).build(null));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TurretFriendlyProxyBlockEntity>> TURRET_PROXY =
             BLOCK_ENTITY_TYPES.register("turret_proxy", () -> BlockEntityType.Builder.of(
                     TurretFriendlyProxyBlockEntity::new, ModBlocks.TURRET_CHEKHOV.get(),
                     ModBlocks.TURRET_FRIENDLY.get(), ModBlocks.TURRET_JEREMY.get(),
-                    ModBlocks.TURRET_TAUON.get()).build(null));
+                    ModBlocks.TURRET_TAUON.get(), ModBlocks.TURRET_RICHARD.get(),
+                    ModBlocks.TURRET_HOWARD.get(), ModBlocks.TURRET_FRITZ.get(),
+                    ModBlocks.TURRET_MAXWELL.get(), ModBlocks.TURRET_ARTY.get(),
+                    ModBlocks.TURRET_HIMARS.get(), ModBlocks.TURRET_SENTRY.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<RadioTorchBlockEntity>> RADIO_TORCH =
             BLOCK_ENTITY_TYPES.register("radio_torch", () -> BlockEntityType.Builder.of(RadioTorchBlockEntity::new,

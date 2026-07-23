@@ -327,6 +327,15 @@ public final class ClientMachineRegistration {
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_FRIENDLY.get(), TurretFriendlyRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_JEREMY.get(), TurretFriendlyRenderer::new);
         event.registerBlockEntityRenderer(ModBlockEntities.TURRET_TAUON.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_RICHARD.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_HOWARD.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_FRITZ.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_MAXWELL.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_ARTY.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_HIMARS.get(), TurretFriendlyRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TURRET_SENTRY.get(), TurretFriendlyRenderer::new);
+        event.registerEntityRenderer(ModEntities.TURRET_ORDNANCE.get(),
+                com.hbm.ntm.client.render.TurretOrdnanceRenderer::new);
         event.registerEntityRenderer(ModEntities.COG.get(), CogRenderer::new);
         event.registerEntityRenderer(ModEntities.SAWBLADE.get(), SawbladeRenderer::new);
         event.registerEntityRenderer(ModEntities.PRIMED_EXPLOSIVE.get(), PrimedExplosiveRenderer::new);
@@ -538,7 +547,11 @@ public final class ClientMachineRegistration {
             private final TurretFriendlyItemRenderer renderer = new TurretFriendlyItemRenderer();
             @Override public BlockEntityWithoutLevelRenderer getCustomRenderer() { return renderer; }
         }, ModItems.TURRET_CHEKHOV_ITEM.get(), ModItems.TURRET_FRIENDLY_ITEM.get(),
-                ModItems.TURRET_JEREMY_ITEM.get(), ModItems.TURRET_TAUON_ITEM.get());
+                ModItems.TURRET_JEREMY_ITEM.get(), ModItems.TURRET_TAUON_ITEM.get(),
+                ModItems.TURRET_RICHARD_ITEM.get(), ModItems.TURRET_HOWARD_ITEM.get(),
+                ModItems.TURRET_FRITZ_ITEM.get(), ModItems.TURRET_MAXWELL_ITEM.get(),
+                ModItems.TURRET_ARTY_ITEM.get(), ModItems.TURRET_HIMARS_ITEM.get(),
+                ModItems.TURRET_SENTRY_ITEM.get());
         event.registerItem(new IClientItemExtensions() {
             private final BatteryPackItemRenderer renderer = new BatteryPackItemRenderer();
 

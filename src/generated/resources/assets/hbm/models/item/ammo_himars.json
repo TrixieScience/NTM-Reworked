@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "hbm:item/ammo_himars_single",
+      "predicate": {
+        "custom_model_data": 1
+      }
+    },
+    {
+      "model": "hbm:item/ammo_himars_standard_he",
+      "predicate": {
+        "custom_model_data": 2
+      }
+    },
+    {
+      "model": "hbm:item/ammo_himars_standard_wp",
+      "predicate": {
+        "custom_model_data": 3
+      }
+    },
+    {
+      "model": "hbm:item/ammo_himars_standard_tb",
+      "predicate": {
+        "custom_model_data": 4
+      }
+    },
+    {
+      "model": "hbm:item/ammo_himars_single_tb",
+      "predicate": {
+        "custom_model_data": 5
+      }
+    },
+    {
+      "model": "hbm:item/ammo_himars_standard_mini_nuke",
+      "predicate": {
+        "custom_model_data": 6
+      }
+    },
+    {
+      "model": "hbm:item/ammo_himars_standard_lava",
+      "predicate": {
+        "custom_model_data": 7
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "hbm:item/ammo_himars_standard"
+  }
+}

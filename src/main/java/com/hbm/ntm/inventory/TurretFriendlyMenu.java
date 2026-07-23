@@ -22,13 +22,13 @@ public final class TurretFriendlyMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public TurretFriendlyMenu(int id, Inventory inventory, RegistryFriendlyByteBuf buffer) {
-        this(id, inventory, find(inventory, buffer.readBlockPos()), new SimpleContainerData(8));
+        this(id, inventory, find(inventory, buffer.readBlockPos()), new SimpleContainerData(11));
     }
 
     public TurretFriendlyMenu(int id, Inventory inventory, Container turret, ContainerData data) {
         super(ModMenus.TURRET_FRIENDLY.get(), id);
         checkContainerSize(turret, TurretFriendlyBlockEntity.SLOT_COUNT);
-        checkContainerDataCount(data, 8);
+        checkContainerDataCount(data, 11);
         this.turret = turret;
         this.data = data;
         addSlot(new FilterSlot(turret, 0, 98, 27, stack -> stack.getItem() instanceof TurretChipItem));
@@ -82,6 +82,10 @@ public final class TurretFriendlyMenu extends AbstractContainerMenu {
                 ? TurretVariant.values()[ordinal] : TurretVariant.FRIENDLY;
     }
     public long maxPower() { return variant().maxPower(); }
+    public int fuelAmount() { return data.get(8); }
+    public int fuelType() { return data.get(9); }
+    public int turretMode() { return data.get(9); }
+    public int loaded() { return data.get(10); }
     public java.util.List<String> whitelist() { return TurretChipItem.names(turret.getItem(0)); }
     public void editWhitelist(int action, String name, int index) {
         if (!(turret instanceof TurretFriendlyBlockEntity friendly)) return;

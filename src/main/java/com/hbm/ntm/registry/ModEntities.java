@@ -9,6 +9,7 @@ import com.hbm.ntm.entity.BulletEntity;
 import com.hbm.ntm.entity.BuildingEntity;
 import com.hbm.ntm.entity.BoxcarEntity;
 import com.hbm.ntm.entity.TorpedoEntity;
+import com.hbm.ntm.entity.TurretOrdnanceEntity;
 import com.hbm.ntm.entity.FlattenedMobEntity;
 import com.hbm.ntm.entity.FortyMillimeterProjectileEntity;
 import com.hbm.ntm.entity.FollyBeamEntity;
@@ -260,6 +261,13 @@ public final class ModEntities {
                                     RocketProjectileEntity::new, MobCategory.MISC)
                             .fireImmune().sized(0.5F, 0.5F).clientTrackingRange(16).updateInterval(1)
                             .build("hbm:entity_bullet_rocket"));
+
+    public static final DeferredHolder<EntityType<?>, EntityType<TurretOrdnanceEntity>> TURRET_ORDNANCE =
+            ENTITY_TYPES.register("entity_turret_ordnance",
+                    () -> EntityType.Builder.<TurretOrdnanceEntity>of(
+                                    TurretOrdnanceEntity::new, MobCategory.MISC)
+                            .fireImmune().sized(0.5F, 0.5F).clientTrackingRange(256).updateInterval(1)
+                            .build("hbm:entity_turret_ordnance"));
 
     public static final DeferredHolder<EntityType<?>, EntityType<MiniNukeProjectileEntity>> MINI_NUKE_PROJECTILE =
             ENTITY_TYPES.register("entity_bullet_mini_nuke",

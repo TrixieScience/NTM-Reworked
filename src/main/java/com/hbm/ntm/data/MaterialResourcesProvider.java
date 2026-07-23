@@ -914,6 +914,13 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:turret_friendly");
         mineableBlocks.add("hbm:turret_jeremy");
         mineableBlocks.add("hbm:turret_tauon");
+        mineableBlocks.add("hbm:turret_richard");
+        mineableBlocks.add("hbm:turret_howard");
+        mineableBlocks.add("hbm:turret_fritz");
+        mineableBlocks.add("hbm:turret_maxwell");
+        mineableBlocks.add("hbm:turret_arty");
+        mineableBlocks.add("hbm:turret_himars");
+        mineableBlocks.add("hbm:turret_sentry");
         mineableBlocks.add("hbm:press_preheater");
         mineableBlocks.add("hbm:machine_shredder");
         mineableBlocks.add("hbm:machine_assembly_machine");
@@ -1044,11 +1051,27 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, unconditionalMultipartState("machine_ammo_press"), blockStates, hbm("machine_ammo_press")));
         writes.add(save(output, selfDropLoot("machine_ammo_press"), lootTables, hbm("machine_ammo_press")));
         writes.add(save(output, ammoPressRecipe(), recipes, hbm("machine_ammo_press")));
-        for (String turret : List.of("turret_chekhov", "turret_friendly", "turret_jeremy", "turret_tauon")) {
+        for (String turret : List.of("turret_chekhov", "turret_friendly", "turret_jeremy", "turret_tauon",
+                "turret_richard", "turret_howard", "turret_fritz", "turret_maxwell",
+                "turret_arty", "turret_himars", "turret_sentry")) {
             writes.add(save(output, emptyModel("block_steel"), blockModels, hbm(turret)));
             writes.add(save(output, unconditionalMultipartState(turret), blockStates, hbm(turret)));
             writes.add(save(output, selfDropLoot(turret), lootTables, hbm(turret)));
         }
+        writes.add(save(output, generatedItemModel("ammo_dgk"), itemModels, hbm("ammo_dgk")));
+        writes.add(save(output, artilleryAmmoItemModel(), itemModels, hbm("ammo_arty")));
+        writes.add(save(output, himarsAmmoItemModel(), itemModels, hbm("ammo_himars")));
+        for (com.hbm.ntm.weapon.ArtilleryAmmoType ammo
+                : com.hbm.ntm.weapon.ArtilleryAmmoType.values()) {
+            if (ammo.ordinal() == 0) continue;
+            writes.add(save(output, generatedItemModel(ammo.serializedName()), itemModels,
+                    hbm(ammo.serializedName())));
+        }
+        for (com.hbm.ntm.weapon.HimarsAmmoType ammo : com.hbm.ntm.weapon.HimarsAmmoType.values()) {
+            writes.add(save(output, generatedItemModel(ammo.serializedName()), itemModels,
+                    hbm(ammo.serializedName())));
+        }
+        writes.add(save(output, dgkAmmoRecipe(), recipes, hbm("ammo_dgk")));
         writes.add(save(output, ammoShellItemModel(), itemModels, hbm("ammo_shell")));
         for (com.hbm.ntm.weapon.TurretShellAmmoType shell
                 : com.hbm.ntm.weapon.TurretShellAmmoType.values()) {
@@ -1205,10 +1228,12 @@ public final class MaterialResourcesProvider implements DataProvider {
                 hbm("upgrade_muffler")));
         writes.add(save(output, generatedItemModel("centrifuge_element"), itemModels,
                 hbm("centrifuge_element")));
-        for (String type : List.of("speed", "power", "afterburn", "overdrive", "ejector", "stack")) for (int level = 1; level <= 3; level++) {
+        for (String type : List.of("speed", "power", "effect", "afterburn", "overdrive", "ejector", "stack")) for (int level = 1; level <= 3; level++) {
             String id = "upgrade_" + type + "_" + level;
             writes.add(save(output, generatedItemModel(id), itemModels, hbm(id)));
         }
+        writes.add(save(output, generatedItemModel("upgrade_5g"), itemModels, hbm("upgrade_5g")));
+        writes.add(save(output, generatedItemModel("upgrade_screm"), itemModels, hbm("upgrade_screm")));
         for (String gravel : List.of("gravel_obsidian", "gravel_diamond")) {
             writes.add(save(output, cubeAllBlockModel(gravel), blockModels, hbm(gravel)));
             writes.add(save(output, blockItemModel(gravel), itemModels, hbm(gravel)));
@@ -2207,6 +2232,13 @@ public final class MaterialResourcesProvider implements DataProvider {
         return shapedItemRecipe(rows, keys, resultId, 1);
     }
 
+    private JsonObject dgkAmmoRecipe() {
+        return shapedItemRecipe(List.of("LLL", "GGG", "CCC"), Map.of(
+                "L", tagIngredient("c:plates/lead"),
+                "G", itemIngredient("hbm:cordite"),
+                "C", tagIngredient("c:ingots/copper")), "hbm:ammo_dgk");
+    }
+
     private JsonObject barrelRecipe(JsonObject wall, JsonObject cap, String resultId) {
         Map<String, JsonObject> key = new LinkedHashMap<>();
         key.put("I", wall);
@@ -2856,6 +2888,39 @@ public final class MaterialResourcesProvider implements DataProvider {
             predicate.addProperty("custom_model_data", shell.ordinal());
             override.add("predicate", predicate);
             override.addProperty("model", "hbm:item/" + shell.serializedName());
+            overrides.add(override);
+        }
+        root.add("overrides", overrides);
+        return root;
+    }
+
+    private JsonObject artilleryAmmoItemModel() {
+        JsonObject root = generatedItemModel("ammo_arty");
+        JsonArray overrides = new JsonArray();
+        for (com.hbm.ntm.weapon.ArtilleryAmmoType ammo
+                : com.hbm.ntm.weapon.ArtilleryAmmoType.values()) {
+            if (ammo.ordinal() == 0) continue;
+            JsonObject override = new JsonObject();
+            JsonObject predicate = new JsonObject();
+            predicate.addProperty("custom_model_data", ammo.legacyMetadata());
+            override.add("predicate", predicate);
+            override.addProperty("model", "hbm:item/" + ammo.serializedName());
+            overrides.add(override);
+        }
+        root.add("overrides", overrides);
+        return root;
+    }
+
+    private JsonObject himarsAmmoItemModel() {
+        JsonObject root = generatedItemModel("ammo_himars_standard");
+        JsonArray overrides = new JsonArray();
+        for (com.hbm.ntm.weapon.HimarsAmmoType ammo : com.hbm.ntm.weapon.HimarsAmmoType.values()) {
+            if (ammo.ordinal() == 0) continue;
+            JsonObject override = new JsonObject();
+            JsonObject predicate = new JsonObject();
+            predicate.addProperty("custom_model_data", ammo.legacyMetadata());
+            override.add("predicate", predicate);
+            override.addProperty("model", "hbm:item/" + ammo.serializedName());
             overrides.add(override);
         }
         root.add("overrides", overrides);

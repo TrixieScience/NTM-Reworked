@@ -83,6 +83,16 @@ public final class ModSounds {
             register("turret.jeremy_reload");
     public static final DeferredHolder<SoundEvent, SoundEvent> TURRET_TAU_FIRE =
             register("weapon.tau_shoot");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TURRET_RICHARD_FIRE =
+            register("turret.richard_fire");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TURRET_HOWARD_FIRE =
+            register("turret.howard_fire");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TURRET_MAXWELL_FIRE =
+            register("turret.maxwell_fire");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TURRET_SENTRY_FIRE =
+            register("turret.sentry_fire");
+    public static final DeferredHolder<SoundEvent, SoundEvent> TURRET_SENTRY_LOCK =
+            register("turret.sentry_lock");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_SWITCH_MODE_1 = register("weapon.switchmode1");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_SWITCH_MODE_2 = register("weapon.switchmode2");
     public static final DeferredHolder<SoundEvent, SoundEvent> GUN_GREASEGUN_FIRE = register("weapon.fire.greasegun");

@@ -37,9 +37,11 @@ import org.jetbrains.annotations.Nullable;
 /** The source 2x2 half-height mount shared by the first NT turret. */
 public final class TurretFriendlyBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final IntegerProperty X = IntegerProperty.create("part_x", 0, 1);
-    public static final IntegerProperty Z = IntegerProperty.create("part_z", 0, 1);
+    public static final IntegerProperty X = IntegerProperty.create("part_x", 0, 3);
+    public static final IntegerProperty Y = IntegerProperty.create("part_y", 0, 1);
+    public static final IntegerProperty Z = IntegerProperty.create("part_z", 0, 3);
     private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, 0.5, 1);
+    private static final VoxelShape FULL_SHAPE = Shapes.block();
     private static final ThreadLocal<Boolean> REMOVING = ThreadLocal.withInitial(() -> false);
     private final TurretVariant variant;
     private final MapCodec<TurretFriendlyBlock> codec;
@@ -53,7 +55,7 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
         this.variant = variant;
         this.codec = simpleCodec(value -> new TurretFriendlyBlock(value, variant));
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH)
-                .setValue(X, 0).setValue(Z, 0));
+                .setValue(X, 0).setValue(Y, 0).setValue(Z, 0));
     }
 
     @Override protected MapCodec<? extends BaseEntityBlock> codec() { return codec; }
@@ -61,7 +63,7 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
     @Nullable @Override public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection().getOpposite();
         BlockPos core = context.getClickedPos();
-        for (BlockPos part : parts(core, facing)) {
+        for (BlockPos part : parts(core, facing, variant)) {
             if (!part.equals(core) && !context.getLevel().getBlockState(part).canBeReplaced(context)) return null;
         }
         return stateForPart(core, core, facing);
@@ -71,16 +73,22 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
                                       LivingEntity placer, ItemStack stack) {
         Direction facing = state.getValue(FACING);
         BlockPos core = corePosition(position, state);
-        for (BlockPos part : parts(core, facing)) {
+        for (BlockPos part : parts(core, facing, variant)) {
             level.setBlock(part, stateForPart(part, core, facing), Block.UPDATE_ALL);
         }
     }
 
     @Override protected RenderShape getRenderShape(BlockState state) { return RenderShape.INVISIBLE; }
     @Override protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos,
-                                             CollisionContext context) { return SHAPE; }
+                                             CollisionContext context) {
+        return variant == TurretVariant.SENTRY || variant == TurretVariant.ARTY
+                || variant == TurretVariant.HIMARS ? FULL_SHAPE : SHAPE;
+    }
     @Override protected VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos,
-                                                      CollisionContext context) { return SHAPE; }
+                                                      CollisionContext context) {
+        return variant == TurretVariant.SENTRY || variant == TurretVariant.ARTY
+                || variant == TurretVariant.HIMARS ? FULL_SHAPE : SHAPE;
+    }
 
     @Override protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos,
                                                           Player player, BlockHitResult hit) {
@@ -106,7 +114,7 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
                 Containers.dropContents(level, core, turret);
                 turret.clearContent();
             }
-            for (BlockPos part : parts(core, facing)) {
+            for (BlockPos part : parts(core, facing, variant)) {
                 if (!part.equals(pos) && level.getBlockState(part).is(this)) {
                     level.setBlock(part, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(),
                             Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
@@ -130,33 +138,67 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
             case FRIENDLY -> ModBlockEntities.TURRET_FRIENDLY.get();
             case JEREMY -> ModBlockEntities.TURRET_JEREMY.get();
             case TAUON -> ModBlockEntities.TURRET_TAUON.get();
+            case RICHARD -> ModBlockEntities.TURRET_RICHARD.get();
+            case HOWARD -> ModBlockEntities.TURRET_HOWARD.get();
+            case FRITZ -> ModBlockEntities.TURRET_FRITZ.get();
+            case MAXWELL -> ModBlockEntities.TURRET_MAXWELL.get();
+            case ARTY -> ModBlockEntities.TURRET_ARTY.get();
+            case HIMARS -> ModBlockEntities.TURRET_HIMARS.get();
+            case SENTRY -> ModBlockEntities.TURRET_SENTRY.get();
         };
         return isCore(state) ? createTickerHelper(type, expected,
                 TurretFriendlyBlockEntity::tick) : null;
     }
 
     @Override protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, X, Z);
+        builder.add(FACING, X, Y, Z);
     }
 
-    public static boolean isCore(BlockState state) { return state.getValue(X) == 0 && state.getValue(Z) == 0; }
+    public static boolean isCore(BlockState state) {
+        return state.getValue(X) == 0 && state.getValue(Y) == 0 && state.getValue(Z) == 0;
+    }
     public TurretVariant variant() { return variant; }
 
     public static BlockPos corePosition(BlockPos pos, BlockState state) {
         Direction facing = state.getValue(FACING);
         Direction side = facing.getClockWise();
-        return pos.relative(side, -state.getValue(X)).relative(facing, -state.getValue(Z));
+        return pos.below(state.getValue(Y)).relative(side, -state.getValue(X))
+                .relative(facing, -state.getValue(Z));
     }
 
     public static BlockPos[] parts(BlockPos core, Direction facing) {
+        return parts(core, facing, TurretVariant.FRIENDLY);
+    }
+
+    public static BlockPos[] parts(BlockPos core, Direction facing, TurretVariant variant) {
+        int size = footprint(variant);
+        int height = variant == TurretVariant.ARTY || variant == TurretVariant.HIMARS ? 2 : 1;
         Direction side = facing.getClockWise();
-        return new BlockPos[]{core, core.relative(side), core.relative(facing), core.relative(side).relative(facing)};
+        BlockPos[] parts = new BlockPos[size * size * height];
+        int index = 0;
+        for (int y = 0; y < height; y++) for (int z = 0; z < size; z++) for (int x = 0; x < size; x++) {
+            parts[index++] = core.above(y).relative(side, x).relative(facing, z);
+        }
+        return parts;
     }
 
     public static Vec3 horizontalOffset(Direction facing) {
+        return horizontalOffset(facing, TurretVariant.FRIENDLY);
+    }
+
+    public static Vec3 horizontalOffset(Direction facing, TurretVariant variant) {
         Direction side = facing.getClockWise();
-        return new Vec3(0.5D + 0.5D * (facing.getStepX() + side.getStepX()), 0D,
-                0.5D + 0.5D * (facing.getStepZ() + side.getStepZ()));
+        double shift = (footprint(variant) - 1D) * 0.5D;
+        return new Vec3(0.5D + shift * (facing.getStepX() + side.getStepX()), 0D,
+                0.5D + shift * (facing.getStepZ() + side.getStepZ()));
+    }
+
+    private static int footprint(TurretVariant variant) {
+        return switch (variant) {
+            case SENTRY -> 1;
+            case ARTY, HIMARS -> 4;
+            default -> 2;
+        };
     }
 
     private BlockState stateForPart(BlockPos part, BlockPos core, Direction facing) {
@@ -164,6 +206,7 @@ public final class TurretFriendlyBlock extends BaseEntityBlock {
         Direction side = facing.getClockWise();
         int x = delta.getX() * side.getStepX() + delta.getZ() * side.getStepZ();
         int z = delta.getX() * facing.getStepX() + delta.getZ() * facing.getStepZ();
-        return defaultBlockState().setValue(FACING, facing).setValue(X, x).setValue(Z, z);
+        return defaultBlockState().setValue(FACING, facing).setValue(X, x)
+                .setValue(Y, delta.getY()).setValue(Z, z);
     }
 }

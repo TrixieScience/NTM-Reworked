@@ -4,9 +4,14 @@ import com.hbm.ntm.energy.HeReceiver;
 import com.hbm.ntm.block.TurretFriendlyBlock;
 import com.hbm.ntm.compat.TurretTargetingFrame;
 import com.hbm.ntm.entity.BulletEntity;
+import com.hbm.ntm.entity.FlameProjectileEntity;
+import com.hbm.ntm.entity.RocketProjectileEntity;
 import com.hbm.ntm.entity.TauBeamEntity;
+import com.hbm.ntm.entity.TurretOrdnanceEntity;
 import com.hbm.ntm.inventory.TurretFriendlyMenu;
+import com.hbm.ntm.item.FlamerGunItem;
 import com.hbm.ntm.item.HeBatteryItem;
+import com.hbm.ntm.item.MachineUpgradeItem;
 import com.hbm.ntm.item.TurretChipItem;
 import com.hbm.ntm.network.SpentCasingPayload;
 import com.hbm.ntm.registry.ModBlockEntities;
@@ -14,10 +19,15 @@ import com.hbm.ntm.registry.ModItems;
 import com.hbm.ntm.registry.ModSounds;
 import com.hbm.ntm.weapon.FiveFiveSixAmmoType;
 import com.hbm.ntm.weapon.FiftyCalAmmoType;
+import com.hbm.ntm.weapon.FlamerFuelType;
+import com.hbm.ntm.weapon.RocketAmmoType;
 import com.hbm.ntm.weapon.SpentCasingPreset;
 import com.hbm.ntm.weapon.StandardAmmoTypes;
 import com.hbm.ntm.weapon.TauAmmoType;
 import com.hbm.ntm.weapon.TurretShellAmmoType;
+import com.hbm.ntm.weapon.ArtilleryAmmoType;
+import com.hbm.ntm.weapon.HimarsAmmoType;
+import com.hbm.ntm.weapon.NineMillimeterAmmoType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -41,6 +51,8 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
@@ -58,7 +70,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 
-/** Shared guts for the first four source NT turrets. */
+/** Shared guts for the source NT turret family. */
 public final class TurretFriendlyBlockEntity extends BlockEntity
         implements WorldlyContainer, MenuProvider, HeReceiver, TurretTargetingFrame {
     public static final int SLOT_COUNT = 11;
@@ -81,6 +93,10 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                 case 5 -> targetMachines ? 1 : 0;
                 case 6 -> stattrak;
                 case 7 -> variant.ordinal();
+                case 8 -> fuelAmount;
+                case 9 -> variant == TurretVariant.ARTY || variant == TurretVariant.HIMARS
+                        ? mode : fuelType.ordinal();
+                case 10 -> loaded;
                 default -> 0;
             };
         }
@@ -96,7 +112,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                 default -> { }
             }
         }
-        @Override public int getCount() { return 8; }
+        @Override public int getCount() { return 11; }
     };
 
     private long power;
@@ -117,6 +133,21 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     private int casingTimer;
     private int targetId = -1;
     private int stattrak;
+    private int loaded;
+    private int fuelAmount;
+    private int mode;
+    private int loadedType = -1;
+    private float crane;
+    private float oldCrane;
+    private boolean sentryLeft;
+    private boolean lastSentryLeft;
+    private float sentryLeftRecoil;
+    private float oldSentryLeftRecoil;
+    private float sentryRightRecoil;
+    private float oldSentryRightRecoil;
+    private int himarsReloadTimer;
+    private int pendingHimarsRounds;
+    private FlamerFuelType fuelType = FlamerFuelType.DIESEL;
     private Entity lastFiredTarget;
     private final TurretVariant variant;
 
@@ -136,6 +167,13 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
             case FRIENDLY -> ModBlockEntities.TURRET_FRIENDLY.get();
             case JEREMY -> ModBlockEntities.TURRET_JEREMY.get();
             case TAUON -> ModBlockEntities.TURRET_TAUON.get();
+            case RICHARD -> ModBlockEntities.TURRET_RICHARD.get();
+            case HOWARD -> ModBlockEntities.TURRET_HOWARD.get();
+            case FRITZ -> ModBlockEntities.TURRET_FRITZ.get();
+            case MAXWELL -> ModBlockEntities.TURRET_MAXWELL.get();
+            case ARTY -> ModBlockEntities.TURRET_ARTY.get();
+            case HIMARS -> ModBlockEntities.TURRET_HIMARS.get();
+            case SENTRY -> ModBlockEntities.TURRET_SENTRY.get();
         };
         return new TurretFriendlyBlockEntity(type, pos, state, variant);
     }
@@ -151,6 +189,7 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
                     SoundSource.BLOCKS, 2F, 1F);
         }
         if (casingTimer > 0 && --casingTimer == 0) ejectJeremyCasing(level);
+        reloadSpecialAmmo(level);
         if (lastFiredTarget != null && (!lastFiredTarget.isAlive() || lastFiredTarget.isRemoved())) {
             stattrak++;
             lastFiredTarget = null;
@@ -159,15 +198,27 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         dischargeBattery();
 
         Entity target = targetId < 0 ? null : level.getEntity(targetId);
-        if (level.getGameTime() % 10L == 0L || !validTarget(target)) {
+        int detectorInterval = variant == TurretVariant.ARTY ? (mode == 1 ? 20 : 200)
+                : variant == TurretVariant.SENTRY ? 10 : 10;
+        if (!validTarget(target)) {
+            target = null;
+            targetId = -1;
+        }
+        if (level.getGameTime() % detectorInterval == 0L) {
+            int previousTarget = targetId;
             target = findTarget(level);
             targetId = target == null ? -1 : target.getId();
+            if (variant == TurretVariant.SENTRY && targetId >= 0 && targetId != previousTarget) {
+                level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_SENTRY_LOCK.get(),
+                        SoundSource.BLOCKS, 2F, 1.5F);
+            }
         }
 
         oldYaw = yaw;
         oldPitch = pitch;
-        if (isOn && power >= variant.consumption()) {
-            power -= variant.consumption();
+        long consumption = consumption();
+        if (isOn && power >= consumption) {
+            power -= consumption;
             if (target != null) {
                 aimAt(target);
                 firingTimer++;
@@ -184,7 +235,17 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
     private void clientTick() {
         oldSpin = spin;
-        if (variant == TurretVariant.TAUON) {
+        oldCrane = crane;
+        oldSentryLeftRecoil = sentryLeftRecoil;
+        oldSentryRightRecoil = sentryRightRecoil;
+        if (sentryLeft != lastSentryLeft) {
+            if (sentryLeft) sentryRightRecoil = 1F;
+            else sentryLeftRecoil = 1F;
+            lastSentryLeft = sentryLeft;
+        }
+        sentryLeftRecoil = Math.max(0F, sentryLeftRecoil - 0.25F);
+        sentryRightRecoil = Math.max(0F, sentryRightRecoil - 0.25F);
+        if (variant == TurretVariant.TAUON || variant == TurretVariant.HOWARD) {
             if (targetId >= 0 && isOn) spin += 45F;
         } else if (variant == TurretVariant.CHEKHOV || variant == TurretVariant.FRIENDLY) {
             acceleration = targetId >= 0 && isOn ? Math.min(45F, acceleration + 2F)
@@ -195,7 +256,8 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     }
 
     private void subscribeAround(ServerLevel level, BlockPos core, BlockState state) {
-        BlockPos[] parts = TurretFriendlyBlock.parts(core, state.getValue(TurretFriendlyBlock.FACING));
+        BlockPos[] parts = TurretFriendlyBlock.parts(core,
+                state.getValue(TurretFriendlyBlock.FACING), variant);
         for (BlockPos part : parts) for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockPos target = part.relative(direction);
             boolean inside = false;
@@ -214,15 +276,20 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     @Nullable private Entity findTarget(ServerLevel level) {
         Vec3 pivot = worldPivot();
         List<Entity> candidates = level.getEntitiesOfClass(Entity.class,
-                new AABB(pivot, pivot).inflate(variant.range()), this::validTarget);
-        return candidates.stream().filter(entity -> hasLineOfSight(level, pivot, hbm$entityEyePosition(entity)))
+                new AABB(pivot, pivot).inflate(range()), this::validTarget);
+        boolean needsSight = variant != TurretVariant.HIMARS
+                && (variant != TurretVariant.ARTY || mode == 1);
+        return candidates.stream().filter(entity -> !needsSight
+                        || hasLineOfSight(level, pivot, hbm$entityEyePosition(entity)))
                 .min(Comparator.comparingDouble(entity -> hbm$entityPosition(entity).distanceToSqr(pivot)))
                 .orElse(null);
     }
 
     private boolean validTarget(@Nullable Entity entity) {
         if (entity == null || !entity.isAlive() || entity.isRemoved()) return false;
-        if (hbm$entityPosition(entity).distanceToSqr(worldPivot()) < variant.grace() * variant.grace()) return false;
+        if (hbm$entityPosition(entity).distanceToSqr(worldPivot()) > range() * range()) return false;
+        double grace = variant == TurretVariant.ARTY && mode == 1 ? 32D : variant.grace();
+        if (hbm$entityPosition(entity).distanceToSqr(worldPivot()) < grace * grace) return false;
         List<String> whitelist = TurretChipItem.names(items.get(CHIP));
         if (entity instanceof Player player) {
             return targetPlayers && !player.isSpectator() && !player.getAbilities().instabuild
@@ -254,16 +321,19 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
     private boolean aligned(Entity target) {
         Aim wanted = wantedAim(target);
-        if (Math.abs(Mth.wrapDegrees(wanted.yaw() - yaw)) > 15F
-                || Math.abs(Mth.wrapDegrees(wanted.pitch() - pitch)) > 15F) return false;
+        float tolerance = variant == TurretVariant.MAXWELL ? 2F
+                : variant == TurretVariant.HIMARS ? 5F : 15F;
+        if (Math.abs(Mth.wrapDegrees(wanted.yaw() - yaw)) > tolerance
+                || Math.abs(Mth.wrapDegrees(wanted.pitch() - pitch)) > tolerance) return false;
+        if (variant == TurretVariant.ARTY || variant == TurretVariant.HIMARS
+                || variant == TurretVariant.MAXWELL || variant == TurretVariant.TAUON) return true;
 
         Vec3 localHeading = barrelDirection(pitch, yaw);
         Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
         Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
         Vec3 velocity = hbm$localVectorToWorld(localHeading).normalize().scale(10D)
                 .add(hbm$velocityAt(localMuzzle));
-        return variant == TurretVariant.TAUON
-                || shotIntersects(target.getBoundingBox().inflate(0.3D), muzzle, velocity, variant.range());
+        return shotIntersects(target.getBoundingBox().inflate(0.3D), muzzle, velocity, range());
     }
 
     public static boolean shotIntersects(AABB targetBounds, Vec3 muzzle, Vec3 velocity, double range) {
@@ -276,8 +346,32 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     }
 
     private Aim wantedAim(Entity target) {
+        if (variant == TurretVariant.HIMARS) {
+            Vec3 delta = hbm$entityEyePosition(target).subtract(worldPivot());
+            Vec3 local = hbm$worldVectorToLocal(delta).normalize();
+            return new Aim((float) (-Mth.atan2(local.x, local.z) * Mth.RAD_TO_DEG), -45F);
+        }
         Vec3 localMuzzle = localPivot().add(barrelDirection(pitch, yaw).scale(variant.barrelLength()));
         Vec3 delta = hbm$entityEyePosition(target).subtract(hbm$localPositionToWorld(localMuzzle));
+        if (variant == TurretVariant.ARTY) {
+            Vec3 local = hbm$worldVectorToLocal(delta);
+            double horizontal = Math.sqrt(local.x * local.x + local.z * local.z);
+            double speed = mode == 1 ? 20D : 50D;
+            double speedSquared = speed * speed;
+            double gravity = 0.4905D;
+            double discriminant = speedSquared * speedSquared
+                    - gravity * (gravity * horizontal * horizontal + 2D * local.y * speedSquared);
+            double pitchRadians;
+            if (discriminant < 0D || horizontal < 0.001D) {
+                pitchRadians = Math.atan2(local.y, horizontal);
+            } else {
+                double root = Math.sqrt(discriminant);
+                double numerator = speedSquared + (mode == 1 ? -root : root);
+                pitchRadians = Math.atan(numerator / (gravity * horizontal));
+            }
+            return new Aim((float) (-Mth.atan2(local.x, local.z) * Mth.RAD_TO_DEG),
+                    (float) (-pitchRadians * Mth.RAD_TO_DEG));
+        }
         Vec3 worldDirection = compensatedDirection(delta, hbm$velocityAt(localMuzzle), 10D);
         Vec3 localDirection = hbm$worldVectorToLocal(worldDirection).normalize();
         float wantedYaw = (float) (-Mth.atan2(localDirection.x, localDirection.z) * Mth.RAD_TO_DEG);
@@ -310,20 +404,73 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         return value + Mth.clamp(Mth.wrapDegrees(target - value), -max, max);
     }
 
+    private double range() {
+        if (variant == TurretVariant.MAXWELL) return variant.range() + upgradeLevel(MachineUpgradeItem.Type.EFFECT) * 3D;
+        if (variant == TurretVariant.ARTY && mode == 1) return 250D;
+        return variant.range();
+    }
+
+    private long consumption() {
+        if (variant != TurretVariant.MAXWELL) return variant.consumption();
+        if (items.stream().anyMatch(stack -> stack.is(ModItems.UPGRADE_5G.get()))) return 10L;
+        return Math.max(100L, 10_000L - upgradeLevel(MachineUpgradeItem.Type.POWER) * 300L);
+    }
+
+    private int upgradeLevel(MachineUpgradeItem.Type type) {
+        int level = 0;
+        for (int slot = 1; slot <= 9; slot++) {
+            if (items.get(slot).getItem() instanceof MachineUpgradeItem upgrade && upgrade.type() == type) {
+                level += upgrade.level();
+            }
+        }
+        return level;
+    }
+
     private boolean readyToFire() {
         return switch (variant) {
             case CHEKHOV -> firingTimer > 20 && firingTimer % 2 == 0;
             case FRIENDLY -> firingTimer > 20 && firingTimer % 5 == 0;
             case TAUON -> firingTimer % 5 == 0;
             case JEREMY -> firingTimer % 40 == 0;
+            case RICHARD -> loaded > 0 && reloadTimer == 0 && firingTimer % 10 == 0;
+            case HOWARD -> loaded > 0 && firingTimer % 2 == 0;
+            case FRITZ -> fuelAmount >= 2 && firingTimer % 2 == 0;
+            case MAXWELL -> true;
+            case ARTY -> firingTimer % (mode == 0 ? 300 : 40) == 0;
+            case HIMARS -> loaded > 0 && himarsReloadTimer == 0 && firingTimer % 40 == 0;
+            case SENTRY -> firingTimer % 10 == 0;
         };
     }
 
     private void fire(ServerLevel level, Entity target) {
+        if (variant == TurretVariant.MAXWELL) {
+            fireMaxwell(level, target);
+            return;
+        }
+        if (variant == TurretVariant.ARTY) {
+            fireArtillery(level, target);
+            return;
+        }
+        if (variant == TurretVariant.HIMARS) {
+            fireHimars(level, target);
+            return;
+        }
+        if (variant == TurretVariant.HOWARD) {
+            fireHoward(level, target);
+            return;
+        }
+        if (variant == TurretVariant.FRITZ) {
+            fireFritz(level, target);
+            return;
+        }
         int slot = firstAmmoSlot();
         if (slot < 0) return;
         if (variant == TurretVariant.TAUON) {
             fireTauon(level, target, slot);
+            return;
+        }
+        if (variant == TurretVariant.RICHARD) {
+            fireRichard(level, target, slot);
             return;
         }
 
@@ -333,7 +480,9 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         float baseDamage = switch (variant) {
             case CHEKHOV, FRIENDLY -> 10F;
             case JEREMY -> 50F;
-            case TAUON -> 0F;
+            case RICHARD -> 30F;
+            case SENTRY -> 5F;
+            case TAUON, HOWARD, FRITZ, MAXWELL, ARTY, HIMARS -> 0F;
         };
         Vec3 localHeading = barrelDirection(pitch, yaw);
         Vec3 heading = hbm$localVectorToWorld(localHeading).normalize();
@@ -345,7 +494,11 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         level.addFreshEntity(bullet);
         lastFiredTarget = target;
         consume(slot);
-        if (variant == TurretVariant.JEREMY) {
+        if (variant == TurretVariant.RICHARD) {
+            loaded--;
+            level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_RICHARD_FIRE.get(),
+                    SoundSource.BLOCKS, 2F, 1F);
+        } else if (variant == TurretVariant.JEREMY) {
             level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_JEREMY_FIRE.get(),
                     SoundSource.BLOCKS, 4F, 1F);
             level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z,
@@ -353,10 +506,166 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
             reloadTimer = 20;
             casingTimer = 22;
         } else {
-            level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.GUN_M2_FIRE.get(),
+            level.playSound(null, BlockPos.containing(worldPivot()),
+                    variant == TurretVariant.SENTRY ? ModSounds.TURRET_SENTRY_FIRE.get()
+                            : ModSounds.GUN_M2_FIRE.get(),
                     SoundSource.BLOCKS, 2F, 1F);
             level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z, 1, 0, 0, 0, 0);
             ejectSmallCasing(level, ammo);
+            if (variant == TurretVariant.SENTRY) sentryLeft = !sentryLeft;
+        }
+    }
+
+    private void fireMaxwell(ServerLevel level, Entity target) {
+        long demand = consumption() * 10L;
+        if (power < demand) return;
+        power -= demand;
+        boolean fiveG = items.stream().anyMatch(stack -> stack.is(ModItems.UPGRADE_5G.get()));
+        if (fiveG && target instanceof Player player) {
+            player.addEffect(new MobEffectInstance(MobEffects.WITHER, 30 * 60 * 20, 4, true, true));
+        } else {
+            target.invulnerableTime = 0;
+            target.hurt(level.damageSources().source(com.hbm.ntm.radiation.ModDamageTypes.ELECTRIC),
+                    (upgradeLevel(MachineUpgradeItem.Type.OVERDRIVE) * 10
+                            + upgradeLevel(MachineUpgradeItem.Type.SPEED) + 1F) * 0.25F);
+        }
+        int afterburn = upgradeLevel(MachineUpgradeItem.Type.AFTERBURN);
+        if (afterburn > 0) target.setRemainingFireTicks(
+                Math.max(target.getRemainingFireTicks(), afterburn * 3 * 20));
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        Vec3 targetEye = hbm$entityEyePosition(target);
+        level.addFreshEntity(TauBeamEntity.visual(level, muzzle, targetEye.subtract(muzzle)));
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_MAXWELL_FIRE.get(),
+                SoundSource.BLOCKS, 2F, 1F);
+        lastFiredTarget = target;
+    }
+
+    private void fireArtillery(ServerLevel level, Entity target) {
+        int slot = firstAmmoSlot();
+        if (slot < 0) return;
+        ArtilleryAmmoType ammo = ArtilleryAmmoType.fromStack(items.get(slot));
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        double speed = mode == 1 ? 20D : 50D;
+        Vec3 velocity = hbm$localVectorToWorld(localHeading).normalize().scale(speed)
+                .add(hbm$velocityAt(localMuzzle));
+        level.addFreshEntity(TurretOrdnanceEntity.artillery(level, ammo, muzzle, velocity,
+                hbm$entityEyePosition(target)));
+        consume(slot);
+        lastFiredTarget = target;
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_JEREMY_FIRE.get(),
+                SoundSource.BLOCKS, 25F, 1F);
+        level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z,
+                5, 0.2D, 0.2D, 0.2D, 0D);
+    }
+
+    private void fireHimars(ServerLevel level, Entity target) {
+        if (loaded <= 0 || loadedType < 0) return;
+        HimarsAmmoType ammo = HimarsAmmoType.values()[Math.floorMod(loadedType, HimarsAmmoType.values().length)];
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        Vec3 velocity = hbm$localVectorToWorld(localHeading).normalize().scale(2.5D)
+                .add(hbm$velocityAt(localMuzzle));
+        level.addFreshEntity(TurretOrdnanceEntity.himars(level, ammo, muzzle, velocity, target));
+        loaded--;
+        lastFiredTarget = target;
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_RICHARD_FIRE.get(),
+                SoundSource.BLOCKS, 25F, 1F);
+    }
+
+    private void fireRichard(ServerLevel level, Entity target, int slot) {
+        RocketAmmoType ammo = RocketAmmoType.fromStack(items.get(slot));
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 heading = hbm$localVectorToWorld(localHeading).normalize();
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        level.addFreshEntity(new RocketProjectileEntity(level, null, ammo,
+                30F * ammo.damageMultiplier(), 0F, muzzle, heading, target));
+        consume(slot);
+        loaded--;
+        lastFiredTarget = target;
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_RICHARD_FIRE.get(),
+                SoundSource.BLOCKS, 2F, 1F);
+    }
+
+    private void fireHoward(ServerLevel level, Entity target) {
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        target.invulnerableTime = 0;
+        target.hurt(level.damageSources().source(com.hbm.ntm.radiation.ModDamageTypes.SHRAPNEL),
+                2F + level.random.nextFloat());
+        loaded--;
+        lastFiredTarget = target;
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.TURRET_HOWARD_FIRE.get(),
+                SoundSource.BLOCKS, 4F, 0.9F + level.random.nextFloat() * 0.2F);
+        level.sendParticles(ParticleTypes.EXPLOSION, muzzle.x, muzzle.y, muzzle.z,
+                2, 0.25D, 0.25D, 0.25D, 0D);
+        ejectHowardCasing(level);
+    }
+
+    private void fireFritz(ServerLevel level, Entity target) {
+        Vec3 localHeading = barrelDirection(pitch, yaw);
+        Vec3 heading = hbm$localVectorToWorld(localHeading).normalize();
+        Vec3 localMuzzle = localPivot().add(localHeading.scale(variant.barrelLength()));
+        Vec3 muzzle = hbm$localPositionToWorld(localMuzzle);
+        FlameProjectileEntity flame = new FlameProjectileEntity(level, null, fuelType,
+                FlamerGunItem.Variant.FLAMETHROWER, 20F, 0.05F, muzzle, heading);
+        flame.setDeltaMovement(flame.getDeltaMovement().add(hbm$velocityAt(localMuzzle)));
+        level.addFreshEntity(flame);
+        fuelAmount -= 2;
+        lastFiredTarget = target;
+        level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.GUN_FLAMER_LOOP.get(),
+                SoundSource.BLOCKS, 2F, 1F + level.random.nextFloat() * 0.5F);
+    }
+
+    private void reloadSpecialAmmo(ServerLevel level) {
+        if (variant == TurretVariant.RICHARD) {
+            if (reloadTimer > 0) {
+                if (--reloadTimer == 0) {
+                    loaded = 17;
+                }
+            } else if (loaded <= 0 && firstAmmoSlot() >= 0) {
+                reloadTimer = 100;
+            } else if (loaded > 0 && firstAmmoSlot() < 0) {
+                loaded = 0;
+            }
+        } else if (variant == TurretVariant.HOWARD && loaded <= 0) {
+            int slot = firstAmmoSlot();
+            if (slot >= 0) {
+                consume(slot);
+                loaded = 200;
+                level.playSound(null, BlockPos.containing(worldPivot()), ModSounds.GUN_M2_EQUIP.get(),
+                        SoundSource.BLOCKS, 4F, 1F);
+            }
+        } else if (variant == TurretVariant.FRITZ && fuelAmount <= 15_500) {
+            int slot = firstAmmoSlot();
+            if (slot >= 0) {
+                fuelType = FlamerFuelType.fromStack(items.get(slot));
+                fuelAmount += FlamerFuelType.RELOAD_AMOUNT;
+                consume(slot);
+            }
+        } else if (variant == TurretVariant.HIMARS) {
+            if (himarsReloadTimer > 0) {
+                himarsReloadTimer--;
+                crane = himarsReloadTimer >= 80
+                        ? (160F - himarsReloadTimer) / 80F : himarsReloadTimer / 80F;
+                if (himarsReloadTimer == 80) loaded = pendingHimarsRounds;
+                if (himarsReloadTimer == 0) crane = 0F;
+            } else if (loaded <= 0) {
+                int slot = firstAmmoSlot();
+                if (slot >= 0) {
+                    HimarsAmmoType type = HimarsAmmoType.fromStack(items.get(slot));
+                    loadedType = type.ordinal();
+                    pendingHimarsRounds = type.rockets();
+                    consume(slot);
+                    himarsReloadTimer = 160;
+                }
+            }
         }
     }
 
@@ -418,6 +727,19 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         PacketDistributor.sendToPlayersNear(level, null, spawn.x, spawn.y, spawn.z, 100, payload);
     }
 
+    private void ejectHowardCasing(ServerLevel level) {
+        Vec3 localSpawn = localPivot().add(new Vec3(-0.875D, 0.2D, -0.125D)
+                .zRot(pitch * Mth.DEG_TO_RAD).yRot(-(yaw * Mth.DEG_TO_RAD + Mth.HALF_PI)));
+        Vec3 spawn = hbm$localPositionToWorld(localSpawn);
+        Vec3 motion = hbm$localVectorToWorld(new Vec3(0.4D, 0D, 0D)
+                .xRot(pitch * Mth.DEG_TO_RAD).yRot(-yaw * Mth.DEG_TO_RAD))
+                .add(hbm$velocityAt(localSpawn));
+        SpentCasingPayload payload = new SpentCasingPayload(SpentCasingPreset.RIFLE_BRASS.ordinal(),
+                spawn.x, spawn.y, spawn.z, motion.x, motion.y, motion.z,
+                yaw, pitch, 0.02F, 0.03F);
+        PacketDistributor.sendToPlayersNear(level, null, spawn.x, spawn.y, spawn.z, 100, payload);
+    }
+
     private int firstAmmoSlot() {
         for (int slot = 1; slot <= 9; slot++) {
             if (variant.accepts(items.get(slot))) return slot;
@@ -431,8 +753,17 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
 
     private Vec3 localPivot() {
         Direction facing = getBlockState().getValue(TurretFriendlyBlock.FACING);
-        Vec3 offset = TurretFriendlyBlock.horizontalOffset(facing);
-        return Vec3.atLowerCornerOf(worldPosition).add(offset.x, 1.5D, offset.z);
+        Vec3 offset = TurretFriendlyBlock.horizontalOffset(facing, variant);
+        double height = switch (variant) {
+            case HOWARD -> 2.25D;
+            case MAXWELL -> 2D;
+            case ARTY -> 3D;
+            case HIMARS -> 5D;
+            case SENTRY -> 1.25D;
+            default -> 1.5D;
+        };
+        return Vec3.atLowerCornerOf(worldPosition).add(offset.x,
+                height, offset.z);
     }
 
     private Vec3 worldPivot() { return hbm$localPositionToWorld(localPivot()); }
@@ -446,6 +777,12 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
             case 2 -> targetAnimals = !targetAnimals;
             case 3 -> targetMobs = !targetMobs;
             case 4 -> targetMachines = !targetMachines;
+            case 5 -> {
+                if (variant == TurretVariant.ARTY) mode = (mode + 1) % 2;
+                else if (variant == TurretVariant.HIMARS) mode = (mode + 1) % 2;
+                else return false;
+                targetId = -1;
+            }
             default -> { return false; }
         }
         setChanged();
@@ -480,6 +817,16 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         tag.putFloat("yaw", yaw); tag.putFloat("pitch", pitch); tag.putFloat("spin", spin);
         tag.putInt("targetId", targetId);
         tag.putInt("stattrak", stattrak);
+        tag.putInt("loaded", loaded);
+        tag.putInt("reloadTimer", reloadTimer);
+        tag.putInt("fuelAmount", fuelAmount);
+        tag.putString("fuelType", fuelType.serializedName());
+        tag.putInt("mode", mode);
+        tag.putInt("loadedType", loadedType);
+        tag.putFloat("crane", crane);
+        tag.putBoolean("sentryLeft", sentryLeft);
+        tag.putInt("himarsReloadTimer", himarsReloadTimer);
+        tag.putInt("pendingHimarsRounds", pendingHimarsRounds);
     }
 
     @Override protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
@@ -491,6 +838,19 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
         yaw = oldYaw = tag.getFloat("yaw"); pitch = oldPitch = tag.getFloat("pitch");
         spin = oldSpin = tag.getFloat("spin"); targetId = tag.getInt("targetId");
         stattrak = tag.getInt("stattrak");
+        loaded = tag.getInt("loaded");
+        reloadTimer = tag.getInt("reloadTimer");
+        fuelAmount = tag.getInt("fuelAmount");
+        String savedFuel = tag.getString("fuelType");
+        for (FlamerFuelType type : FlamerFuelType.values()) {
+            if (type.serializedName().equals(savedFuel)) fuelType = type;
+        }
+        mode = tag.getInt("mode");
+        loadedType = tag.contains("loadedType") ? tag.getInt("loadedType") : -1;
+        crane = oldCrane = tag.getFloat("crane");
+        sentryLeft = tag.getBoolean("sentryLeft");
+        himarsReloadTimer = tag.getInt("himarsReloadTimer");
+        pendingHimarsRounds = tag.getInt("pendingHimarsRounds");
     }
 
     @Override public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
@@ -508,6 +868,17 @@ public final class TurretFriendlyBlockEntity extends BlockEntity
     public float yaw(float partial) { return Mth.lerp(partial, oldYaw, yaw); }
     public float pitch(float partial) { return Mth.lerp(partial, oldPitch, pitch); }
     public float spin(float partial) { return Mth.lerp(partial, oldSpin, spin); }
+    public int loaded() { return loaded; }
+    public int loadedType() { return loadedType; }
+    public int mode() { return mode; }
+    public float crane(float partial) { return Mth.lerp(partial, oldCrane, crane); }
+    public boolean sentryLeft() { return sentryLeft; }
+    public float sentryLeftRecoil(float partial) {
+        return Mth.lerp(partial, oldSentryLeftRecoil, sentryLeftRecoil);
+    }
+    public float sentryRightRecoil(float partial) {
+        return Mth.lerp(partial, oldSentryRightRecoil, sentryRightRecoil);
+    }
     public TurretVariant variant() { return variant; }
 
     @Override public long getPower() { return power; }

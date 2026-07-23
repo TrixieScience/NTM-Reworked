@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "tag": "c:ingots/copper"
+    },
+    "G": {
+      "item": "hbm:cordite"
+    },
+    "L": {
+      "tag": "c:plates/lead"
+    }
+  },
+  "pattern": [
+    "LLL",
+    "GGG",
+    "CCC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:ammo_dgk"
+  }
+}

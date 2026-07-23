@@ -15,5 +15,5 @@ public final class MachineUpgradeItem extends Item {
     public Type type() { return type; }
     public int level() { return level; }
 
-    public enum Type { SPEED, POWER, AFTERBURN, OVERDRIVE, EJECTOR, STACK }
+    public enum Type { SPEED, POWER, EFFECT, AFTERBURN, OVERDRIVE, EJECTOR, STACK }
 }

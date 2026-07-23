@@ -9,6 +9,8 @@ import com.hbm.ntm.registry.ModBlocks;
 import com.hbm.ntm.registry.ModItems;
 import com.hbm.ntm.weapon.FiveFiveSixAmmoType;
 import com.hbm.ntm.weapon.FiftyCalAmmoType;
+import com.hbm.ntm.weapon.FlamerFuelType;
+import com.hbm.ntm.weapon.RocketAmmoType;
 import com.hbm.ntm.weapon.TauAmmoType;
 import com.hbm.ntm.weapon.TurretShellAmmoType;
 import net.minecraft.core.BlockPos;
@@ -109,19 +111,30 @@ public final class TurretFriendlyGameTests {
         ItemStack fiveFiveSix = FiveFiveSixAmmoType.FULL_METAL_JACKET.createStack(ModItems.AMMO_STANDARD.get(), 1);
         ItemStack tau = TauAmmoType.DEPLETED_URANIUM.createStack(ModItems.AMMO_STANDARD.get(), 1);
         ItemStack shell = TurretShellAmmoType.W9.createStack(ModItems.AMMO_SHELL.get(), 1);
+        ItemStack rocket = RocketAmmoType.INCENDIARY.createStack(ModItems.AMMO_STANDARD.get(), 1);
+        ItemStack fuel = FlamerFuelType.NAPALM.createStack(ModItems.AMMO_STANDARD.get(), 1);
+        ItemStack dgk = new ItemStack(ModItems.AMMO_DGK.get());
 
         helper.assertTrue(TurretVariant.CHEKHOV.accepts(fifty)
                         && !TurretVariant.CHEKHOV.accepts(fiveFiveSix)
                         && TurretVariant.JEREMY.accepts(shell)
                         && !TurretVariant.JEREMY.accepts(fifty)
                         && TurretVariant.TAUON.accepts(tau)
-                        && !TurretVariant.TAUON.accepts(shell),
+                        && !TurretVariant.TAUON.accepts(shell)
+                        && TurretVariant.RICHARD.accepts(rocket)
+                        && !TurretVariant.RICHARD.accepts(fuel)
+                        && TurretVariant.HOWARD.accepts(dgk)
+                        && TurretVariant.FRITZ.accepts(fuel),
                 "Each source turret must only accept its own ammunition family");
         helper.assertTrue(TurretVariant.JEREMY.range() == 80D
                         && TurretVariant.TAUON.range() == 128D
                         && TurretVariant.TAUON.maxPower() == 100_000L
-                        && TurretVariant.TAUON.consumption() == 1_000L,
-                "Jeremy and Tauon must retain their source range and power values");
+                        && TurretVariant.TAUON.consumption() == 1_000L
+                        && TurretVariant.RICHARD.range() == 64D
+                        && TurretVariant.HOWARD.range() == 250D
+                        && TurretVariant.HOWARD.maxPower() == 50_000L
+                        && TurretVariant.FRITZ.range() == 48D,
+                "Every turret must retain its source range and power values");
         helper.succeed();
     }
 

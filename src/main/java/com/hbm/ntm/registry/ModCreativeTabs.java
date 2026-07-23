@@ -582,6 +582,24 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.TURRET_FRIENDLY_ITEM.get());
                         output.accept(ModItems.TURRET_JEREMY_ITEM.get());
                         output.accept(ModItems.TURRET_TAUON_ITEM.get());
+                        output.accept(ModItems.TURRET_RICHARD_ITEM.get());
+                        output.accept(ModItems.TURRET_HOWARD_ITEM.get());
+                        output.accept(ModItems.TURRET_FRITZ_ITEM.get());
+                        output.accept(ModItems.TURRET_MAXWELL_ITEM.get());
+                        output.accept(ModItems.TURRET_ARTY_ITEM.get());
+                        output.accept(ModItems.TURRET_HIMARS_ITEM.get());
+                        output.accept(ModItems.TURRET_SENTRY_ITEM.get());
+                        output.accept(ModItems.AMMO_DGK.get());
+                        for (com.hbm.ntm.weapon.ArtilleryAmmoType type
+                                : com.hbm.ntm.weapon.ArtilleryAmmoType.values()) {
+                            output.accept(type.createStack(ModItems.AMMO_ARTY.get(), 1));
+                        }
+                        for (com.hbm.ntm.weapon.HimarsAmmoType type
+                                : com.hbm.ntm.weapon.HimarsAmmoType.values()) {
+                            output.accept(type.createStack(ModItems.AMMO_HIMARS.get(), 1));
+                        }
+                        output.accept(ModItems.UPGRADE_5G.get());
+                        output.accept(ModItems.UPGRADE_SCREM.get());
                         output.accept(ModItems.TURRET_CHIP.get());
                         for (com.hbm.ntm.weapon.TurretShellAmmoType type
                                 : com.hbm.ntm.weapon.TurretShellAmmoType.values()) {

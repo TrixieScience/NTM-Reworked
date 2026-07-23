@@ -18,6 +18,13 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
     private static final ResourceLocation STANDARD = texture("gui_turret_base.png");
     private static final ResourceLocation CANNON = texture("gui_turret_cannon.png");
     private static final ResourceLocation TAU = texture("gui_turret_tau.png");
+    private static final ResourceLocation RICHARD = texture("gui_turret_richard.png");
+    private static final ResourceLocation HOWARD = texture("gui_turret_howard.png");
+    private static final ResourceLocation FRITZ = texture("gui_turret_fritz.png");
+    private static final ResourceLocation MAXWELL = texture("gui_turret_maxwell.png");
+    private static final ResourceLocation ARTY = texture("gui_turret_arty.png");
+    private static final ResourceLocation HIMARS = texture("gui_turret_himars.png");
+    private static final ResourceLocation SENTRY = texture("gui_turret_sentry.png");
     private EditBox field;
     private int whitelistIndex;
 
@@ -52,6 +59,19 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
                 break;
             }
         }
+        if (menu.variant() == com.hbm.ntm.blockentity.TurretVariant.FRITZ
+                && isHovering(134, 63, 7, 52, mouseX, mouseY)) {
+            graphics.renderTooltip(font, Component.literal(menu.fuelAmount() + " / 16000 mB"),
+                    mouseX, mouseY);
+        }
+        if ((menu.variant() == com.hbm.ntm.blockentity.TurretVariant.ARTY
+                || menu.variant() == com.hbm.ntm.blockentity.TurretVariant.HIMARS)
+                && isHovering(151, 16, 18, 18, mouseX, mouseY)) {
+            String key = menu.variant() == com.hbm.ntm.blockentity.TurretVariant.ARTY
+                    ? (menu.turretMode() == 0 ? "turret.arty.artillery" : "turret.arty.cannon")
+                    : (menu.turretMode() == 0 ? "turret.arty.artillery_rocket" : "turret.arty.manual_rocket");
+            graphics.renderTooltip(font, Component.translatable(key), mouseX, mouseY);
+        }
     }
 
     @Override protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
@@ -81,6 +101,15 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
                 }
             }
         }
+        if (menu.variant() == com.hbm.ntm.blockentity.TurretVariant.FRITZ) {
+            int fuel = Math.clamp(menu.fuelAmount() * 52 / 16_000, 0, 52);
+            if (fuel > 0) drawFritzFuel(graphics, fuel);
+        }
+        if ((menu.variant() == com.hbm.ntm.blockentity.TurretVariant.ARTY
+                || menu.variant() == com.hbm.ntm.blockentity.TurretVariant.HIMARS)
+                && menu.turretMode() == 1) {
+            graphics.blit(TEXTURE, leftPos + 151, topPos + 16, 210, 0, 18, 18, 256, 256);
+        }
         if (inside(mouseX, mouseY, 7, 80, 18, 18)) {
             graphics.blit(TEXTURE, leftPos + 7, topPos + 80, 176, 58, 18, 18, 256, 256);
         }
@@ -101,6 +130,13 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
             case FRIENDLY -> FRIENDLY;
             case JEREMY -> CANNON;
             case TAUON -> TAU;
+            case RICHARD -> RICHARD;
+            case HOWARD -> HOWARD;
+            case FRITZ -> FRITZ;
+            case MAXWELL -> MAXWELL;
+            case ARTY -> ARTY;
+            case HIMARS -> HIMARS;
+            case SENTRY -> SENTRY;
         };
     }
 
@@ -108,8 +144,30 @@ public final class TurretFriendlyScreen extends AbstractContainerScreen<TurretFr
         return ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID, "textures/gui/weapon/" + name);
     }
 
+    private void drawFritzFuel(GuiGraphics graphics, int height) {
+        String name = switch (menu.fuelType()) {
+            case 1 -> "gasoline";
+            case 2 -> "naphtha";
+            case 3 -> "balefire";
+            default -> "diesel";
+        };
+        ResourceLocation fluid = ResourceLocation.fromNamespaceAndPath(HbmNtm.MOD_ID,
+                "textures/gui/fluids/" + name + ".png");
+        int remaining = height;
+        int bottom = topPos + 115;
+        while (remaining > 0) {
+            int strip = Math.min(16, remaining);
+            bottom -= strip;
+            graphics.blit(fluid, leftPos + 134, bottom, 0, 16 - strip, 7, strip, 16, 16);
+            remaining -= strip;
+        }
+    }
+
     @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (inside(mouseX, mouseY, 115, 26, 18, 18)) return press(0);
+        if ((menu.variant() == com.hbm.ntm.blockentity.TurretVariant.ARTY
+                || menu.variant() == com.hbm.ntm.blockentity.TurretVariant.HIMARS)
+                && inside(mouseX, mouseY, 151, 16, 18, 18)) return press(5);
         for (int id = 1; id <= 4; id++) {
             if (inside(mouseX, mouseY, 8 + (id - 1) * 14, 30, 10, 10)) return press(id);
         }
