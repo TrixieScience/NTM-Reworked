@@ -1,6 +1,7 @@
 package com.hbm.ntm.block;
 
 import com.hbm.ntm.blockentity.CraneExtractorBlockEntity;
+import com.hbm.ntm.blockentity.CraneGrabberBlockEntity;
 import com.hbm.ntm.blockentity.CraneInserterBlockEntity;
 import com.hbm.ntm.item.ConveyorWandItem;
 import com.hbm.ntm.registry.ModItems;
@@ -54,6 +55,8 @@ public abstract class AbstractCraneBlock extends BaseEntityBlock {
             extractor.setCustomName(stack.getHoverName());
         } else if (level.getBlockEntity(pos) instanceof CraneInserterBlockEntity inserter) {
             inserter.setCustomName(stack.getHoverName());
+        } else if (level.getBlockEntity(pos) instanceof CraneGrabberBlockEntity grabber) {
+            grabber.setCustomName(stack.getHoverName());
         }
     }
 
@@ -93,6 +96,8 @@ public abstract class AbstractCraneBlock extends BaseEntityBlock {
         if (!state.is(newState.getBlock()) && !level.isClientSide) {
             if (level.getBlockEntity(pos) instanceof CraneExtractorBlockEntity extractor) {
                 extractor.dropRealContents();
+            } else if (level.getBlockEntity(pos) instanceof CraneGrabberBlockEntity grabber) {
+                grabber.dropRealContents();
             } else if (level.getBlockEntity(pos) instanceof net.minecraft.world.Container container) {
                 Containers.dropContents(level, pos, container);
                 container.clearContent();

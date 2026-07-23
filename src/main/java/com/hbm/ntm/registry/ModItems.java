@@ -754,6 +754,7 @@ public final class ModItems {
     public static final DeferredItem<ConveyorWandItem> CONVEYOR_WAND_TRIPLE;
     public static final DeferredItem<DescriptionBlockItem> CRANE_EXTRACTOR_ITEM;
     public static final DeferredItem<DescriptionBlockItem> CRANE_INSERTER_ITEM;
+    public static final DeferredItem<DescriptionBlockItem> CRANE_GRABBER_ITEM;
     public static final DeferredItem<BlockItem> CRANE_BOXER_ITEM;
     public static final DeferredItem<BlueprintItem> BLUEPRINTS;
     public static final DeferredItem<MufflerItem> UPGRADE_MUFFLER;
@@ -1745,6 +1746,11 @@ public final class ModItems {
                 () -> new DescriptionBlockItem(ModBlocks.CRANE_INSERTER.get(), new Item.Properties(),
                         "block.hbm.crane_inserter.desc.0", "block.hbm.crane_inserter.desc.1",
                         "block.hbm.crane_inserter.desc.2", "block.hbm.crane_inserter.desc.3"));
+        CRANE_GRABBER_ITEM = ITEMS.register("crane_grabber",
+                () -> new DescriptionBlockItem(ModBlocks.CRANE_GRABBER.get(), new Item.Properties(),
+                        "block.hbm.crane_grabber.desc.0", "block.hbm.crane_grabber.desc.1",
+                        "block.hbm.crane_grabber.desc.2", "block.hbm.crane_grabber.desc.3",
+                        "block.hbm.crane_grabber.desc.4", "block.hbm.crane_grabber.desc.5"));
         CRANE_BOXER_ITEM = ITEMS.register("crane_boxer",
                 () -> new DescriptionBlockItem(ModBlocks.CRANE_BOXER.get(), new Item.Properties(),
                         "block.hbm.crane_boxer.desc.0",

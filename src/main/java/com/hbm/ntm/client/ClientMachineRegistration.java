@@ -115,6 +115,7 @@ import com.hbm.ntm.client.screen.ChemicalPlantScreen;
 import com.hbm.ntm.client.screen.CentrifugeScreen;
 import com.hbm.ntm.client.screen.ConveyorBoxerScreen;
 import com.hbm.ntm.client.screen.CraneExtractorScreen;
+import com.hbm.ntm.client.screen.CraneGrabberScreen;
 import com.hbm.ntm.client.screen.CraneInserterScreen;
 import com.hbm.ntm.client.screen.CrucibleScreen;
 import com.hbm.ntm.client.screen.DieselGeneratorScreen;
@@ -255,6 +256,7 @@ public final class ClientMachineRegistration {
         event.register(ModMenus.CRANE_BOXER.get(), ConveyorBoxerScreen::new);
         event.register(ModMenus.CRANE_EXTRACTOR.get(), CraneExtractorScreen::new);
         event.register(ModMenus.CRANE_INSERTER.get(), CraneInserterScreen::new);
+        event.register(ModMenus.CRANE_GRABBER.get(), CraneGrabberScreen::new);
         event.register(ModMenus.RADIO_TORCH.get(), RadioTorchScreen::new);
         event.register(ModMenus.RADIO_TELEX.get(), RadioTelexScreen::new);
         event.register(ModMenus.RADIO_AUTOCAL.get(), RadioAutocalScreen::new);

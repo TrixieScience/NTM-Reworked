@@ -1023,6 +1023,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:conveyor_chute");
         mineableBlocks.add("hbm:crane_extractor");
         mineableBlocks.add("hbm:crane_inserter");
+        mineableBlocks.add("hbm:crane_grabber");
         mineableBlocks.add("hbm:crane_boxer");
         shovelBlocks.add("hbm:dirt_oily");
         shovelBlocks.add("hbm:dirt_dead");
@@ -1607,6 +1608,8 @@ public final class MaterialResourcesProvider implements DataProvider {
                 hbm("crane_extractor_inventory")));
         writes.add(save(output, craneInventoryBlockModel("inserter"), blockModels,
                 hbm("crane_inserter_inventory")));
+        writes.add(save(output, craneInventoryBlockModel("grabber"), blockModels,
+                hbm("crane_grabber_inventory")));
         writes.add(save(output, legacyBlockItemModel("crane_boxer_inventory", List.of(30, 45, 0),
                 List.of(0, 0, 0), List.of(0.625, 0.625, 0.625)), itemModels,
                 hbm("crane_boxer")));
@@ -1616,6 +1619,9 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, legacyBlockItemModel("crane_inserter_inventory", List.of(30, 45, 0),
                 List.of(0, 0, 0), List.of(0.625, 0.625, 0.625)), itemModels,
                 hbm("crane_inserter")));
+        writes.add(save(output, legacyBlockItemModel("crane_grabber_inventory", List.of(30, 45, 0),
+                List.of(0, 0, 0), List.of(0.625, 0.625, 0.625)), itemModels,
+                hbm("crane_grabber")));
         writes.add(save(output, fluidIdentifierModel(), itemModels, hbm("fluid_identifier_multi")));
         writes.add(save(output, fluidIdentifierRecipe(), recipes, hbm("fluid_identifier_multi")));
         writes.add(save(output, fluidDuctBaseRecipe(), recipes, hbm("fluid_duct_neo")));
@@ -1680,6 +1686,12 @@ public final class MaterialResourcesProvider implements DataProvider {
                 tagIngredient("c:ingots/iron"), 2), recipes, hbm("crane_inserter_from_iron")));
         writes.add(save(output, craneEndpointRecipe("crane_inserter", false,
                 tagIngredient("c:ingots/steel"), 4), recipes, hbm("crane_inserter_from_steel")));
+        writes.add(save(output, craneGrabberRecipe(itemIngredient("minecraft:stone_bricks"), 1),
+                recipes, hbm("crane_grabber_from_stone")));
+        writes.add(save(output, craneGrabberRecipe(tagIngredient("c:ingots/iron"), 2),
+                recipes, hbm("crane_grabber_from_iron")));
+        writes.add(save(output, craneGrabberRecipe(tagIngredient("c:ingots/steel"), 4),
+                recipes, hbm("crane_grabber_from_steel")));
         writes.add(save(output, regularConveyorRecipe(), recipes, hbm("conveyor_wand")));
         writes.add(save(output, regularConveyorRubberRecipe(), recipes, hbm("conveyor_wand_rubber")));
         writes.add(save(output, expressConveyorRecipe(), recipes, hbm("conveyor_wand_express")));
@@ -1693,6 +1705,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, selfDropLoot("conveyor_wand"), lootTables, hbm("conveyor_chute")));
         writes.add(save(output, selfDropLoot("crane_extractor"), lootTables, hbm("crane_extractor")));
         writes.add(save(output, selfDropLoot("crane_inserter"), lootTables, hbm("crane_inserter")));
+        writes.add(save(output, selfDropLoot("crane_grabber"), lootTables, hbm("crane_grabber")));
         writes.add(save(output, selfDropLoot("crane_boxer"), lootTables, hbm("crane_boxer")));
         for (String material : List.of("steel", "red_copper", "carbon", "aluminium", "copper", "tungsten", "gold",
                 "lead", "zirconium")) {
@@ -3384,9 +3397,11 @@ public final class MaterialResourcesProvider implements DataProvider {
     /** Crane inventory face, rescued from metadata zero. */
     private JsonObject craneInventoryBlockModel(String type) {
         String output = type.equals("boxer") ? "crane_box" : "crane_out";
+        String input = type.equals("grabber") ? "crane_pull" : "crane_in";
         String side = switch (type) {
             case "extractor" -> "crane_out_side_down";
             case "inserter" -> "crane_in_side_up";
+            case "grabber" -> "crane_grabber_side_up";
             case "boxer" -> "crane_boxer_side_up";
             default -> throw new IllegalArgumentException("Unknown crane inventory model: " + type);
         };
@@ -3396,7 +3411,7 @@ public final class MaterialResourcesProvider implements DataProvider {
         JsonObject textures = new JsonObject();
         textures.addProperty("particle", "hbm:block/crane_side");
         textures.addProperty("down", "hbm:block/" + output);
-        textures.addProperty("up", "hbm:block/crane_in");
+        textures.addProperty("up", "hbm:block/" + input);
         for (String face : List.of("north", "south", "west", "east")) {
             textures.addProperty(face, "hbm:block/" + side);
         }
@@ -4333,6 +4348,13 @@ public final class MaterialResourcesProvider implements DataProvider {
         if (extractor) key.put("P", itemIngredient("hbm:part_generic"));
         return foundryShaped(extractor ? List.of("CCC", "CPC", "CBC")
                 : List.of("CCC", "C C", "CBC"), key, "hbm:" + endpoint, count);
+    }
+
+    private JsonObject craneGrabberRecipe(JsonObject casing, int count) {
+        return foundryShaped(List.of("C C", "P P", "CBC"), Map.of(
+                "C", casing,
+                "P", itemIngredient("hbm:part_generic"),
+                "B", itemIngredient("hbm:conveyor_wand")), "hbm:crane_grabber", count);
     }
 
     private JsonObject regularConveyorRecipe() {

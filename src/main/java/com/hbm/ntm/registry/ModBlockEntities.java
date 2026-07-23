@@ -33,6 +33,7 @@ import com.hbm.ntm.blockentity.CentrifugeBlockEntity;
 import com.hbm.ntm.blockentity.CentrifugeProxyBlockEntity;
 import com.hbm.ntm.blockentity.ConveyorBoxerBlockEntity;
 import com.hbm.ntm.blockentity.CraneExtractorBlockEntity;
+import com.hbm.ntm.blockentity.CraneGrabberBlockEntity;
 import com.hbm.ntm.blockentity.CraneInserterBlockEntity;
 import com.hbm.ntm.blockentity.CrackingTowerBlockEntity;
 import com.hbm.ntm.blockentity.CrackingTowerProxyBlockEntity;
@@ -805,6 +806,11 @@ public final class ModBlockEntities {
             BLOCK_ENTITY_TYPES.register("crane_inserter",
                     () -> BlockEntityType.Builder.of(CraneInserterBlockEntity::new,
                             ModBlocks.CRANE_INSERTER.get()).build(null));
+
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CraneGrabberBlockEntity>> CRANE_GRABBER =
+            BLOCK_ENTITY_TYPES.register("crane_grabber",
+                    () -> BlockEntityType.Builder.of(CraneGrabberBlockEntity::new,
+                            ModBlocks.CRANE_GRABBER.get()).build(null));
 
     private ModBlockEntities() {
     }

@@ -9,6 +9,7 @@ import com.hbm.ntm.block.ConveyorLiftBlock;
 import com.hbm.ntm.block.AbstractCraneBlock;
 import com.hbm.ntm.blockentity.ConveyorBoxerBlockEntity;
 import com.hbm.ntm.blockentity.CraneExtractorBlockEntity;
+import com.hbm.ntm.blockentity.CraneGrabberBlockEntity;
 import com.hbm.ntm.blockentity.CraneInserterBlockEntity;
 import com.hbm.ntm.entity.MovingConveyorItemEntity;
 import com.hbm.ntm.entity.MovingConveyorPackageEntity;
@@ -412,6 +413,7 @@ public final class ConveyorGameTests {
         checkRecipe(helper, "part_generic", ModItems.PART_GENERIC.get(), 4);
         checkRecipe(helper, "crane_extractor_from_stone", ModItems.CRANE_EXTRACTOR_ITEM.get(), 1);
         checkRecipe(helper, "crane_inserter_from_iron", ModItems.CRANE_INSERTER_ITEM.get(), 2);
+        checkRecipe(helper, "crane_grabber_from_steel", ModItems.CRANE_GRABBER_ITEM.get(), 4);
         checkRecipe(helper, "crane_boxer", ModItems.CRANE_BOXER_ITEM.get(), 1);
         check(helper, ConveyorWandItem.stackFor(ConveyorType.REGULAR, 3).getCount() == 3
                         && ConveyorWandItem.stackFor(ConveyorType.EXPRESS, 1).is(ModItems.CONVEYOR_WAND_EXPRESS.get())
@@ -551,6 +553,100 @@ public final class ConveyorGameTests {
         check(helper, chest.countItem(Items.COPPER_INGOT) == 7 && inserter.isEmpty(),
                 "The Conveyor Inserter must place an incoming moving stack into its configured output inventory");
         helper.succeed();
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 30)
+    public static void grabberFiltersPassingItemsAndHonorsStackUpgrade(GameTestHelper helper) {
+        BlockPos grabberPos = helper.absolutePos(new BlockPos(3, 2, 3));
+        BlockPos chestPos = grabberPos.north();
+        BlockState grabberState = ModBlocks.CRANE_GRABBER.get().defaultBlockState()
+                .setValue(AbstractCraneBlock.INPUT, Direction.SOUTH)
+                .setValue(AbstractCraneBlock.OUTPUT, Direction.NORTH);
+        helper.getLevel().setBlock(chestPos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
+        helper.getLevel().setBlock(grabberPos, grabberState, Block.UPDATE_ALL);
+        CraneGrabberBlockEntity grabber = (CraneGrabberBlockEntity)
+                helper.getLevel().getBlockEntity(grabberPos);
+        grabber.setFilter(0, new ItemStack(Items.IRON_INGOT));
+        grabber.toggleWhitelist();
+        grabber.setItem(CraneGrabberBlockEntity.STACK_UPGRADE,
+                new ItemStack(ModItems.MACHINE_UPGRADES.get("upgrade_stack_3").get()));
+
+        helper.runAfterDelay(21, () -> {
+            MovingConveyorItemEntity item = MovingConveyorItemEntity.create(helper.getLevel(),
+                    new ItemStack(Items.IRON_INGOT, 8));
+            item.setPos(grabberPos.getX() + 0.5D, grabberPos.getY() + 0.25D, grabberPos.getZ() + 1.5D);
+            helper.getLevel().addFreshEntity(item);
+            CraneGrabberBlockEntity.tick(helper.getLevel(), grabberPos, grabberState, grabber);
+            ChestBlockEntity chest = (ChestBlockEntity) helper.getLevel().getBlockEntity(chestPos);
+            check(helper, !item.isAlive() && chest.countItem(Items.IRON_INGOT) == 8,
+                    "A whitelisted Grabber with the tier-three stack upgrade must insert up to 64 passing items");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 30)
+    public static void grabberMovesWholeParcelOntoOutputConveyor(GameTestHelper helper) {
+        BlockPos grabberPos = helper.absolutePos(new BlockPos(3, 2, 3));
+        BlockPos outputPos = grabberPos.north();
+        BlockState grabberState = ModBlocks.CRANE_GRABBER.get().defaultBlockState()
+                .setValue(AbstractCraneBlock.INPUT, Direction.SOUTH)
+                .setValue(AbstractCraneBlock.OUTPUT, Direction.NORTH);
+        BlockState beltState = ModBlocks.CONVEYOR.get().defaultBlockState()
+                .setValue(ConveyorBlock.FACING, Direction.SOUTH);
+        helper.getLevel().setBlock(outputPos, beltState, Block.UPDATE_ALL);
+        helper.getLevel().setBlock(grabberPos, grabberState, Block.UPDATE_ALL);
+        CraneGrabberBlockEntity grabber = (CraneGrabberBlockEntity)
+                helper.getLevel().getBlockEntity(grabberPos);
+
+        helper.runAfterDelay(21, () -> {
+            MovingConveyorItemEntity item = MovingConveyorItemEntity.create(helper.getLevel(),
+                    new ItemStack(Items.COPPER_INGOT, 17));
+            item.setPos(grabberPos.getX() + 0.5D, grabberPos.getY() + 0.25D, grabberPos.getZ() + 1.5D);
+            helper.getLevel().addFreshEntity(item);
+            CraneGrabberBlockEntity.tick(helper.getLevel(), grabberPos, grabberState, grabber);
+            List<MovingConveyorItemEntity> output = helper.getLevel().getEntitiesOfClass(
+                    MovingConveyorItemEntity.class, new AABB(outputPos).inflate(0.5D),
+                    moving -> moving.isAlive() && moving.getItemStack().is(Items.COPPER_INGOT));
+            check(helper, !item.isAlive() && output.size() == 1
+                            && output.getFirst().getItemStack().getCount() == 17,
+                    "Belt-to-belt grabbing must move the complete parcel regardless of the stack upgrade");
+            helper.succeed();
+        });
+    }
+
+    @GameTest(template = "empty", timeoutTicks = 30)
+    public static void grabberOnlyReachesNearestTripleConveyorLane(GameTestHelper helper) {
+        BlockPos grabberPos = helper.absolutePos(new BlockPos(3, 2, 3));
+        BlockPos chestPos = grabberPos.north();
+        BlockState grabberState = ModBlocks.CRANE_GRABBER.get().defaultBlockState()
+                .setValue(AbstractCraneBlock.INPUT, Direction.SOUTH)
+                .setValue(AbstractCraneBlock.OUTPUT, Direction.NORTH);
+        helper.getLevel().setBlock(grabberPos.south(), ModBlocks.CONVEYOR_TRIPLE.get().defaultBlockState(),
+                Block.UPDATE_ALL);
+        helper.getLevel().setBlock(chestPos, Blocks.CHEST.defaultBlockState(), Block.UPDATE_ALL);
+        helper.getLevel().setBlock(grabberPos, grabberState, Block.UPDATE_ALL);
+        CraneGrabberBlockEntity grabber = (CraneGrabberBlockEntity)
+                helper.getLevel().getBlockEntity(grabberPos);
+        grabber.setItem(CraneGrabberBlockEntity.STACK_UPGRADE,
+                new ItemStack(ModItems.MACHINE_UPGRADES.get("upgrade_stack_3").get()));
+
+        helper.runAfterDelay(21, () -> {
+            MovingConveyorItemEntity near = MovingConveyorItemEntity.create(helper.getLevel(),
+                    new ItemStack(Items.GOLD_INGOT, 3));
+            near.setPos(grabberPos.getX() + 0.5D, grabberPos.getY() + 0.25D, grabberPos.getZ() + 0.8D);
+            MovingConveyorItemEntity far = MovingConveyorItemEntity.create(helper.getLevel(),
+                    new ItemStack(Items.IRON_INGOT, 3));
+            far.setPos(grabberPos.getX() + 0.5D, grabberPos.getY() + 0.25D, grabberPos.getZ() + 1.5D);
+            helper.getLevel().addFreshEntity(near);
+            helper.getLevel().addFreshEntity(far);
+            CraneGrabberBlockEntity.tick(helper.getLevel(), grabberPos, grabberState, grabber);
+            ChestBlockEntity chest = (ChestBlockEntity) helper.getLevel().getBlockEntity(chestPos);
+            check(helper, !near.isAlive() && far.isAlive()
+                            && chest.countItem(Items.GOLD_INGOT) == 3
+                            && chest.countItem(Items.IRON_INGOT) == 0,
+                    "The Grabber must preserve the source contracted AABB for the nearest triple-belt lane");
+            helper.succeed();
+        });
     }
 
     private static void checkRecipe(GameTestHelper helper, String id, net.minecraft.world.item.Item item, int count) {

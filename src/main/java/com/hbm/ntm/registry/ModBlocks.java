@@ -33,6 +33,7 @@ import com.hbm.ntm.block.ConveyorBoxerBlock;
 import com.hbm.ntm.block.ConveyorChuteBlock;
 import com.hbm.ntm.block.ConveyorLiftBlock;
 import com.hbm.ntm.block.CraneExtractorBlock;
+import com.hbm.ntm.block.CraneGrabberBlock;
 import com.hbm.ntm.block.CraneInserterBlock;
 import com.hbm.ntm.block.CrackingTowerBlock;
 import com.hbm.ntm.block.CrucibleBlock;
@@ -370,6 +371,7 @@ public final class ModBlocks {
     public static final DeferredBlock<ConveyorChuteBlock> CONVEYOR_CHUTE;
     public static final DeferredBlock<CraneExtractorBlock> CRANE_EXTRACTOR;
     public static final DeferredBlock<CraneInserterBlock> CRANE_INSERTER;
+    public static final DeferredBlock<CraneGrabberBlock> CRANE_GRABBER;
     public static final DeferredBlock<ConveyorBoxerBlock> CRANE_BOXER;
     public static final DeferredBlock<Block> BLOCK_COKE_COAL;
     public static final DeferredBlock<Block> BLOCK_COKE_LIGNITE;
@@ -1131,6 +1133,7 @@ public final class ModBlocks {
         CONVEYOR_CHUTE = BLOCKS.register("conveyor_chute", () -> new ConveyorChuteBlock(conveyorProperties()));
         CRANE_EXTRACTOR = BLOCKS.register("crane_extractor", () -> new CraneExtractorBlock(craneProperties()));
         CRANE_INSERTER = BLOCKS.register("crane_inserter", () -> new CraneInserterBlock(craneProperties()));
+        CRANE_GRABBER = BLOCKS.register("crane_grabber", () -> new CraneGrabberBlock(craneProperties()));
         CRANE_BOXER = BLOCKS.register("crane_boxer", () -> new ConveyorBoxerBlock(
                 craneProperties()));
         BLOCK_COKE_COAL = registerCokeBlock("block_coke_coal");

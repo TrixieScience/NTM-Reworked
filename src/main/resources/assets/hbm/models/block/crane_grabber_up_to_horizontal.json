@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "hbm:block/crane_side",
+    "down": "hbm:block/crane_top",
+    "up": "hbm:block/crane_pull",
+    "north": "hbm:block/crane_side_out",
+    "south": "hbm:block/crane_side",
+    "west": "hbm:block/crane_grabber_side_up_turn_left",
+    "east": "hbm:block/crane_grabber_side_up_turn_right"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "variants": {
+    "input=down,output=down": { "model": "hbm:block/crane_grabber_vertical_up" },
+    "input=down,output=up": { "model": "hbm:block/crane_grabber_vertical_up" },
+    "input=down,output=north": { "model": "hbm:block/crane_grabber_down_to_horizontal" },
+    "input=down,output=east": { "model": "hbm:block/crane_grabber_down_to_horizontal", "y": 90 },
+    "input=down,output=south": { "model": "hbm:block/crane_grabber_down_to_horizontal", "y": 180 },
+    "input=down,output=west": { "model": "hbm:block/crane_grabber_down_to_horizontal", "y": 270 },
+
+    "input=up,output=down": { "model": "hbm:block/crane_grabber_vertical_down" },
+    "input=up,output=up": { "model": "hbm:block/crane_grabber_vertical_down" },
+    "input=up,output=north": { "model": "hbm:block/crane_grabber_up_to_horizontal" },
+    "input=up,output=east": { "model": "hbm:block/crane_grabber_up_to_horizontal", "y": 90 },
+    "input=up,output=south": { "model": "hbm:block/crane_grabber_up_to_horizontal", "y": 180 },
+    "input=up,output=west": { "model": "hbm:block/crane_grabber_up_to_horizontal", "y": 270 },
+
+    "input=south,output=up": { "model": "hbm:block/crane_grabber_horizontal_to_up" },
+    "input=south,output=down": { "model": "hbm:block/crane_grabber_horizontal_to_down" },
+    "input=south,output=north": { "model": "hbm:block/crane_grabber_horizontal_straight" },
+    "input=south,output=east": { "model": "hbm:block/crane_grabber_horizontal_right" },
+    "input=south,output=south": { "model": "hbm:block/crane_grabber_horizontal_straight" },
+    "input=south,output=west": { "model": "hbm:block/crane_grabber_horizontal_left" },
+
+    "input=west,output=up": { "model": "hbm:block/crane_grabber_horizontal_to_up", "y": 90 },
+    "input=west,output=down": { "model": "hbm:block/crane_grabber_horizontal_to_down", "y": 90 },
+    "input=west,output=north": { "model": "hbm:block/crane_grabber_horizontal_left", "y": 90 },
+    "input=west,output=east": { "model": "hbm:block/crane_grabber_horizontal_straight", "y": 90 },
+    "input=west,output=south": { "model": "hbm:block/crane_grabber_horizontal_right", "y": 90 },
+    "input=west,output=west": { "model": "hbm:block/crane_grabber_horizontal_straight", "y": 90 },
+
+    "input=north,output=up": { "model": "hbm:block/crane_grabber_horizontal_to_up", "y": 180 },
+    "input=north,output=down": { "model": "hbm:block/crane_grabber_horizontal_to_down", "y": 180 },
+    "input=north,output=north": { "model": "hbm:block/crane_grabber_horizontal_straight", "y": 180 },
+    "input=north,output=east": { "model": "hbm:block/crane_grabber_horizontal_left", "y": 180 },
+    "input=north,output=south": { "model": "hbm:block/crane_grabber_horizontal_straight", "y": 180 },
+    "input=north,output=west": { "model": "hbm:block/crane_grabber_horizontal_right", "y": 180 },
+
+    "input=east,output=up": { "model": "hbm:block/crane_grabber_horizontal_to_up", "y": 270 },
+    "input=east,output=down": { "model": "hbm:block/crane_grabber_horizontal_to_down", "y": 270 },
+    "input=east,output=north": { "model": "hbm:block/crane_grabber_horizontal_right", "y": 270 },
+    "input=east,output=east": { "model": "hbm:block/crane_grabber_horizontal_straight", "y": 270 },
+    "input=east,output=south": { "model": "hbm:block/crane_grabber_horizontal_left", "y": 270 },
+    "input=east,output=west": { "model": "hbm:block/crane_grabber_horizontal_straight", "y": 270 }
+  }
+}

@@ -189,6 +189,7 @@
     "hbm:conveyor_chute",
     "hbm:crane_extractor",
     "hbm:crane_inserter",
+    "hbm:crane_grabber",
     "hbm:crane_boxer"
   ]
 }

@@ -612,9 +612,11 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.conveyor_chute", "Conveyor Chute");
         language.addProperty("block.hbm.crane_extractor", "Conveyor Ejector");
         language.addProperty("block.hbm.crane_inserter", "Conveyor Inserter");
+        language.addProperty("block.hbm.crane_grabber", "Conveyor Grabber");
         language.addProperty("block.hbm.crane_boxer", "Conveyor Boxer");
         language.addProperty("container.craneExtractor", "Conveyor Ejector");
         language.addProperty("container.craneInserter", "Conveyor Inserter");
+        language.addProperty("container.craneGrabber", "Conveyor Grabber");
         language.addProperty("container.craneBoxer", "Conveyor Boxer");
         language.addProperty("item.hbm.part_generic", "Pneumatic Piston");
         language.addProperty("block.hbm.crane_extractor.desc.0",
@@ -634,6 +636,18 @@ final class HbmEnglishTranslations {
         language.addProperty("block.hbm.crane_inserter.desc.2",
                 "Shift-click with screwdriver to set the output side");
         language.addProperty("block.hbm.crane_inserter.desc.3",
+                "Click twice to set the opposite side");
+        language.addProperty("block.hbm.crane_grabber.desc.0",
+                "Takes items from passing conveyors and places them into containers");
+        language.addProperty("block.hbm.crane_grabber.desc.1",
+                "Will only take items from the closest lane");
+        language.addProperty("block.hbm.crane_grabber.desc.2",
+                "Has up to 9 filter slots with black and whitelist");
+        language.addProperty("block.hbm.crane_grabber.desc.3",
+                "Right-click with screwdriver to set input side");
+        language.addProperty("block.hbm.crane_grabber.desc.4",
+                "Shift-click with screwdriver to set the output side");
+        language.addProperty("block.hbm.crane_grabber.desc.5",
                 "Click twice to set the opposite side");
         language.addProperty("block.hbm.crane_boxer.desc.0",
                 "Loads a configurable amount of stacks into boxes which move along conveyor belts");

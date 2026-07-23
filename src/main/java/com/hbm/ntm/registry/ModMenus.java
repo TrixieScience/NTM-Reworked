@@ -20,6 +20,7 @@ import com.hbm.ntm.inventory.ChemicalPlantMenu;
 import com.hbm.ntm.inventory.CentrifugeMenu;
 import com.hbm.ntm.inventory.ConveyorBoxerMenu;
 import com.hbm.ntm.inventory.CraneExtractorMenu;
+import com.hbm.ntm.inventory.CraneGrabberMenu;
 import com.hbm.ntm.inventory.CraneInserterMenu;
 import com.hbm.ntm.inventory.DieselGeneratorMenu;
 import com.hbm.ntm.inventory.DfcMenu;
@@ -248,6 +249,9 @@ public final class ModMenus {
 
     public static final DeferredHolder<MenuType<?>, MenuType<CraneInserterMenu>> CRANE_INSERTER = MENUS.register(
             "crane_inserter", () -> IMenuTypeExtension.create(CraneInserterMenu::new));
+
+    public static final DeferredHolder<MenuType<?>, MenuType<CraneGrabberMenu>> CRANE_GRABBER = MENUS.register(
+            "crane_grabber", () -> IMenuTypeExtension.create(CraneGrabberMenu::new));
 
     public static final DeferredHolder<MenuType<?>, MenuType<RadioTorchMenu>> RADIO_TORCH = MENUS.register(
             "radio_torch", () -> IMenuTypeExtension.create(RadioTorchMenu::new));

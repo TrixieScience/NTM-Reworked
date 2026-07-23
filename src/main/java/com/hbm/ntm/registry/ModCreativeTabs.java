@@ -496,6 +496,7 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.CONVEYOR_WAND_TRIPLE.get());
                         output.accept(ModItems.CRANE_EXTRACTOR_ITEM.get());
                         output.accept(ModItems.CRANE_INSERTER_ITEM.get());
+                        output.accept(ModItems.CRANE_GRABBER_ITEM.get());
                         output.accept(ModItems.CRANE_BOXER_ITEM.get());
                         output.accept(ModItems.RED_CABLE_ITEM.get());
                         output.accept(ModItems.RED_CABLE_GAUGE_ITEM.get());

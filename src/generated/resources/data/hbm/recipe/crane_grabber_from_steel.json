@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "hbm:conveyor_wand"
+    },
+    "C": {
+      "tag": "c:ingots/steel"
+    },
+    "P": {
+      "item": "hbm:part_generic"
+    }
+  },
+  "pattern": [
+    "C C",
+    "P P",
+    "CBC"
+  ],
+  "result": {
+    "count": 4,
+    "id": "hbm:crane_grabber"
+  }
+}

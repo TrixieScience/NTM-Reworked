@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "hbm:conveyor_wand"
+    },
+    "C": {
+      "item": "minecraft:stone_bricks"
+    },
+    "P": {
+      "item": "hbm:part_generic"
+    }
+  },
+  "pattern": [
+    "C C",
+    "P P",
+    "CBC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:crane_grabber"
+  }
+}
