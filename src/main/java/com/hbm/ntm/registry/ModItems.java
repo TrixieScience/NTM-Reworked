@@ -388,6 +388,8 @@ public final class ModItems {
     public static final DeferredItem<BlockItem> FLUID_VALVE_ITEM;
     public static final DeferredItem<BlockItem> FLUID_SWITCH_ITEM;
     public static final DeferredItem<DescriptionBlockItem> FLUID_COUNTER_VALVE_ITEM;
+    public static final DeferredItem<BlockItem> FLUID_PUMP_ITEM;
+    public static final DeferredItem<BlockItem> MACHINE_DRAIN_ITEM;
     public static final DeferredItem<BlockItem> DYNAMITE_ITEM;
     public static final DeferredItem<BlockItem> TNT_NTM_ITEM;
     public static final DeferredItem<BlockItem> SEMTEX_ITEM;
@@ -1160,6 +1162,8 @@ public final class ModItems {
         FLUID_COUNTER_VALVE_ITEM = ITEMS.register("fluid_counter_valve",
                 () -> new DescriptionBlockItem(ModBlocks.FLUID_COUNTER_VALVE.get(), new Item.Properties(),
                         "block.hbm.fluid_counter_valve.desc"));
+        FLUID_PUMP_ITEM = ITEMS.registerSimpleBlockItem("fluid_pump", ModBlocks.FLUID_PUMP);
+        MACHINE_DRAIN_ITEM = ITEMS.registerSimpleBlockItem("machine_drain", ModBlocks.MACHINE_DRAIN);
         DYNAMITE_ITEM = ITEMS.registerSimpleBlockItem("dynamite", ModBlocks.DYNAMITE);
         TNT_NTM_ITEM = ITEMS.registerSimpleBlockItem("tnt_ntm", ModBlocks.TNT_NTM);
         SEMTEX_ITEM = ITEMS.registerSimpleBlockItem("semtex", ModBlocks.SEMTEX);

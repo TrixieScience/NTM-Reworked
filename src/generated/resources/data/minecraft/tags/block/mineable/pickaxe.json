@@ -78,6 +78,8 @@
     "hbm:fluid_valve",
     "hbm:fluid_switch",
     "hbm:fluid_counter_valve",
+    "hbm:fluid_pump",
+    "hbm:machine_drain",
     "hbm:machine_battery_socket",
     "hbm:machine_battery_redd",
     "hbm:machine_press",

@@ -1211,6 +1211,8 @@ final class HbmEnglishTranslations {
         language.addProperty("item.hbm.battery_creative", "Infinite Battery");
         language.addProperty("item.hbm.fluid_barrel_infinite", "Infinite Fluid Barrel");
         language.addProperty("block.hbm.machine_battery_socket", "Battery Socket");
+        language.addProperty("block.hbm.fluid_pump", "Flow Control Pump");
+        language.addProperty("block.hbm.machine_drain", "Drainage Pipe");
         language.addProperty("block.hbm.machine_battery_socket.desc.0", "Allows battery items to be connected");
         language.addProperty("block.hbm.machine_battery_socket.desc.1", "to the power grid directly.");
         language.addProperty("block.hbm.machine_battery_socket.desc.2", "Acts as a cable, all ports are connected");

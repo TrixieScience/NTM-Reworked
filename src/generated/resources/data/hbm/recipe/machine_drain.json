@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "type": "neoforge:components",
+      "components": {
+        "minecraft:custom_data": {
+          "material": "steel"
+        },
+        "minecraft:custom_model_data": 30
+      },
+      "items": "hbm:plate_cast",
+      "strict": false
+    },
+    "T": {
+      "item": "hbm:tank_steel"
+    }
+  },
+  "pattern": [
+    "PPP",
+    "T  ",
+    "PPP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "hbm:machine_drain"
+  }
+}

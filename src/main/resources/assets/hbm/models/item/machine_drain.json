@@ -1,0 +1,28 @@
+{
+  "parent": "hbm:block/machine_drain",
+  "display": {
+    "gui": {
+      "rotation": [30, 45, 0],
+      "translation": [6, 2, 0],
+      "scale": [0.3125, 0.3125, 0.3125]
+    },
+    "ground": {
+      "translation": [0, 2, 0],
+      "scale": [0.15625, 0.15625, 0.15625]
+    },
+    "fixed": {
+      "rotation": [0, 180, 0],
+      "scale": [0.25, 0.25, 0.25]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 225, 0],
+      "translation": [0, 1, 0],
+      "scale": [0.2, 0.2, 0.2]
+    },
+    "thirdperson_righthand": {
+      "rotation": [75, 225, 0],
+      "translation": [0, 2.5, 0],
+      "scale": [0.15625, 0.15625, 0.15625]
+    }
+  }
+}

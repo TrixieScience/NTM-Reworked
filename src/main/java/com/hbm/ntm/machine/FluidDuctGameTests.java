@@ -4,6 +4,10 @@ import com.hbm.ntm.HbmNtm;
 import com.hbm.ntm.block.FluidDuctBlock;
 import com.hbm.ntm.block.HeatBoilerBlock;
 import com.hbm.ntm.block.FluidUtilityBlock;
+import com.hbm.ntm.block.FluidPumpBlock;
+import com.hbm.ntm.block.DrainagePipeBlock;
+import com.hbm.ntm.blockentity.DrainagePipeBlockEntity;
+import com.hbm.ntm.blockentity.FluidPumpBlockEntity;
 import com.hbm.ntm.blockentity.FluidUtilityBlockEntity;
 import com.hbm.ntm.blockentity.HeatBoilerBlockEntity;
 import com.hbm.ntm.blockentity.ArcWelderBlockEntity;
@@ -22,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.fluids.FluidStack;
@@ -253,6 +258,114 @@ public final class FluidDuctGameTests {
         check(helper, counter.counter() == 0, "The source ROR reset function must clear the counter");
         counter.runRorFunction("FUN:setstate", new String[]{"0"});
         check(helper, !counter.routesFluid(), "The source ROR state function must close the counter valve");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void flowControlPumpIsDirectionalRateLimitedAndRedstoneLocked(GameTestHelper helper) {
+        BlockPos sourcePos = new BlockPos(3, 2, 3);
+        BlockPos sinkPos = sourcePos.east();
+        BlockState pumpState = ModBlocks.FLUID_PUMP.get().defaultBlockState()
+                .setValue(FluidPumpBlock.FACING, Direction.SOUTH);
+        helper.setBlock(sourcePos, pumpState);
+        helper.setBlock(sinkPos, pumpState);
+        FluidPumpBlockEntity source = helper.getBlockEntity(sourcePos);
+        FluidPumpBlockEntity sink = helper.getBlockEntity(sinkPos);
+        source.selectFluid(FluidIdentifierItem.Selection.WATER);
+        sink.selectFluid(FluidIdentifierItem.Selection.WATER);
+        source.configure(100, 0, 2);
+        sink.configure(500, 0, 2);
+
+        BlockPos absoluteSource = helper.absolutePos(sourcePos);
+        IFluidHandler wrongSide = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                absoluteSource, Direction.NORTH);
+        IFluidHandler input = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                absoluteSource, Direction.WEST);
+        check(helper, wrongSide == null && input != null
+                        && input.fill(new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 250),
+                        IFluidHandler.FluidAction.EXECUTE) == 100,
+                "The pump must accept only from its source-rotated input and cap its buffer at throughput");
+
+        FluidPumpBlockEntity.serverTick(helper.getLevel(), absoluteSource, source.getBlockState(), source);
+        check(helper, source.amount() == 0 && sink.amount() == 100,
+                "The pump must send one throughput-limited batch through its opposite output");
+
+        check(helper, input.fill(new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 100),
+                IFluidHandler.FluidAction.EXECUTE) == 100, "The drained source buffer must refill");
+        helper.setBlock(sourcePos.north(), Blocks.REDSTONE_BLOCK);
+        FluidPumpBlockEntity.serverTick(helper.getLevel(), absoluteSource, source.getBlockState(), source);
+        check(helper, source.amount() == 100 && sink.amount() == 100 && source.redstone(),
+                "Redstone must stop pump output without refusing or destroying buffered fluid");
+
+        source.configure(100, 1, 2);
+        check(helper, source.amount() == 0 && source.pressure() == 1,
+                "Changing source pressure must clear the pump tank");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void flowControlPumpPriorityOrdersDuctReceivers(GameTestHelper helper) {
+        BlockPos ductPos = new BlockPos(4, 2, 4);
+        BlockPos lowPos = ductPos.west();
+        BlockPos highPos = ductPos.east();
+        helper.setBlock(ductPos, ModBlocks.FLUID_DUCT_NEO.get().defaultBlockState()
+                .setValue(FluidDuctBlock.TYPE, FluidIdentifierItem.Selection.WATER));
+        helper.setBlock(lowPos, ModBlocks.FLUID_PUMP.get().defaultBlockState()
+                .setValue(FluidPumpBlock.FACING, Direction.NORTH));
+        helper.setBlock(highPos, ModBlocks.FLUID_PUMP.get().defaultBlockState()
+                .setValue(FluidPumpBlock.FACING, Direction.SOUTH));
+        FluidPumpBlockEntity low = helper.getBlockEntity(lowPos);
+        FluidPumpBlockEntity high = helper.getBlockEntity(highPos);
+        low.selectFluid(FluidIdentifierItem.Selection.WATER);
+        high.selectFluid(FluidIdentifierItem.Selection.WATER);
+        low.configure(100, 0, 0);
+        high.configure(100, 0, 4);
+
+        IFluidHandler duct = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                helper.absolutePos(ductPos), Direction.UP);
+        check(helper, duct != null && duct.fill(new FluidStack(
+                net.minecraft.world.level.material.Fluids.WATER, 100),
+                IFluidHandler.FluidAction.EXECUTE) == 100,
+                "The typed duct must accept the pump-priority test fluid");
+        check(helper, high.amount() == 100 && low.amount() == 0,
+                "Highest-priority pump receivers must fill before lowest-priority receivers");
+        helper.succeed();
+    }
+
+    @GameTest(template = "empty")
+    public static void drainagePipeMatchesSourceFootprintInputsAndHalfDrain(GameTestHelper helper) {
+        BlockPos core = new BlockPos(4, 2, 5);
+        Direction facing = Direction.SOUTH;
+        BlockState base = ModBlocks.MACHINE_DRAIN.get().defaultBlockState()
+                .setValue(DrainagePipeBlock.FACING, facing);
+        for (int part = 0; part < 3; part++) {
+            helper.setBlock(core.relative(facing.getOpposite(), part),
+                    base.setValue(DrainagePipeBlock.PART, part));
+        }
+
+        check(helper, DrainagePipeBlock.corePosition(core.north(2),
+                        helper.getBlockState(core.north(2))).equals(core),
+                "Every drainage-pipe dummy must resolve back to the core");
+        BlockPos absoluteCore = helper.absolutePos(core);
+        IFluidHandler front = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                absoluteCore, Direction.SOUTH);
+        IFluidHandler side = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                absoluteCore, Direction.EAST);
+        IFluidHandler back = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                absoluteCore, Direction.NORTH);
+        IFluidHandler top = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK,
+                absoluteCore, Direction.UP);
+        check(helper, front != null && side != null && back == null && top == null,
+                "The source drain must accept fluid at its front and sides only");
+
+        DrainagePipeBlockEntity drain = helper.getBlockEntity(core);
+        drain.selectFluid(FluidIdentifierItem.Selection.WATER);
+        check(helper, front.fill(new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 2_000),
+                        IFluidHandler.FluidAction.EXECUTE) == 2_000,
+                "The source drain must hold a 2,000 mB selected-fluid buffer");
+        DrainagePipeBlockEntity.tick(helper.getLevel(), absoluteCore, drain.getBlockState(), drain);
+        check(helper, drain.amount() == 1_000,
+                "Each source drain tick must discard half of its stored fluid");
         helper.succeed();
     }
 

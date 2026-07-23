@@ -52,6 +52,8 @@ import com.hbm.ntm.blockentity.FensuBlockEntity;
 import com.hbm.ntm.blockentity.FensuProxyBlockEntity;
 import com.hbm.ntm.blockentity.FluidDuctBlockEntity;
 import com.hbm.ntm.blockentity.FluidUtilityBlockEntity;
+import com.hbm.ntm.blockentity.FluidPumpBlockEntity;
+import com.hbm.ntm.blockentity.DrainagePipeBlockEntity;
 import com.hbm.ntm.blockentity.FluidBarrelBlockEntity;
 import com.hbm.ntm.blockentity.FluidStorageTankBlockEntity;
 import com.hbm.ntm.blockentity.FluidStorageTankProxyBlockEntity;
@@ -558,6 +560,12 @@ public final class ModBlockEntities {
                     FluidUtilityBlockEntity::new, ModBlocks.FLUID_DUCT_GAUGE.get(),
                     ModBlocks.FLUID_VALVE.get(), ModBlocks.FLUID_SWITCH.get(),
                     ModBlocks.FLUID_COUNTER_VALVE.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidPumpBlockEntity>> FLUID_PUMP =
+            BLOCK_ENTITY_TYPES.register("fluid_pump", () -> BlockEntityType.Builder.of(
+                    FluidPumpBlockEntity::new, ModBlocks.FLUID_PUMP.get()).build(null));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<DrainagePipeBlockEntity>> MACHINE_DRAIN =
+            BLOCK_ENTITY_TYPES.register("machine_drain", () -> BlockEntityType.Builder.of(
+                    DrainagePipeBlockEntity::new, ModBlocks.MACHINE_DRAIN.get()).build(null));
 
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<FluidStorageTankBlockEntity>> MACHINE_FLUIDTANK =
             BLOCK_ENTITY_TYPES.register("machine_fluidtank",

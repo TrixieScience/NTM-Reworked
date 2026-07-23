@@ -44,6 +44,8 @@ import com.hbm.ntm.block.FractionTowerSeparatorBlock;
 import com.hbm.ntm.block.GasTurbineBlock;
 import com.hbm.ntm.block.FluidDuctBlock;
 import com.hbm.ntm.block.FluidUtilityBlock;
+import com.hbm.ntm.block.FluidPumpBlock;
+import com.hbm.ntm.block.DrainagePipeBlock;
 import com.hbm.ntm.block.PowerGaugeBlock;
 import com.hbm.ntm.block.FluidBurnerBlock;
 import com.hbm.ntm.block.FluidBarrelBlock;
@@ -280,6 +282,8 @@ public final class ModBlocks {
     public static final DeferredBlock<FluidUtilityBlock> FLUID_VALVE;
     public static final DeferredBlock<FluidUtilityBlock> FLUID_SWITCH;
     public static final DeferredBlock<FluidUtilityBlock> FLUID_COUNTER_VALVE;
+    public static final DeferredBlock<FluidPumpBlock> FLUID_PUMP;
+    public static final DeferredBlock<DrainagePipeBlock> MACHINE_DRAIN;
     public static final DeferredBlock<ConventionalExplosiveBlock> DYNAMITE;
     public static final DeferredBlock<ConventionalExplosiveBlock> TNT_NTM;
     public static final DeferredBlock<ConventionalExplosiveBlock> SEMTEX;
@@ -850,6 +854,14 @@ public final class ModBlocks {
         FLUID_VALVE = fluidUtility("fluid_valve", FluidUtilityBlock.Kind.VALVE);
         FLUID_SWITCH = fluidUtility("fluid_switch", FluidUtilityBlock.Kind.SWITCH);
         FLUID_COUNTER_VALVE = fluidUtility("fluid_counter_valve", FluidUtilityBlock.Kind.COUNTER);
+        FLUID_PUMP = BLOCKS.register("fluid_pump", () -> new FluidPumpBlock(
+                BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                        .strength(5.0F, 10.0F).sound(SoundType.METAL)
+                        .requiresCorrectToolForDrops().noOcclusion()));
+        MACHINE_DRAIN = BLOCKS.register("machine_drain", () -> new DrainagePipeBlock(
+                BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                        .strength(5.0F, 10.0F).sound(SoundType.METAL)
+                        .requiresCorrectToolForDrops().noOcclusion()));
         DYNAMITE = registerExplosive("dynamite", 8.0F);
         TNT_NTM = registerExplosive("tnt_ntm", 10.0F);
         SEMTEX = registerExplosive("semtex", 12.0F);

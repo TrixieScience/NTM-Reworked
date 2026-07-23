@@ -86,6 +86,11 @@ public final class ModNetwork {
                 RadioTorchConfigPayload::handle
         );
         registrar.playToServer(
+                FluidPumpConfigPayload.TYPE,
+                FluidPumpConfigPayload.STREAM_CODEC,
+                FluidPumpConfigPayload::handle
+        );
+        registrar.playToServer(
                 GasTurbineControlPayload.TYPE,
                 GasTurbineControlPayload.STREAM_CODEC,
                 GasTurbineControlPayload::handle

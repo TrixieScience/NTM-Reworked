@@ -1,6 +1,7 @@
 package com.hbm.ntm.blockentity;
 
 import com.hbm.ntm.block.FluidDuctBlock;
+import com.hbm.ntm.fluid.PrioritizedFluidHandler;
 import com.hbm.ntm.item.FluidIdentifierItem;
 import com.hbm.ntm.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
@@ -74,17 +75,27 @@ public class FluidDuctBlockEntity extends BlockEntity {
             if (action.simulate() || transferable <= 0) return transferable;
 
             int moved = 0;
-            long remainingCapacity = totalCapacity;
-            for (int index = 0; index < receivers.size() && moved < transferable; index++) {
-                int capacity = capacities.get(index);
-                if (capacity <= 0) continue;
-                int remaining = transferable - moved;
-                int share = remainingCapacity <= 0L ? remaining
-                        : (int) Math.min(capacity, Math.max(1L, (long) remaining * capacity / remainingCapacity));
-                FluidStack offered = resource.copy();
-                offered.setAmount(share);
-                moved += receivers.get(index).fill(offered, FluidAction.EXECUTE);
-                remainingCapacity -= capacity;
+            for (int priority = 4; priority >= 0 && moved < transferable; priority--) {
+                long priorityCapacity = 0L;
+                for (int index = 0; index < receivers.size(); index++) {
+                    if (priority(receivers.get(index)) == priority) priorityCapacity += capacities.get(index);
+                }
+                int priorityTransfer = (int) Math.min(transferable - moved, priorityCapacity);
+                int priorityMoved = 0;
+                long remainingCapacity = priorityCapacity;
+                for (int index = 0; index < receivers.size() && priorityMoved < priorityTransfer; index++) {
+                    IFluidHandler receiver = receivers.get(index);
+                    int capacity = capacities.get(index);
+                    if (capacity <= 0 || priority(receiver) != priority) continue;
+                    int remaining = priorityTransfer - priorityMoved;
+                    int share = remainingCapacity <= 0L ? remaining
+                            : (int) Math.min(capacity,
+                            Math.max(1L, (long) remaining * capacity / remainingCapacity));
+                    FluidStack offered = resource.copyWithAmount(share);
+                    priorityMoved += receiver.fill(offered, FluidAction.EXECUTE);
+                    remainingCapacity -= capacity;
+                }
+                moved += priorityMoved;
             }
             if (moved > 0) {
                 for (FluidDuctBlockEntity duct : search.ducts()) duct.recordTransfer(moved);
@@ -128,5 +139,10 @@ public class FluidDuctBlockEntity extends BlockEntity {
     }
 
     private record NetworkSearch(List<IFluidHandler> receivers, List<FluidDuctBlockEntity> ducts) {
+    }
+
+    private static int priority(IFluidHandler handler) {
+        return handler instanceof PrioritizedFluidHandler prioritized
+                ? Math.clamp(prioritized.fluidPriority(), 0, 4) : 2;
     }
 }

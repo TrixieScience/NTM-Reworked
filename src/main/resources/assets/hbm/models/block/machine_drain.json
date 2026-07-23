@@ -1,0 +1,5 @@
+{
+  "loader": "neoforge:obj",
+  "model": "hbm:models/block/machine_drain.obj",
+  "flip_v": true
+}

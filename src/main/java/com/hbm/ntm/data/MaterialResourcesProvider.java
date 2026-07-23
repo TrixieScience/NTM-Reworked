@@ -911,6 +911,8 @@ public final class MaterialResourcesProvider implements DataProvider {
         mineableBlocks.add("hbm:fluid_valve");
         mineableBlocks.add("hbm:fluid_switch");
         mineableBlocks.add("hbm:fluid_counter_valve");
+        mineableBlocks.add("hbm:fluid_pump");
+        mineableBlocks.add("hbm:machine_drain");
         mineableBlocks.add("hbm:machine_battery_socket");
         mineableBlocks.add("hbm:machine_battery_redd");
         mineableBlocks.add("hbm:machine_press");
@@ -1621,8 +1623,12 @@ public final class MaterialResourcesProvider implements DataProvider {
         writes.add(save(output, fluidCounterValveRecipe(), recipes, hbm("fluid_counter_valve")));
         writes.add(save(output, fluidDuctGaugeRecipe(), recipes, hbm("fluid_duct_gauge")));
         writes.add(save(output, powerGaugeRecipe(), recipes, hbm("red_cable_gauge")));
+        writes.add(save(output, fluidPumpRecipe(), recipes, hbm("fluid_pump")));
+        writes.add(save(output, drainagePipeRecipe(), recipes, hbm("machine_drain")));
+        writes.add(save(output, unconditionalMultipartState("machine_drain"), blockStates,
+                hbm("machine_drain")));
         for (String block : List.of("fluid_valve", "fluid_switch", "fluid_counter_valve",
-                "fluid_duct_gauge", "red_cable_gauge")) {
+                "fluid_duct_gauge", "red_cable_gauge", "fluid_pump", "machine_drain")) {
             writes.add(save(output, selfDropLoot(block), lootTables, hbm(block)));
         }
         writes.add(save(output, pipeModel(), itemModels, hbm("pipe")));
@@ -4434,6 +4440,21 @@ public final class MaterialResourcesProvider implements DataProvider {
                 itemIngredient("hbm:ingot_steel"),
                 customComponentIngredient("hbm:circuit", "type", "basic", 8)),
                 recipeResult("hbm:red_cable_gauge", 1));
+    }
+
+    private JsonObject fluidPumpRecipe() {
+        return foundryShaped(List.of(" S ", "PGP", "IMI"), Map.of(
+                "S", itemIngredient("hbm:shell_steel"),
+                "P", itemIngredient("hbm:pipe_steel"),
+                "G", itemIngredient("hbm:ingot_graphite"),
+                "I", itemIngredient("hbm:ingot_steel"),
+                "M", itemIngredient("hbm:motor")), "hbm:fluid_pump", 1);
+    }
+
+    private JsonObject drainagePipeRecipe() {
+        return shapedItemRecipe(List.of("PPP", "T  ", "PPP"), Map.of(
+                "P", materialComponentIngredient("hbm:plate_cast", "steel", 30),
+                "T", itemIngredient("hbm:tank_steel")), "hbm:machine_drain");
     }
 
     private JsonObject fluidDuctUntypingRecipe() {

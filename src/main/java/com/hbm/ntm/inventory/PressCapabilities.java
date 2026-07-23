@@ -170,6 +170,10 @@ public final class PressCapabilities {
                 (duct, side) -> duct.fluidHandler(side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_UTILITY.get(),
                 (duct, side) -> duct.fluidHandler(side));
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_PUMP.get(),
+                (pump, side) -> pump.fluidHandler(side));
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.MACHINE_DRAIN.get(),
+                (drain, side) -> drain.fluidHandler(side));
         event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.FLUID_BARREL.get(),
                 (barrel, side) -> new SidedInvWrapper(barrel, side == null ? Direction.DOWN : side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, ModBlockEntities.FLUID_BARREL.get(),

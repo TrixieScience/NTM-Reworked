@@ -7,6 +7,7 @@ import com.hbm.ntm.block.HeatExchangerBlock;
 import com.hbm.ntm.block.HighPowerCondenserBlock;
 import com.hbm.ntm.block.FluidBurnerBlock;
 import com.hbm.ntm.block.FluidStorageTankBlock;
+import com.hbm.ntm.block.DrainagePipeBlock;
 import com.hbm.ntm.block.GasTurbineBlock;
 import com.hbm.ntm.block.IndustrialTurbineBlock;
 import com.hbm.ntm.block.SteamEngineBlock;
@@ -20,6 +21,8 @@ import com.hbm.ntm.blockentity.HighPowerCondenserBlockEntity;
 import com.hbm.ntm.blockentity.FluidBurnerBlockEntity;
 import com.hbm.ntm.blockentity.FluidDuctBlockEntity;
 import com.hbm.ntm.blockentity.FluidUtilityBlockEntity;
+import com.hbm.ntm.blockentity.FluidPumpBlockEntity;
+import com.hbm.ntm.blockentity.DrainagePipeBlockEntity;
 import com.hbm.ntm.blockentity.PowerGaugeBlockEntity;
 import com.hbm.ntm.blockentity.FoundryOutletBlockEntity;
 import com.hbm.ntm.blockentity.FluidStorageTankBlockEntity;
@@ -71,6 +74,17 @@ public final class ClientLookOverlay {
         }
         if (minecraft.level.getBlockEntity(hit.getBlockPos()) instanceof PowerGaugeBlockEntity gauge) {
             renderPowerGauge(event.getGuiGraphics(), minecraft, gauge);
+            return;
+        }
+        if (minecraft.level.getBlockEntity(hit.getBlockPos()) instanceof FluidPumpBlockEntity pump) {
+            renderFluidPump(event.getGuiGraphics(), minecraft, pump);
+            return;
+        }
+        if (state.is(ModBlocks.MACHINE_DRAIN.get())) {
+            var core = DrainagePipeBlock.corePosition(hit.getBlockPos(), state);
+            if (minecraft.level.getBlockEntity(core) instanceof DrainagePipeBlockEntity drain) {
+                renderDrainagePipe(event.getGuiGraphics(), minecraft, drain);
+            }
             return;
         }
         if (state.is(ModBlocks.FLUID_DUCT_NEO.get())) {
@@ -262,6 +276,46 @@ public final class ClientLookOverlay {
         graphics.drawString(minecraft.font,
                 com.hbm.ntm.item.BatteryPackItem.shortNumber(gauge.deltaSecond()) + "HE/s",
                 x, y + 10, 0xFFFFFF, true);
+    }
+
+    private static void renderFluidPump(GuiGraphics graphics, Minecraft minecraft,
+                                        FluidPumpBlockEntity pump) {
+        int x = graphics.guiWidth() / 2 + 8;
+        int y = graphics.guiHeight() / 2;
+        Component title = pump.getBlockState().getBlock().getName();
+        graphics.drawString(minecraft.font, title, x + 1, y - 9, 0x404000, false);
+        graphics.drawString(minecraft.font, title, x, y - 10, 0xFFFF00, false);
+        MutableComponent flow = Component.literal("-> ").withStyle(ChatFormatting.GREEN)
+                .append(Component.translatable(pump.selection().translationKey())
+                        .withStyle(style -> style.withColor(pump.selection().color())))
+                .append(Component.literal(" (" + pump.pressure() + " PU): "
+                        + String.format(java.util.Locale.US, "%,d", pump.throughput()) + "mB/t")
+                        .withStyle(ChatFormatting.RESET))
+                .append(Component.literal(" ->").withStyle(ChatFormatting.RED));
+        graphics.drawString(minecraft.font, flow, x, y, 0xFFFFFF, true);
+        graphics.drawString(minecraft.font,
+                Component.literal("Priority: ").append(Component.literal(pump.priorityName())
+                        .withStyle(ChatFormatting.YELLOW)), x, y + 10, 0xFFFFFF, true);
+        if (pump.amount() > 0) {
+            graphics.drawString(minecraft.font, String.format(java.util.Locale.US,
+                    "%,d mB buffered", pump.amount()), x, y + 20, 0xFFFFFF, true);
+        }
+    }
+
+    private static void renderDrainagePipe(GuiGraphics graphics, Minecraft minecraft,
+                                           DrainagePipeBlockEntity drain) {
+        int x = graphics.guiWidth() / 2 + 8;
+        int y = graphics.guiHeight() / 2;
+        Component title = drain.getBlockState().getBlock().getName();
+        graphics.drawString(minecraft.font, title, x + 1, y - 9, 0x404000, false);
+        graphics.drawString(minecraft.font, title, x, y - 10, 0xFFFF00, false);
+        MutableComponent fluid = Component.literal("-> ").withStyle(ChatFormatting.GREEN)
+                .append(Component.translatable(drain.selection().translationKey())
+                        .withStyle(ChatFormatting.RESET))
+                .append(Component.literal(": " + drain.amount() + "/"
+                        + DrainagePipeBlockEntity.CAPACITY + "mB")
+                        .withStyle(ChatFormatting.RESET));
+        graphics.drawString(minecraft.font, fluid, x, y, 0xFFFFFF, true);
     }
 
     private static void renderFoundryOutlet(GuiGraphics graphics, Minecraft minecraft,
