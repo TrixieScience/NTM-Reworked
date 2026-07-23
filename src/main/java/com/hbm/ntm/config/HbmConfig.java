@@ -35,6 +35,7 @@ public final class HbmConfig {
     public static final ModConfigSpec.ConfigValue<Integer> EXPLOSION_LIFESPAN_SECONDS;
     public static final ModConfigSpec.ConfigValue<Integer> FLEIJA_BLAST_SPEED;
     public static final ModConfigSpec.ConfigValue<Integer> MK5_BLAST_TIME;
+    public static final ModConfigSpec.IntValue MK5_BLAST_THREADS;
     public static final ModConfigSpec.ConfigValue<Integer> FALLOUT_RANGE;
     public static final ModConfigSpec.ConfigValue<Integer> FALLOUT_DELAY;
     public static final ModConfigSpec.BooleanValue ENABLE_EXPLOSION_CHUNK_LOADING;
@@ -318,6 +319,9 @@ public final class HbmConfig {
         ENABLE_EXPLOSION_CHUNK_LOADING = builder
                 .comment("Allows procedural explosions to keep their central chunk loaded.")
                 .define("6.05_enableChunkLoading", true);
+        MK5_BLAST_THREADS = builder
+                .comment("Worker threads used to calculate MK5 explosion rays. 0 picks half the available processors, up to 12.")
+                .defineInRange("6.06_mk5BlastThreads", 0, 0, 64);
         builder.pop();
 
         builder.push("10_dangerous_drops");
